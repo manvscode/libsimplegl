@@ -18,8 +18,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#ifndef _SIMPLEGL_MATH_H_
-#define _SIMPLEGL_MATH_H_
+#ifndef _MAT2_H_
+#define _MAT2_H_
+#include <float.h>
 #include <limits.h>
 #if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
 #include <stdbool.h>
@@ -48,48 +49,71 @@
 extern "C" {
 #endif
 
-#if defined(SIMPLEGL_MATH_USE_LONG_DOUBLE)
-	#define VEC2_USE_LONG_DOUBLE
-	#define VEC3_USE_LONG_DOUBLE
-	#define VEC4_USE_LONG_DOUBLE
-	#define MAT3_USE_LONG_DOUBLE
-#elif defined(SIMPLEGL_MATH_USE_DOUBLE)
-	#define VEC2_USE_DOUBLE
-	#define VEC3_USE_DOUBLE
-	#define VEC4_USE_DOUBLE
-	#define MAT3_USE_DOUBLE
+#include <vec2.h>
+
+#if defined(MAT2_USE_LONG_DOUBLE)
+	#ifndef SCALAR_T
+	#define SCALAR_T 
+	typedef long double scaler_t;
+	#endif
+	#ifndef SCALAR_EPSILON
+	#define SCALAR_EPSILON LDBL_EPSILON
+	#endif
+#elif defined(MAT2_USE_DOUBLE)
+	#ifndef SCALAR_T
+	#define SCALAR_T 
+	typedef double scaler_t;
+	#endif
+	#ifndef SCALAR_EPSILON
+	#define SCALAR_EPSILON DBL_EPSILON
+	#endif
 #else /* default: use float */
-	#define VEC2_USE_FLOAT
-	#define VEC3_USE_FLOAT
-	#define VEC4_USE_FLOAT
-	#define MAT3_USE_DOUBLE
+	#ifndef SCALAR_T
+	#define SCALAR_T 
+	typedef float scaler_t;
+	#endif
+	#ifndef SCALAR_EPSILON
+	#define SCALAR_EPSILON FLT_EPSILON
+	#endif
 #endif
 
 
-#include <vec2.h>
-#include <vec3.h>
-#include <vec4.h>
-#include <mat2.h>
-#include <mat3.h>
-//#include <mat4.h>
-
-
 /*
- * Four Dimensional Matrices
-typedef struct mat4 {
-    union { // allowed in C11
+ * Two Dimensional Matrices
+ */
+typedef struct mat2 {
+    union { 
         struct {
-            vec4_t x;
-            vec4_t y;
-            vec4_t z;
-            vec4_t w;
+            vec2_t x;
+            vec2_t y;
         };
-        scaler_t m[ 16 ];
+        scaler_t m[ 4 ];
     };
-} mat4_t;
-*/
+} mat2_t;
+
+extern const mat2_t MAT2_IDENITY;
+extern const mat2_t MAT2_ZERO;
+
+/* |a c|
+ * |b d|
+ */
+#define MAT2_MATRIX(a,b,c,d)  { .m = { a, b, c, d } }
+
+void          mat2_initialize  ( mat2_t* m, scaler_t a, scaler_t b, scaler_t c, scaler_t d );
+void          mat2_identity    ( mat2_t* m );
+void          mat2_zero        ( mat2_t* m );
+scaler_t      mat2_determinant ( const mat2_t* m );
+const mat2_t  mat2_mult_matrix ( const mat2_t* __restrict a, const mat2_t* __restrict b );
+const vec2_t  mat2_mult_vector ( const mat2_t* __restrict m, const vec2_t* __restrict v );
+void          mat2_invert      ( mat2_t* m );
+void          mat2_transpose   ( mat2_t* m );
+const char*   mat2_to_string   ( const mat2_t* m );
+
+#define mat2_x_vector( p_m )   ((vec2_t*) &(p_m)->x)
+#define mat2_y_vector( p_m )   ((vec2_t*) &(p_m)->y)
+
 
 #ifdef __cplusplus
 } /* C linkage */
 #endif
-#endif /* _SIMPLEGL_MATH_H_ */
+#endif /* _MAT2_H_ */

@@ -18,8 +18,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#ifndef _SIMPLEGL_MATH_H_
-#define _SIMPLEGL_MATH_H_
+#ifndef _MAT3_H_
+#define _MAT3_H_
+#include <float.h>
 #include <limits.h>
 #if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
 #include <stdbool.h>
@@ -48,48 +49,68 @@
 extern "C" {
 #endif
 
-#if defined(SIMPLEGL_MATH_USE_LONG_DOUBLE)
-	#define VEC2_USE_LONG_DOUBLE
-	#define VEC3_USE_LONG_DOUBLE
-	#define VEC4_USE_LONG_DOUBLE
-	#define MAT3_USE_LONG_DOUBLE
-#elif defined(SIMPLEGL_MATH_USE_DOUBLE)
-	#define VEC2_USE_DOUBLE
-	#define VEC3_USE_DOUBLE
-	#define VEC4_USE_DOUBLE
-	#define MAT3_USE_DOUBLE
+#include <vec3.h>
+
+#if defined(MAT3_USE_LONG_DOUBLE)
+	#ifndef SCALAR_T
+	#define SCALAR_T 
+	typedef long double scaler_t;
+	#endif
+	#ifndef SCALAR_EPSILON
+	#define SCALAR_EPSILON LDBL_EPSILON
+	#endif
+#elif defined(MAT3_USE_DOUBLE)
+	#ifndef SCALAR_T
+	#define SCALAR_T 
+	typedef double scaler_t;
+	#endif
+	#ifndef SCALAR_EPSILON
+	#define SCALAR_EPSILON DBL_EPSILON
+	#endif
 #else /* default: use float */
-	#define VEC2_USE_FLOAT
-	#define VEC3_USE_FLOAT
-	#define VEC4_USE_FLOAT
-	#define MAT3_USE_DOUBLE
+	#ifndef SCALAR_T
+	#define SCALAR_T 
+	typedef float scaler_t;
+	#endif
+	#ifndef SCALAR_EPSILON
+	#define SCALAR_EPSILON FLT_EPSILON
+	#endif
 #endif
 
 
-#include <vec2.h>
-#include <vec3.h>
-#include <vec4.h>
-#include <mat2.h>
-#include <mat3.h>
-//#include <mat4.h>
-
-
 /*
- * Four Dimensional Matrices
-typedef struct mat4 {
-    union { // allowed in C11
+ * Three Dimensional Matrices
+ */
+typedef struct mat3 {
+    union { 
         struct {
-            vec4_t x;
-            vec4_t y;
-            vec4_t z;
-            vec4_t w;
+            vec3_t x;
+            vec3_t y;
+            vec3_t z;
         };
-        scaler_t m[ 16 ];
+        scaler_t m[ 9 ];
     };
-} mat4_t;
-*/
+} mat3_t;
+
+extern const mat3_t MAT3_IDENITY;
+extern const mat3_t MAT3_ZERO;
+
+void          mat3_identity    ( mat3_t* m );
+void          mat3_zero        ( mat3_t* m );
+scaler_t      mat3_determinant ( const mat3_t* m );
+const mat3_t  mat3_mult_matrix ( const mat3_t* __restrict a, const mat3_t* __restrict b );
+const vec3_t  mat3_mult_vector ( const mat3_t* __restrict m, const vec3_t* __restrict v );
+void          mat3_invert      ( mat3_t* m );
+void          mat3_transpose   ( mat3_t* m );
+void          mat3_adjoint     ( mat3_t* m );
+const char*   mat3_to_string   ( const mat3_t* m );
+
+#define mat3_x_vector( p_m )   ((vec3_t*) &(p_m)->x)
+#define mat3_y_vector( p_m )   ((vec3_t*) &(p_m)->y)
+#define mat3_z_vector( p_m )   ((vec3_t*) &(p_m)->z)
+
 
 #ifdef __cplusplus
 } /* C linkage */
 #endif
-#endif /* _SIMPLEGL_MATH_H_ */
+#endif /* _MAT3_H_ */

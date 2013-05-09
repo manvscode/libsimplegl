@@ -18,8 +18,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#ifndef _VEC3_H_
-#define _VEC3_H_
+#ifndef _VEC2_H_
+#define _VEC2_H_
 #include <float.h>
 #include <limits.h>
 #if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
@@ -49,7 +49,7 @@
 extern "C" {
 #endif
 
-#if defined(VEC3_USE_LONG_DOUBLE)
+#if defined(VEC2_USE_LONG_DOUBLE)
 	#ifndef SCALAR_T
 	#define SCALAR_T 
 	typedef long double scaler_t;
@@ -57,7 +57,7 @@ extern "C" {
 	#ifndef SCALAR_EPSILON
 	#define SCALAR_EPSILON LDBL_EPSILON
 	#endif
-#elif defined(VEC3_USE_DOUBLE)
+#elif defined(VEC2_USE_DOUBLE)
 	#ifndef SCALAR_T
 	#define SCALAR_T 
 	typedef double scaler_t;
@@ -76,42 +76,40 @@ extern "C" {
 #endif
 
 /*
- * Three Dimensional Vectors
+ * Two Dimensional Vectors
  */
-typedef struct vec3 {
+typedef struct vec2 {
     union { /* allowed in C11 */
         struct {
             scaler_t x;
             scaler_t y;
-            scaler_t z;
         };
-        scaler_t v[ 3 ];
+        scaler_t v[ 2 ];
     };
-} vec3_t;
+} vec2_t;
 
-extern const vec3_t VEC3_ZERO;
-extern const vec3_t VEC3_XUNIT;
-extern const vec3_t VEC3_YUNIT;
-extern const vec3_t VEC3_ZUNIT;
+extern const vec2_t VEC2_ZERO;
+extern const vec2_t VEC2_XUNIT;
+extern const vec2_t VEC2_YUNIT;
 
-vec3_t      vec3_add           ( const vec3_t* a, const vec3_t* b );
-vec3_t      vec3_subtract      ( const vec3_t* a, const vec3_t* b );
-vec3_t      vec3_multiply      ( const vec3_t* v, scaler_t s );
-void        vec3_scale         ( vec3_t* v, scaler_t s );
-scaler_t    vec3_dot_product   ( const vec3_t* a, const vec3_t* b );
-vec3_t      vec3_cross_product ( const vec3_t* a, const vec3_t* b );
-scaler_t    vec3_magnitude     ( const vec3_t* v );
-scaler_t    vec3_distance      ( const vec3_t* a, const vec3_t* b );
-scaler_t    vec3_angle         ( const vec3_t* a, const vec3_t* b ); /* in radians */
-void        vec3_normalize     ( vec3_t* v );
-bool        vec3_is_normalized ( const vec3_t* v );
-void        vec3_negate        ( vec3_t* v );
-bool        vec3_compare       ( const vec3_t* a, const vec3_t* b );
-void        vec3_zero          ( vec3_t* v );
-const char* vec3_to_string     ( const vec3_t* v ); /* not thread safe */
+vec2_t      vec2_add           ( const vec2_t* a, const vec2_t* b );
+vec2_t      vec2_subtract      ( const vec2_t* a, const vec2_t* b );
+vec2_t      vec2_multiply      ( const vec2_t* v, scaler_t s );
+void        vec2_scale         ( vec2_t* v, scaler_t s );
+scaler_t    vec2_dot_product   ( const vec2_t* a, const vec2_t* b );
+vec2_t      vec2_cross_product ( const vec2_t* a, const vec2_t* b );
+scaler_t    vec2_magnitude     ( const vec2_t* v );
+scaler_t    vec2_distance      ( const vec2_t* a, const vec2_t* b );
+scaler_t    vec2_angle         ( const vec2_t* a, const vec2_t* b ); /* in radians */
+void        vec2_normalize     ( vec2_t* v );
+bool        vec2_is_normalized ( const vec2_t* v );
+void        vec2_negate        ( vec2_t* v );
+bool        vec2_compare       ( const vec2_t* a, const vec2_t* b );
+void        vec2_zero          ( vec2_t* v );
+const char* vec2_to_string     ( const vec2_t* v ); /* not thread safe */
 
 
 #ifdef __cplusplus
 } /* C linkage */
 #endif
-#endif /* _VEC3_H_ */
+#endif /* _VEC2_H_ */

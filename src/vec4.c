@@ -18,11 +18,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include <stdio.h>
 #include <float.h>
 #include <math.h>
 #include <limits.h>
+#include <string.h>
 #include <assert.h>
 #include "vec4.h"
+#include "vec3.h"
 
 static __inline scaler_t fast_inverse_sqrt( scaler_t number );
 
@@ -75,7 +78,7 @@ scaler_t vec4_dot_product( const vec4_t* a, const vec4_t* b )
     return a->x * b->x + a->y * b->y + a->z * b->z + a->w * b->w;
 }
 
-vec4_t vec4_cross_product( const vec4_t* a, const vec4_t* b )
+vec4_t vec4_cross_product( const vec4_t* a, const vec4_t* b, const vec4_t* c )
 {
     vec4_t result;
     // TODO: Implement this!
@@ -91,6 +94,32 @@ scaler_t vec4_magnitude( const vec4_t* v )
     return sqrt( v->x * v->x + v->y * v->y + v->z * v->z + v->w * v->w );
 	#else /* default: use float */
     return sqrtf( v->x * v->x + v->y * v->y + v->z * v->z + v->w * v->w );
+	#endif
+}
+
+scaler_t vec4_distance( const vec4_t* a, const vec4_t* b )
+{
+	#if defined(VEC3_USE_LONG_DOUBLE)
+    return sqrtl(
+		(a->x - b->x) * (a->x - b->x) +
+		(a->y - b->y) * (a->y - b->y) +
+		(a->z - b->z) * (a->z - b->z) +
+		(a->w - b->w) * (a->w - b->w)
+	);
+	#elif defined(VEC3_USE_DOUBLE)
+    return sqrt(
+		(a->x - b->x) * (a->x - b->x) +
+		(a->y - b->y) * (a->y - b->y) +
+		(a->z - b->z) * (a->z - b->z) +
+		(a->w - b->w) * (a->w - b->w)
+	);
+	#else /* default: use float */
+    return sqrtf(
+		(a->x - b->x) * (a->x - b->x) +
+		(a->y - b->y) * (a->y - b->y) +
+		(a->z - b->z) * (a->z - b->z) +
+		(a->w - b->w) * (a->w - b->w)
+	);
 	#endif
 }
 
@@ -172,6 +201,19 @@ bool vec4_compare( const vec4_t* a, const vec4_t* b )
            (fabsf(a->z - b->z) < SCALAR_EPSILON) &&
            (fabsf(a->w - b->w) < SCALAR_EPSILON);
 	#endif
+}
+
+void vec4_zero( vec4_t* v )
+{
+	memset( v, 0, sizeof(vec4_t) );
+}
+
+const char* vec4_to_string( const vec4_t* v ) /* not thread safe */
+{
+	static char string_buffer[ 128 ];
+	snprintf( string_buffer, sizeof(string_buffer) - 1, "(%.2f, %.2f, %.2f, %.2f)", v->x, v->y, v->z, v->w );
+	string_buffer[ sizeof(string_buffer) - 1 ] = '\0';
+	return string_buffer;
 }
 
 scaler_t fast_inverse_sqrt( scaler_t number )

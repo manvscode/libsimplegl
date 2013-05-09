@@ -96,18 +96,21 @@ extern const vec4_t VEC4_YUNIT;
 extern const vec4_t VEC4_ZUNIT;
 extern const vec4_t VEC4_WUNIT;
 
-vec4_t   vec4_add           ( const vec4_t* a, const vec4_t* b );
-vec4_t   vec4_subtract      ( const vec4_t* a, const vec4_t* b );
-vec4_t   vec4_multiply      ( const vec4_t* v, scaler_t s );
-void     vec4_scale         ( vec4_t* v, scaler_t s );
-scaler_t vec4_dot_product   ( const vec4_t* a, const vec4_t* b );
-vec4_t   vec4_cross_product ( const vec4_t* a, const vec4_t* b );
-scaler_t vec4_magnitude     ( const vec4_t* v );
-scaler_t vec4_angle         ( const vec4_t* a, const vec4_t* b ); /* in radians */
-void     vec4_normalize     ( vec4_t* v );
-bool     vec4_is_normalized ( const vec4_t* v );
-void     vec4_negate        ( vec4_t* v );
-bool     vec4_compare       ( const vec4_t* a, const vec4_t* b );
+vec4_t      vec4_add            ( const vec4_t* a, const vec4_t* b );
+vec4_t      vec4_subtract       ( const vec4_t* a, const vec4_t* b );
+vec4_t      vec4_multiply       ( const vec4_t* v, scaler_t s );
+void        vec4_scale          ( vec4_t* v, scaler_t s );
+scaler_t    vec4_dot_product    ( const vec4_t* a, const vec4_t* b );
+vec4_t      vec4_cross_product  ( const vec4_t* a, const vec4_t* b, const vec4_t* c );
+scaler_t    vec4_magnitude      ( const vec4_t* v );
+scaler_t    vec4_distance       ( const vec4_t* a, const vec4_t* b );
+scaler_t    vec4_angle          ( const vec4_t* a, const vec4_t* b ); /* in radians */
+void        vec4_normalize      ( vec4_t* v );
+bool        vec4_is_normalized  ( const vec4_t* v );
+void        vec4_negate         ( vec4_t* v );
+bool        vec4_compare        ( const vec4_t* a, const vec4_t* b );
+void        vec4_zero           ( vec4_t* v );
+const char* vec4_to_string      ( const vec4_t* v ); /* not thread safe */
 
 #define vec4_to_vec3( p_v ) ((vec3_t*)(p_v)
 

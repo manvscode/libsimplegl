@@ -23,102 +23,93 @@
 #include <math.h>
 #include <limits.h>
 #include <string.h>
-#include "vec3.h"
+#include "vec2.h"
 
 static __inline scaler_t fast_inverse_sqrt( scaler_t number );
 
-const vec3_t VEC3_ZERO  = { .x = 0.0f, .y = 0.0f, .z = 0.0f };
-const vec3_t VEC3_XUNIT = { .x = 1.0f, .y = 0.0f, .z = 0.0f };
-const vec3_t VEC3_YUNIT = { .x = 0.0f, .y = 1.0f, .z = 0.0f };
-const vec3_t VEC3_ZUNIT = { .x = 0.0f, .y = 0.0f, .z = 1.0f };
+const vec2_t VEC2_ZERO  = { .x = 0.0f, .y = 0.0f };
+const vec2_t VEC2_XUNIT = { .x = 1.0f, .y = 0.0f };
+const vec2_t VEC2_YUNIT = { .x = 0.0f, .y = 1.0f };
 
-vec3_t vec3_add( const vec3_t* a, const vec3_t* b )
+vec2_t vec2_add( const vec2_t* a, const vec2_t* b )
 {
-    vec3_t result;
+    vec2_t result;
     result.x = a->x + b->x;
     result.y = a->y + b->y;
-    result.z = a->z + b->z;
     return result;
 }
 
-vec3_t vec3_subtract( const vec3_t* a, const vec3_t* b )
+vec2_t vec2_subtract( const vec2_t* a, const vec2_t* b )
 {
-    vec3_t result;
+    vec2_t result;
     result.x = a->x - b->x;
     result.y = a->y - b->y;
-    result.z = a->z - b->z;
     return result;
 }
 
-vec3_t vec3_multiply( const vec3_t* v, scaler_t s )
+vec2_t vec2_multiply( const vec2_t* v, scaler_t s )
 {
-    vec3_t result;
+    vec2_t result;
     result.x = v->x * s;
     result.y = v->y * s;
-    result.z = v->z * s;
     return result;
 }
 
-void vec3_scale( vec3_t* v, scaler_t s )
+void vec2_scale( vec2_t* v, scaler_t s )
 {
     v->x *= s;
     v->y *= s;
-    v->z *= s;
 }
 
-scaler_t vec3_dot_product( const vec3_t* a, const vec3_t* b )
+scaler_t vec2_dot_product( const vec2_t* a, const vec2_t* b )
 {
-    return a->x * b->x + a->y * b->y + a->z * b->z;
+    return a->x * b->x + a->y * b->y;
 }
 
-vec3_t vec3_cross_product( const vec3_t* a, const vec3_t* b )
+vec2_t vec2_cross_product( const vec2_t* a, const vec2_t* b )
 {
-    vec3_t result;
-    result.x = a->y * b->z - a->z * b->y;
-    result.y = a->z * b->x - a->x * b->z;
-    result.z = a->x * b->y - a->y * b->x;
+    vec2_t result;
+    //result.x = a->y * b->z - a->z * b->y;
+    //result.y = a->z * b->x - a->x * b->z;
     return result;
 }
 
-scaler_t vec3_magnitude( const vec3_t* v )
+scaler_t vec2_magnitude( const vec2_t* v )
 {
 	#if defined(VEC3_USE_LONG_DOUBLE)
-    return sqrtl( v->x * v->x + v->y * v->y + v->z * v->z );
+    return sqrtl( v->x * v->x + v->y * v->y );
 	#elif defined(VEC3_USE_DOUBLE)
-    return sqrt( v->x * v->x + v->y * v->y + v->z * v->z );
+    return sqrt( v->x * v->x + v->y * v->y );
 	#else /* default: use float */
-    return sqrtf( v->x * v->x + v->y * v->y + v->z * v->z );
+    return sqrtf( v->x * v->x + v->y * v->y );
 	#endif
 }
 
-scaler_t vec3_distance( const vec3_t* a, const vec3_t* b )
+scaler_t vec2_distance( const vec2_t* a, const vec2_t* b )
 {
 	#if defined(VEC3_USE_LONG_DOUBLE)
     return sqrtl(
 		(a->x - b->x) * (a->x - b->x) +
-		(a->y - b->y) * (a->y - b->y) +
-		(a->z - b->z) * (a->z - b->z)
+		(a->y - b->y) * (a->y - b->y)
 	);
 	#elif defined(VEC3_USE_DOUBLE)
     return sqrt(
 		(a->x - b->x) * (a->x - b->x) +
-		(a->y - b->y) * (a->y - b->y) +
-		(a->z - b->z) * (a->z - b->z)
+		(a->y - b->y) * (a->y - b->y)
 	);
 	#else /* default: use float */
     return sqrtf(
 		(a->x - b->x) * (a->x - b->x) +
-		(a->y - b->y) * (a->y - b->y) +
-		(a->z - b->z) * (a->z - b->z)
+		(a->y - b->y) * (a->y - b->y)
 	);
 	#endif
 }
 
-scaler_t vec3_angle( const vec3_t* a, const vec3_t* b ) /* in radians */
+scaler_t vec2_angle( const vec2_t* a, const vec2_t* b ) /* in radians */
 {
-    scaler_t dot_product = vec3_dot_product( a, b );
-    scaler_t a_length    = vec3_magnitude( a );
-    scaler_t b_length    = vec3_magnitude( b );
+    scaler_t dot_product = vec2_dot_product( a, b );
+    scaler_t a_length    = vec2_magnitude( a );
+    scaler_t b_length    = vec2_magnitude( b );
 
 	#if defined(VEC3_USE_LONG_DOUBLE)
     return acosl( dot_product / ( a_length * b_length ) );
@@ -129,71 +120,62 @@ scaler_t vec3_angle( const vec3_t* a, const vec3_t* b ) /* in radians */
 	#endif
 }
 
-void vec3_normalize( vec3_t* v )
+void vec2_normalize( vec2_t* v )
 {
 	#if 0
-    scaler_t length = vec3_magnitude( v );
+    scaler_t length = vec2_magnitude( v );
     v->x /= length;
     v->y /= length;
-    v->z /= length;
 	#else
-    scaler_t inverse_length = fast_inverse_sqrt( v->x * v->x + v->y * v->y + v->z * v->z );
+    scaler_t inverse_length = fast_inverse_sqrt( v->x * v->x + v->y * v->y );
     v->x *= inverse_length;
     v->y *= inverse_length;
-    v->z *= inverse_length;
 	#endif
 }
 
-bool vec3_is_normalized( const vec3_t* v )
+bool vec2_is_normalized( const vec2_t* v )
 {
 	#if defined(VEC3_USE_LONG_DOUBLE)
     return (fabsl(v->x - 1.0) < SCALAR_EPSILON) &&
-           (fabsl(v->y - 1.0) < SCALAR_EPSILON) &&
-           (fabsl(v->z - 1.0) < SCALAR_EPSILON);
+           (fabsl(v->y - 1.0) < SCALAR_EPSILON);
 	#elif defined(VEC3_USE_DOUBLE)
     return (fabs(v->x - 1.0) < SCALAR_EPSILON) &&
-           (fabs(v->y - 1.0) < SCALAR_EPSILON) &&
-           (fabs(v->z - 1.0) < SCALAR_EPSILON);
+           (fabs(v->y - 1.0) < SCALAR_EPSILON);
 	#else /* default: use float */
     return (fabsf(v->x - 1.0f) < SCALAR_EPSILON) &&
-           (fabsf(v->y - 1.0f) < SCALAR_EPSILON) &&
-           (fabsf(v->z - 1.0f) < SCALAR_EPSILON);
+           (fabsf(v->y - 1.0f) < SCALAR_EPSILON);
 	#endif
 }
 
-void vec3_negate( vec3_t* v )
+void vec2_negate( vec2_t* v )
 {
     v->x = -v->x;
     v->y = -v->y;
-    v->z = -v->z;
 }
 
-bool vec3_compare( const vec3_t* a, const vec3_t* b )
+bool vec2_compare( const vec2_t* a, const vec2_t* b )
 {
 	#if defined(VEC3_USE_LONG_DOUBLE)
     return (fabsl(a->x - b->x) < SCALAR_EPSILON) &&
-           (fabsl(a->y - b->y) < SCALAR_EPSILON) &&
-           (fabsl(a->z - b->z) < SCALAR_EPSILON);
+           (fabsl(a->y - b->y) < SCALAR_EPSILON);
 	#elif defined(VEC3_USE_DOUBLE)
     return (fabs(a->x - b->x) < SCALAR_EPSILON) &&
-           (fabs(a->y - b->y) < SCALAR_EPSILON) &&
-           (fabs(a->z - b->z) < SCALAR_EPSILON);
+           (fabs(a->y - b->y) < SCALAR_EPSILON);
 	#else /* default: use float */
     return (fabsf(a->x - b->x) < SCALAR_EPSILON) &&
-           (fabsf(a->y - b->y) < SCALAR_EPSILON) &&
-           (fabsf(a->z - b->z) < SCALAR_EPSILON);
+           (fabsf(a->y - b->y) < SCALAR_EPSILON);
 	#endif
 }
 
-void vec3_zero( vec3_t* v )
+void vec2_zero( vec2_t* v )
 {
-	memset( v, 0, sizeof(vec3_t) );
+	memset( v, 0, sizeof(vec2_t) );
 }
 
-const char* vec3_to_string( const vec3_t* v ) /* not thread safe */
+const char* vec2_to_string( const vec2_t* v ) /* not thread safe */
 {
 	static char string_buffer[ 128 ];
-	snprintf( string_buffer, sizeof(string_buffer) - 1, "(%08.1f, %08.1f, %08.1f)", v->x, v->y, v->z );
+	snprintf( string_buffer, sizeof(string_buffer) - 1, "(%08.1f, %08.1f)", v->x, v->y );
 	string_buffer[ sizeof(string_buffer) - 1 ] = '\0';
 	return string_buffer;
 }
