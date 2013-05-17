@@ -79,13 +79,13 @@ extern "C" {
  * Two Dimensional Vectors
  */
 typedef struct vec2 {
-    union { /* allowed in C11 */
-        struct {
-            scaler_t x;
-            scaler_t y;
-        };
-        scaler_t v[ 2 ];
-    };
+	union { /* allowed in C11 */
+		struct {
+			scaler_t x;
+			scaler_t y;
+		};
+		scaler_t v[ 2 ];
+	};
 } vec2_t;
 
 extern const vec2_t VEC2_ZERO;
@@ -97,7 +97,8 @@ vec2_t      vec2_subtract      ( const vec2_t* a, const vec2_t* b );
 vec2_t      vec2_multiply      ( const vec2_t* v, scaler_t s );
 void        vec2_scale         ( vec2_t* v, scaler_t s );
 scaler_t    vec2_dot_product   ( const vec2_t* a, const vec2_t* b );
-vec2_t      vec2_cross_product ( const vec2_t* a, const vec2_t* b );
+vec2_t      vec2_cross_product ( const vec2_t* v );
+scaler_t    vec2_determinant   ( const vec2_t* a, const vec2_t* b );
 scaler_t    vec2_magnitude     ( const vec2_t* v );
 scaler_t    vec2_distance      ( const vec2_t* a, const vec2_t* b );
 scaler_t    vec2_angle         ( const vec2_t* a, const vec2_t* b ); /* in radians */
@@ -108,6 +109,7 @@ bool        vec2_compare       ( const vec2_t* a, const vec2_t* b );
 void        vec2_zero          ( vec2_t* v );
 const char* vec2_to_string     ( const vec2_t* v ); /* not thread safe */
 
+#define     vec2_area          vec2_determinant
 
 #ifdef __cplusplus
 } /* C linkage */

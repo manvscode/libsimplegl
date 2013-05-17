@@ -4,7 +4,29 @@
 
 static __inline void simplegl_shader_error  ( GLuint shader );
 static __inline void simplegl_program_error ( GLuint program );
+static char* shader_load( const char* path );
 
+GLboolean simplegl_program_from_shaders( GLuint* program, const shader_info_t* shaders, GLsizei count )
+{
+	shader_info_t* info;
+	GLuint shader_names[ count ]; /* VLAs in C99 */
+    GLsizei i;
+	GLboolean result = true;
+
+    for( i = 0; result && i < shader_count; i++ )
+    {
+		info = shaders[ i ];
+
+		const char* shader_source_code = shader_load( info->filename );
+
+		result = simplegl_shader_create_from_source( &shader_names[ i ], info->type, shader_source_code );
+		free( shader_source_code );
+    }
+
+	result = result && simplegl_program_create( program, shader_names, count, GLtrue /* delete shaders when program is deleted */ );
+
+	return result;
+}
 
 /*  Creates, compiles and links shader program.
  *
@@ -74,7 +96,7 @@ void simplegl_shader_error( GLuint shader )
     }
 }
 
-GLboolean simplegl_program_create( GLuint* program, GLuint *shaders, GLsizei shader_count )
+GLboolean simplegl_program_create( GLuint* program, GLuint *shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion )
 {
     GLuint p = glCreateProgram( );
     GLsizei i;
@@ -97,6 +119,19 @@ GLboolean simplegl_program_create( GLuint* program, GLuint *shaders, GLsizei sha
         #endif
         return GL_FALSE;
     }
+
+	if( mark_shaders_for_deletion )
+	{
+		/*
+		 *  Mark all of the attached shaders to be
+		 *  deleted when the program gets deleted
+		 *  with glDeleteProgram().
+		 */
+		for( i = 0; i < shader_count; i++ )
+		{
+			glDeleteShaders( shaders[ i ] );
+		}
+	}
 
     *program = p;
     return GL_TRUE;
@@ -130,4 +165,37 @@ void simplegl_program_error( GLuint program )
     {
         fprintf( stderr, "[Program %zu Error] unknown\n", program );
     }
+}
+
+char* shader_load( const char* path )
+{
+        FILE* file = fopen( path, "r" );
+        char* result = NULL;
+
+        if( file )
+        {
+                fseek( file, 0, SEEK_END );
+                size_t file_size = ftell( file ); /* TODO: what if size is 0 */
+                fseek( file, 0, SEEK_SET );
+
+                if( file_size > 0 )
+                {
+                        result = (char*) malloc( sizeof(char) * (file_size + 1) );
+
+                        if( result )
+                        {
+                                char* buffer = result;
+                                while( !feof( file ) )
+                                {
+                                        size_t bytes_read = fread( buffer, sizeof(char), file_size, file );
+                                        buffer += bytes_read;
+                                }
+                                buffer[ file_size + 1 ] = '\0';
+                        }
+                }
+
+                fclose( file );
+        }
+
+        return result;
 }

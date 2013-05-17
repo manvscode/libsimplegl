@@ -7,5 +7,5 @@ bin_PROGRAMS = \
 $(top_builddir)/bin/test-shaders
 
 __top_builddir__bin_test_shaders_SOURCES = test-shaders.c
-__top_builddir__bin_test_shaders_LDADD   = -lGL -lglut $(top_builddir)/lib/.libs/libsimplegl.a
+__top_builddir__bin_test_shaders_LDFLAGS = -lGL -lglut $(top_builddir)/lib/.libs/libsimplegl.a
 

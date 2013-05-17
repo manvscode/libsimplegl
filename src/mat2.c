@@ -57,7 +57,7 @@ scaler_t mat2_determinant( const mat2_t* m )
 	return m->m[ 0 ] * m->m[ 3 ] - m->m[ 1 ] * m->m[ 2 ];
 }
 
-const mat2_t mat2_mult_matrix( const mat2_t* __restrict a, const mat2_t* __restrict b )
+mat2_t mat2_mult_matrix( const mat2_t* __restrict a, const mat2_t* __restrict b )
 {
 	mat2_t result;
 	/*      a     b              result
@@ -72,7 +72,7 @@ const mat2_t mat2_mult_matrix( const mat2_t* __restrict a, const mat2_t* __restr
 	return result;
 }
 
-const vec2_t mat2_mult_vector( const mat2_t* __restrict m, const vec2_t* __restrict v )
+vec2_t mat2_mult_vector( const mat2_t* __restrict m, const vec2_t* __restrict v )
 {
     vec2_t result;
 

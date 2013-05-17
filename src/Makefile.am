@@ -10,5 +10,4 @@ library_include_HEADERS = $(libsimplegl_headers)
 # Library
 lib_LTLIBRARIES                            = $(top_builddir)/lib/libsimplegl.la
 __top_builddir__lib_libsimplegl_la_SOURCES = $(libsimplegl_src)
-__top_builddir__lib_libsimplegl_la_LIBADD  = -lGL -lm
-
+__top_builddir__lib_libsimplegl_la_LDFLAGS = -lGL -lGLU -lm -L/System/Library/Frameworks/OpenGL.framework/Libraries -framework GLUT -framework OpenGL

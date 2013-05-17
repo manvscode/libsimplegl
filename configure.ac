@@ -5,13 +5,13 @@ AM_SILENT_RULES([yes])
 AC_CONFIG_HEADERS([src/libsimplegl-config.h])
 
 AC_PROG_CC
-AC_PROG_CC_C99
 AC_PROG_CC_STDC
-#AC_PROG_CXX
+AC_PROG_CXX
 AC_C_INLINE
 AC_HEADER_STDC
 #AC_LANG([C++])
 #AX_CXX_COMPILE_STDCXX_11 # C++11 support
+AC_PROG_RANLIB
 
 
 AH_TOP([
@@ -27,11 +27,13 @@ AC_C_BIGENDIAN
 
 DFLAGS="-D SIMPLEGL_DEBUG"
 
-CFLAGS="-Wall -g -ggdb -O0 $DFLAGS -I/usr/include -I/usr/local/include -I/usr/include -lm -lGL"
+CFLAGS="-Wall -g -ggdb -O0 $DFLAGS -I/usr/include -I/usr/local/include -I/usr/include"
 #CXXFLAGS="-Wall -g -ggdb -O0 $DFLAGS -I/usr/include -I/usr/local/include -I/usr/include"
-LDFLAGS=""
+#LDFLAGS="-lGL -lGLU -lm"
+#LDFLAGS="$LDFLAGS -L/System/Library/Frameworks/OpenGL.framework/Libraries -framework GLUT -framework OpenGL"
 
 
+AC_CHECK_HEADERS([float.h])
 AC_CHECK_HEADERS([math.h])
 AC_CHECK_HEADERS([limits.h])
 AC_CHECK_FUNCS([floor])
@@ -53,6 +55,7 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
 
+AM_PROG_AR
 LT_INIT([shared static])
 
 AC_PROG_LIBTOOL

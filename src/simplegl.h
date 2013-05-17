@@ -43,16 +43,27 @@ extern "C" {
     #endif
 #endif
 
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
 #include <GL/gl.h>
+#endif
 
 
 
 /*
  * Shaders
  */
+
+typedef struct shader_info {
+	GLenum type;
+	char*  filename;
+} shader_info_t;
+
+GLboolean     simplegl_program_from_shaders      ( GLuint* program, const shader_info_t* shaders, GLsizei count );
 GLboolean     simplegl_shader_create_from_source ( GLuint* shader, GLenum type, const GLchar* source );
 const GLchar* simplegl_shader_log                ( GLuint shader );
-GLboolean     simplegl_program_create            ( GLuint* program, GLuint *shaders, GLsizei shader_count );
+GLboolean     simplegl_program_create            ( GLuint* program, GLuint *shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion );
 const GLchar* simplegl_program_log               ( GLuint program );
 
 #ifdef __cplusplus

@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <GL/gl.h>
 #include <vec2.h>
 #include <vec3.h>
 #include <mat2.h>
 #include <mat3.h>
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
 
 int main( int argc, char* argv[] )
 {

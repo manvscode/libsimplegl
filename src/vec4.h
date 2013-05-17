@@ -79,15 +79,15 @@ extern "C" {
  * Four Dimensional Vectors
  */
 typedef struct vec4 {
-    union { /* allowed in C11 */
-        struct {
+    //union { /* allowed in C11 */
+        //struct {
             scaler_t x;
             scaler_t y;
             scaler_t z;
             scaler_t w;
-        };
-        scaler_t v[ 4 ];
-    };
+        //};
+        //scaler_t v[ 4 ];
+    //};
 } vec4_t;
 
 extern const vec4_t VEC4_ZERO;

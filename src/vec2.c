@@ -66,12 +66,19 @@ scaler_t vec2_dot_product( const vec2_t* a, const vec2_t* b )
     return a->x * b->x + a->y * b->y;
 }
 
-vec2_t vec2_cross_product( const vec2_t* a, const vec2_t* b )
+vec2_t vec2_cross_product( const vec2_t* v )
 {
     vec2_t result;
-    //result.x = a->y * b->z - a->z * b->y;
-    //result.y = a->z * b->x - a->x * b->z;
+
+    result.x = v->y;
+    result.y = -v->x;
+
     return result;
+}
+
+scaler_t vec2_determinant( const vec2_t* a, const vec2_t* b )
+{
+    return a->x * b->y - b->x * a->y;
 }
 
 scaler_t vec2_magnitude( const vec2_t* v )
