@@ -88,9 +88,15 @@ typedef struct vec2 {
 	};
 } vec2_t;
 
+
 extern const vec2_t VEC2_ZERO;
 extern const vec2_t VEC2_XUNIT;
 extern const vec2_t VEC2_YUNIT;
+
+/* |a|
+ * |b|
+ */
+#define VEC2_VECTOR(a,b)  { .v = { a, b } }
 
 vec2_t      vec2_add           ( const vec2_t* a, const vec2_t* b );
 vec2_t      vec2_subtract      ( const vec2_t* a, const vec2_t* b );

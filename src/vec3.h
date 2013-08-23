@@ -94,6 +94,12 @@ extern const vec3_t VEC3_XUNIT;
 extern const vec3_t VEC3_YUNIT;
 extern const vec3_t VEC3_ZUNIT;
 
+/* |a|
+ * |b|
+ * |c|
+ */
+#define VEC3_VECTOR(a,b,c)  { .v = { a, b, c } }
+
 vec3_t      vec3_add           ( const vec3_t* a, const vec3_t* b );
 vec3_t      vec3_subtract      ( const vec3_t* a, const vec3_t* b );
 vec3_t      vec3_multiply      ( const vec3_t* v, scaler_t s );

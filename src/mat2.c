@@ -82,29 +82,37 @@ vec2_t mat2_mult_vector( const mat2_t* __restrict m, const vec2_t* __restrict v 
     return result;
 }
 
-void mat2_invert( mat2_t* m )
+bool mat2_invert( mat2_t* m )
 {
 	/* inv(A) = (1/det(A)) * transpose( cofactors(A) ) */
 
 	scaler_t det = mat2_determinant( m );
 
-	/* |a  c|  cofactors and transpose  | d  -b|
-     * |b  d|  ---------------------->  |-c   a|
-     */
-	{
-		scaler_t tmp = m->m[ 0 ];
-		m->m[ 0 ] = m->m[ 3 ];
-		m->m[ 3 ] = tmp;
 
-		tmp = m->m[ 1 ];
-		m->m[ 1 ] = -m->m[ 2 ];
-		m->m[ 2 ] = -tmp;
+	if( det > SCALAR_EPSILON ) // testing if not zero
+	{
+		/* |a  c|  cofactors and transpose  | d  -b|
+		 * |b  d|  ---------------------->  |-c   a|
+		 */
+		{
+			scaler_t tmp = m->m[ 0 ];
+			m->m[ 0 ] = m->m[ 3 ];
+			m->m[ 3 ] = tmp;
+
+			tmp = m->m[ 1 ];
+			m->m[ 1 ] = -m->m[ 2 ];
+			m->m[ 2 ] = -tmp;
+		}
+
+		m->m[ 0 ] /= det;
+		m->m[ 1 ] /= det;
+		m->m[ 2 ] /= det;
+		m->m[ 3 ] /= det;
+
+		return true;
 	}
 
-	m->m[ 0 ] /= det;
-	m->m[ 1 ] /= det;
-	m->m[ 2 ] /= det;
-	m->m[ 3 ] /= det;
+	return false;
 }
 
 void mat2_transpose( mat2_t* m )

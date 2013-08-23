@@ -96,6 +96,13 @@ extern const vec4_t VEC4_YUNIT;
 extern const vec4_t VEC4_ZUNIT;
 extern const vec4_t VEC4_WUNIT;
 
+/* |a|
+ * |b|
+ * |c|
+ * |d|
+ */
+#define VEC4_VECTOR(a,b,c)  { .v = { a, b, c, d } }
+
 vec4_t      vec4_add            ( const vec4_t* a, const vec4_t* b );
 vec4_t      vec4_subtract       ( const vec4_t* a, const vec4_t* b );
 vec4_t      vec4_multiply       ( const vec4_t* v, scaler_t s );

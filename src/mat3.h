@@ -95,13 +95,20 @@ typedef struct mat3 {
 extern const mat3_t MAT3_IDENITY;
 extern const mat3_t MAT3_ZERO;
 
+/* |a d g|
+ * |b e h|
+ * |c f i|
+ */
+#define MAT3_MATRIX(a,b,c,d,e,f,g,h,i)  { .m = { a, b, c, d, e, f, g, h, i } }
+
 void          mat3_identity    ( mat3_t* m );
 void          mat3_zero        ( mat3_t* m );
 scaler_t      mat3_determinant ( const mat3_t* m );
-const mat3_t  mat3_mult_matrix ( const mat3_t* __restrict a, const mat3_t* __restrict b );
-const vec3_t  mat3_mult_vector ( const mat3_t* __restrict m, const vec3_t* __restrict v );
-void          mat3_invert      ( mat3_t* m );
+mat3_t        mat3_mult_matrix ( const mat3_t* __restrict a, const mat3_t* __restrict b );
+vec3_t        mat3_mult_vector ( const mat3_t* __restrict m, const vec3_t* __restrict v );
+bool          mat3_invert      ( mat3_t* m );
 void          mat3_transpose   ( mat3_t* m );
+mat3_t        mat3_cofactor    ( mat3_t* m );
 void          mat3_adjoint     ( mat3_t* m );
 const char*   mat3_to_string   ( const mat3_t* m );
 

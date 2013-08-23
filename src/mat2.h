@@ -105,7 +105,7 @@ void          mat2_zero        ( mat2_t* m );
 scaler_t      mat2_determinant ( const mat2_t* m );
 mat2_t        mat2_mult_matrix ( const mat2_t* __restrict a, const mat2_t* __restrict b );
 vec2_t        mat2_mult_vector ( const mat2_t* __restrict m, const vec2_t* __restrict v );
-void          mat2_invert      ( mat2_t* m );
+bool          mat2_invert      ( mat2_t* m );
 void          mat2_transpose   ( mat2_t* m );
 const char*   mat2_to_string   ( const mat2_t* m );
 
