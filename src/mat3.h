@@ -82,14 +82,7 @@ extern "C" {
  * Three Dimensional Matrices
  */
 typedef struct mat3 {
-    union { 
-        struct {
-            vec3_t x;
-            vec3_t y;
-            vec3_t z;
-        };
-        scaler_t m[ 9 ];
-    };
+    scaler_t m[ 9 ];
 } mat3_t;
 
 extern const mat3_t MAT3_IDENITY;
@@ -112,9 +105,9 @@ mat3_t        mat3_cofactor    ( mat3_t* m );
 void          mat3_adjoint     ( mat3_t* m );
 const char*   mat3_to_string   ( const mat3_t* m );
 
-#define mat3_x_vector( p_m )   ((vec3_t*) &(p_m)->x)
-#define mat3_y_vector( p_m )   ((vec3_t*) &(p_m)->y)
-#define mat3_z_vector( p_m )   ((vec3_t*) &(p_m)->z)
+#define mat3_x_vector( p_m )   ((vec3_t*) &(p_m)->m[0])
+#define mat3_y_vector( p_m )   ((vec3_t*) &(p_m)->m[3])
+#define mat3_z_vector( p_m )   ((vec3_t*) &(p_m)->m[6])
 
 
 #ifdef __cplusplus

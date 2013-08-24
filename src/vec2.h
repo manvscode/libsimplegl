@@ -79,13 +79,8 @@ extern "C" {
  * Two Dimensional Vectors
  */
 typedef struct vec2 {
-	union { /* allowed in C11 */
-		struct {
-			scaler_t x;
-			scaler_t y;
-		};
-		scaler_t v[ 2 ];
-	};
+	scaler_t x;
+	scaler_t y;
 } vec2_t;
 
 
@@ -96,7 +91,7 @@ extern const vec2_t VEC2_YUNIT;
 /* |a|
  * |b|
  */
-#define VEC2_VECTOR(a,b)  { .v = { a, b } }
+#define VEC2_VECTOR(a,b)  { .x = a, .y = b }
 
 vec2_t      vec2_add           ( const vec2_t* a, const vec2_t* b );
 vec2_t      vec2_subtract      ( const vec2_t* a, const vec2_t* b );

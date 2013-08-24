@@ -79,14 +79,9 @@ extern "C" {
  * Three Dimensional Vectors
  */
 typedef struct vec3 {
-    union { /* allowed in C11 */
-        struct {
-            scaler_t x;
-            scaler_t y;
-            scaler_t z;
-        };
-        scaler_t v[ 3 ];
-    };
+	scaler_t x;
+	scaler_t y;
+	scaler_t z;
 } vec3_t;
 
 extern const vec3_t VEC3_ZERO;
@@ -98,7 +93,7 @@ extern const vec3_t VEC3_ZUNIT;
  * |b|
  * |c|
  */
-#define VEC3_VECTOR(a,b,c)  { .v = { a, b, c } }
+#define VEC3_VECTOR(a,b,c)  { .x = a, .y = b, .z = c }
 
 vec3_t      vec3_add           ( const vec3_t* a, const vec3_t* b );
 vec3_t      vec3_subtract      ( const vec3_t* a, const vec3_t* b );

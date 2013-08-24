@@ -79,15 +79,10 @@ extern "C" {
  * Four Dimensional Vectors
  */
 typedef struct vec4 {
-    //union { /* allowed in C11 */
-        //struct {
-            scaler_t x;
-            scaler_t y;
-            scaler_t z;
-            scaler_t w;
-        //};
-        //scaler_t v[ 4 ];
-    //};
+	scaler_t x;
+	scaler_t y;
+	scaler_t z;
+	scaler_t w;
 } vec4_t;
 
 extern const vec4_t VEC4_ZERO;
@@ -101,7 +96,7 @@ extern const vec4_t VEC4_WUNIT;
  * |c|
  * |d|
  */
-#define VEC4_VECTOR(a,b,c)  { .v = { a, b, c, d } }
+#define VEC4_VECTOR(a,b,c,d)  { .x = a, .y = b, .z = c, .w = d }
 
 vec4_t      vec4_add            ( const vec4_t* a, const vec4_t* b );
 vec4_t      vec4_subtract       ( const vec4_t* a, const vec4_t* b );

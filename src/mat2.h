@@ -82,13 +82,7 @@ extern "C" {
  * Two Dimensional Matrices
  */
 typedef struct mat2 {
-    union { 
-        struct {
-            vec2_t x;
-            vec2_t y;
-        };
-        scaler_t m[ 4 ];
-    };
+    scaler_t m[ 4 ];
 } mat2_t;
 
 extern const mat2_t MAT2_IDENITY;
@@ -109,8 +103,8 @@ bool          mat2_invert      ( mat2_t* m );
 void          mat2_transpose   ( mat2_t* m );
 const char*   mat2_to_string   ( const mat2_t* m );
 
-#define mat2_x_vector( p_m )   ((vec2_t*) &(p_m)->x)
-#define mat2_y_vector( p_m )   ((vec2_t*) &(p_m)->y)
+#define mat2_x_vector( p_m )   ((vec2_t*) &(p_m)->m[0])
+#define mat2_y_vector( p_m )   ((vec2_t*) &(p_m)->m[2])
 
 
 #ifdef __cplusplus
