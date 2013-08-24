@@ -50,8 +50,13 @@ void mat4_zero( mat4_t* m )
 
 scaler_t mat4_determinant( const mat4_t* m )
 {
-	// TODO: implement this!
-	return 0.0f;
+	// d1, d2, d3, and d4 are the determinants of the sub-matrices
+	scaler_t d1 = m->m[5] * (m->m[10] * m->m[15] - m->m[14] * m->m[11]) - m->m[6] * (m->m[9] * m->m[15] - m->m[13] * m->m[11]) + m->m[7] * (m->m[9] * m->m[14] - m->m[13] * m->m[10]);
+	scaler_t d2 = m->m[4] * (m->m[10] * m->m[15] - m->m[14] * m->m[11]) - m->m[6] * (m->m[8] * m->m[15] - m->m[12] * m->m[11]) + m->m[7] * (m->m[8] * m->m[14] - m->m[12] * m->m[10]);
+	scaler_t d3 = m->m[4] * (m->m[9] * m->m[15] - m->m[13] * m->m[11]) - m->m[5] * (m->m[8] * m->m[15] - m->m[12] * m->m[11]) + m->m[7] * (m->m[8] * m->m[13] - m->m[12] * m->m[9]);
+	scaler_t d4 = m->m[4] * (m->m[9] * m->m[14] - m->m[13] * m->m[10]) - m->m[5] * (m->m[8] * m->m[14] - m->m[12] * m->m[10]) + m->m[6] * (m->m[8] * m->m[13] - m->m[12] * m->m[9]);
+
+	return m->m[0]*d1 - m->m[1]*d2 + m->m[2]*d3 - m->m[3]*d4;
 }
 
 mat4_t mat4_mult_matrix( const mat4_t* __restrict a, const mat4_t* __restrict b )
@@ -105,8 +110,7 @@ vec4_t mat4_mult_vector( const mat4_t* __restrict m, const vec4_t* __restrict v 
 
 bool mat4_invert( mat4_t* m )
 {
-    assert( false );
-
+	#if 0
 	scaler_t det = mat4_determinant( m );
 
 	if( det > SCALAR_EPSILON ) // testing if not zero
@@ -134,6 +138,58 @@ bool mat4_invert( mat4_t* m )
 	}
 
 	return false;
+	#else
+	scaler_t d1 = m->m[5] * (m->m[10] * m->m[15] - m->m[14] * m->m[11]) - m->m[6] * (m->m[9] * m->m[15] - m->m[13] * m->m[11]) + m->m[7] * (m->m[9] * m->m[14] - m->m[13] * m->m[10]);
+	scaler_t d2 = m->m[4] * (m->m[10] * m->m[15] - m->m[14] * m->m[11]) - m->m[6] * (m->m[8] * m->m[15] - m->m[12] * m->m[11]) + m->m[7] * (m->m[8] * m->m[14] - m->m[12] * m->m[10]);
+	scaler_t d3 = m->m[4] * (m->m[9] * m->m[15] - m->m[13] * m->m[11]) - m->m[5] * (m->m[8] * m->m[15] - m->m[12] * m->m[11]) + m->m[7] * (m->m[8] * m->m[13] - m->m[12] * m->m[9]);
+	scaler_t d4 = m->m[4] * (m->m[9] * m->m[14] - m->m[13] * m->m[10]) - m->m[5] * (m->m[8] * m->m[14] - m->m[12] * m->m[10]) + m->m[6] * (m->m[8] * m->m[13] - m->m[12] * m->m[9]);
+	scaler_t det = m->m[0]*d1 - m->m[1]*d2 + m->m[2]*d3 - m->m[3]*d4;
+
+	if( det > SCALAR_EPSILON ) // testing if not zero
+	{
+		mat4_t cofactor_matrix;
+		cofactor_matrix.m[ 0] = +(d1);
+		cofactor_matrix.m[ 1] = -(d2);
+		cofactor_matrix.m[ 2] = +(d3);
+		cofactor_matrix.m[ 3] = -(d4);
+		cofactor_matrix.m[ 4] = -(m->m[1] * (m->m[10]*m->m[15]-m->m[14]*m->m[11]) - m->m[2] * (m->m[9]*m->m[15]-m->m[13]*m->m[11]) + m->m[3] * (m->m[9]*m->m[14]-m->m[13]*m->m[10]));
+		cofactor_matrix.m[ 5] = +(m->m[0] * (m->m[10]*m->m[15]-m->m[14]*m->m[11]) - m->m[2] * (m->m[8]*m->m[15]-m->m[12]*m->m[11]) + m->m[3] * (m->m[8]*m->m[14]-m->m[12]*m->m[10]));
+		cofactor_matrix.m[ 6] = -(m->m[0] * (m->m[9]*m->m[15]-m->m[13]*m->m[11]) - m->m[1] * (m->m[8]*m->m[15]-m->m[12]*m->m[11]) + m->m[3] * (m->m[8]*m->m[13]-m->m[12]*m->m[9]));
+		cofactor_matrix.m[ 7] = +(m->m[0] * (m->m[9]*m->m[14]-m->m[13]*m->m[10]) - m->m[1] * (m->m[8]*m->m[14]-m->m[12]*m->m[10]) + m->m[2] * (m->m[8]*m->m[13]-m->m[12]*m->m[9]));
+		cofactor_matrix.m[ 8] = +(m->m[1] * (m->m[6]*m->m[15]-m->m[14]*m->m[7]) - m->m[2] * (m->m[5]*m->m[15]-m->m[13]*m->m[7]) + m->m[3] * (m->m[5]*m->m[14]-m->m[13]*m->m[6]));
+		cofactor_matrix.m[ 9] = -(m->m[0] * (m->m[6]*m->m[15]-m->m[14]*m->m[7]) - m->m[2] * (m->m[4]*m->m[15]-m->m[12]*m->m[7]) + m->m[3] * (m->m[4]*m->m[14]-m->m[12]*m->m[6]));
+		cofactor_matrix.m[10] = +(m->m[0] * (m->m[5]*m->m[15]-m->m[13]*m->m[7]) - m->m[1] * (m->m[4]*m->m[15]-m->m[12]*m->m[7]) + m->m[3] * (m->m[4]*m->m[13]-m->m[12]*m->m[5]));
+		cofactor_matrix.m[11] = -(m->m[0] * (m->m[5]*m->m[14]-m->m[13]*m->m[6]) - m->m[1] * (m->m[4]*m->m[14]-m->m[12]*m->m[6]) + m->m[2] * (m->m[4]*m->m[13]-m->m[12]*m->m[5]));
+		cofactor_matrix.m[12] = -(m->m[1] * (m->m[6]*m->m[11]-m->m[10]*m->m[7]) - m->m[2] * (m->m[5]*m->m[11]-m->m[9]*m->m[7]) + m->m[3] * (m->m[5]*m->m[10]-m->m[9]*m->m[6]));
+		cofactor_matrix.m[13] = +(m->m[0] * (m->m[6]*m->m[11]-m->m[10]*m->m[7]) - m->m[2] * (m->m[4]*m->m[11]-m->m[8]*m->m[7]) + m->m[3] * (m->m[4]*m->m[10]-m->m[8]*m->m[6]));
+		cofactor_matrix.m[14] = -(m->m[0] * (m->m[5]*m->m[11]-m->m[9]*m->m[7]) - m->m[1] * (m->m[4]*m->m[11]-m->m[8]*m->m[7]) + m->m[3] * (m->m[4]*m->m[9]-m->m[8]*m->m[5]));
+		cofactor_matrix.m[15] = +(m->m[0] * (m->m[5]*m->m[10]-m->m[9]*m->m[6]) - m->m[1] * (m->m[4]*m->m[10]-m->m[8]*m->m[6]) + m->m[2] * (m->m[4]*m->m[9]-m->m[8]*m->m[5]));
+
+		mat4_transpose( &cofactor_matrix );
+		*m = cofactor_matrix;
+
+		m->m[ 0] /= det;
+		m->m[ 1] /= det;
+		m->m[ 2] /= det;
+		m->m[ 3] /= det;
+		m->m[ 4] /= det;
+		m->m[ 5] /= det;
+		m->m[ 6] /= det;
+		m->m[ 7] /= det;
+		m->m[ 8] /= det;
+		m->m[ 9] /= det;
+		m->m[10] /= det;
+		m->m[11] /= det;
+		m->m[12] /= det;
+		m->m[13] /= det;
+		m->m[14] /= det;
+		m->m[15] /= det;
+
+		return true;
+	}
+
+	return false;
+	#endif
 }
 
 void mat4_transpose( mat4_t* m )
@@ -175,7 +231,22 @@ mat4_t mat4_cofactor( mat4_t* m )
 	// | m02 m06 m10 m14 |
 	// | m03 m07 m11 m15 |
 
-	// TODO: implement this!
+	cofactor.m[ 0] = +(m->m[5] * (m->m[10] * m->m[15] - m->m[14] * m->m[11]) - m->m[6] * (m->m[9] * m->m[15] - m->m[13] * m->m[11]) + m->m[7] * (m->m[9] * m->m[14] - m->m[13] * m->m[10]));
+	cofactor.m[ 1] = -(m->m[4] * (m->m[10] * m->m[15] - m->m[14] * m->m[11]) - m->m[6] * (m->m[8] * m->m[15] - m->m[12] * m->m[11]) + m->m[7] * (m->m[8] * m->m[14] - m->m[12] * m->m[10]));
+	cofactor.m[ 2] = +(m->m[4] * (m->m[9] * m->m[15] - m->m[13] * m->m[11]) - m->m[5] * (m->m[8] * m->m[15] - m->m[12] * m->m[11]) + m->m[7] * (m->m[8] * m->m[13] - m->m[12] * m->m[9]));
+	cofactor.m[ 3] = -(m->m[4] * (m->m[9] * m->m[14] - m->m[13] * m->m[10]) - m->m[5] * (m->m[8] * m->m[14] - m->m[12] * m->m[10]) + m->m[6] * (m->m[8] * m->m[13] - m->m[12] * m->m[9]));
+	cofactor.m[ 4] = -(m->m[1] * (m->m[10]*m->m[15]-m->m[14]*m->m[11]) - m->m[2] * (m->m[9]*m->m[15]-m->m[13]*m->m[11]) + m->m[3] * (m->m[9]*m->m[14]-m->m[13]*m->m[10]));
+	cofactor.m[ 5] = +(m->m[0] * (m->m[10]*m->m[15]-m->m[14]*m->m[11]) - m->m[2] * (m->m[8]*m->m[15]-m->m[12]*m->m[11]) + m->m[3] * (m->m[8]*m->m[14]-m->m[12]*m->m[10]));
+	cofactor.m[ 6] = -(m->m[0] * (m->m[9]*m->m[15]-m->m[13]*m->m[11]) - m->m[1] * (m->m[8]*m->m[15]-m->m[12]*m->m[11]) + m->m[3] * (m->m[8]*m->m[13]-m->m[12]*m->m[9]));
+	cofactor.m[ 7] = +(m->m[0] * (m->m[9]*m->m[14]-m->m[13]*m->m[10]) - m->m[1] * (m->m[8]*m->m[14]-m->m[12]*m->m[10]) + m->m[2] * (m->m[8]*m->m[13]-m->m[12]*m->m[9]));
+	cofactor.m[ 8] = +(m->m[1] * (m->m[6]*m->m[15]-m->m[14]*m->m[7]) - m->m[2] * (m->m[5]*m->m[15]-m->m[13]*m->m[7]) + m->m[3] * (m->m[5]*m->m[14]-m->m[13]*m->m[6]));
+	cofactor.m[ 9] = -(m->m[0] * (m->m[6]*m->m[15]-m->m[14]*m->m[7]) - m->m[2] * (m->m[4]*m->m[15]-m->m[12]*m->m[7]) + m->m[3] * (m->m[4]*m->m[14]-m->m[12]*m->m[6]));
+	cofactor.m[10] = +(m->m[0] * (m->m[5]*m->m[15]-m->m[13]*m->m[7]) - m->m[1] * (m->m[4]*m->m[15]-m->m[12]*m->m[7]) + m->m[3] * (m->m[4]*m->m[13]-m->m[12]*m->m[5]));
+	cofactor.m[11] = -(m->m[0] * (m->m[5]*m->m[14]-m->m[13]*m->m[6]) - m->m[1] * (m->m[4]*m->m[14]-m->m[12]*m->m[6]) + m->m[2] * (m->m[4]*m->m[13]-m->m[12]*m->m[5]));
+	cofactor.m[12] = -(m->m[1] * (m->m[6]*m->m[11]-m->m[10]*m->m[7]) - m->m[2] * (m->m[5]*m->m[11]-m->m[9]*m->m[7]) + m->m[3] * (m->m[5]*m->m[10]-m->m[9]*m->m[6]));
+	cofactor.m[13] = +(m->m[0] * (m->m[6]*m->m[11]-m->m[10]*m->m[7]) - m->m[2] * (m->m[4]*m->m[11]-m->m[8]*m->m[7]) + m->m[3] * (m->m[4]*m->m[10]-m->m[8]*m->m[6]));
+	cofactor.m[14] = -(m->m[0] * (m->m[5]*m->m[11]-m->m[9]*m->m[7]) - m->m[1] * (m->m[4]*m->m[11]-m->m[8]*m->m[7]) + m->m[3] * (m->m[4]*m->m[9]-m->m[8]*m->m[5]));
+	cofactor.m[15] = +(m->m[0] * (m->m[5]*m->m[10]-m->m[9]*m->m[6]) - m->m[1] * (m->m[4]*m->m[10]-m->m[8]*m->m[6]) + m->m[2] * (m->m[4]*m->m[9]-m->m[8]*m->m[5]));
 
 	return cofactor;
 }
