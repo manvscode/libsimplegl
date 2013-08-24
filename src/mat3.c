@@ -90,9 +90,9 @@ vec3_t mat3_mult_vector( const mat3_t* __restrict m, const vec3_t* __restrict v 
 	// |m0x + m1y + m2z|   | m0 m3 m6 |    |x|
 	// |m3x + m4y + m5z| = | m1 m4 m7 | *  |y|
 	// |m6x + m7y + m8z| = | m2 m5 m8 |    |z|
-	result.x = m->m[ 0 ] * v->x + m->m[ 3 ] * v->y + m->m[ 6 ] * v->z;
-	result.y = m->m[ 1 ] * v->x + m->m[ 4 ] * v->y + m->m[ 7 ] * v->z;
-	result.z = m->m[ 2 ] * v->x + m->m[ 5 ] * v->y + m->m[ 8 ] * v->z;
+	result.x = m->m[ 0 ] * v->x  +  m->m[ 3 ] * v->y  +  m->m[ 6 ] * v->z;
+	result.y = m->m[ 1 ] * v->x  +  m->m[ 4 ] * v->y  +  m->m[ 7 ] * v->z;
+	result.z = m->m[ 2 ] * v->x  +  m->m[ 5 ] * v->y  +  m->m[ 8 ] * v->z;
 
     return result;
 }
@@ -174,9 +174,9 @@ const char* mat3_to_string( const mat3_t* m )
 {
 	static char string_buffer[ 128 ];
 	snprintf( string_buffer, sizeof(string_buffer) - 1,
-		"|%-6.1f %-6.1f %6.1f|\n"
-		"|%-6.1f %-6.1f %6.1f|\n"
-		"|%-6.1f %-6.1f %6.1f|\n",
+		"|%-5.1f %-5.1f %-5.1f|\n"
+		"|%-5.1f %-5.1f %-5.1f|\n"
+		"|%-5.1f %-5.1f %-5.1f|\n",
 		m->m[0], m->m[3], m->m[6],
 		m->m[1], m->m[4], m->m[7],
 		m->m[2], m->m[5], m->m[8]

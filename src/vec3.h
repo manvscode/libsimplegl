@@ -84,6 +84,8 @@ typedef struct vec3 {
 	scaler_t z;
 } vec3_t;
 
+typedef vec3_t pt3_t;
+
 extern const vec3_t VEC3_ZERO;
 extern const vec3_t VEC3_XUNIT;
 extern const vec3_t VEC3_YUNIT;

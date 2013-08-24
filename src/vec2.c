@@ -176,7 +176,7 @@ bool vec2_compare( const vec2_t* a, const vec2_t* b )
 
 void vec2_zero( vec2_t* v )
 {
-	memset( v, 0, sizeof(vec2_t) );
+	*v = VEC2_ZERO;
 }
 
 const char* vec2_to_string( const vec2_t* v ) /* not thread safe */

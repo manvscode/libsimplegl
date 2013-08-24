@@ -1,8 +1,8 @@
 # Add new files in alphabetical order. Thanks.
-libsimplegl_src = vec2.c vec3.c vec4.c mat2.c mat3.c
+libsimplegl_src = vec2.c vec3.c vec4.c mat2.c mat3.c mat4.c
 
 # Add new files in alphabetical order. Thanks.
-libsimplegl_headers = vec2.h vec3.h vec4.h mat2.h mat3.h
+libsimplegl_headers = vec2.h vec3.h vec4.h mat2.h mat3.h mat4.h
 
 library_includedir      = $(includedir)/libsimplegl/
 library_include_HEADERS = $(libsimplegl_headers)

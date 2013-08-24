@@ -83,6 +83,7 @@ typedef struct vec2 {
 	scaler_t y;
 } vec2_t;
 
+typedef vec2_t pt2_t;
 
 extern const vec2_t VEC2_ZERO;
 extern const vec2_t VEC2_XUNIT;

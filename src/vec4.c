@@ -205,7 +205,7 @@ bool vec4_compare( const vec4_t* a, const vec4_t* b )
 
 void vec4_zero( vec4_t* v )
 {
-	memset( v, 0, sizeof(vec4_t) );
+	*v = VEC4_ZERO;
 }
 
 const char* vec4_to_string( const vec4_t* v ) /* not thread safe */

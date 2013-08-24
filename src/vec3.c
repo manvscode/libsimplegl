@@ -187,7 +187,7 @@ bool vec3_compare( const vec3_t* a, const vec3_t* b )
 
 void vec3_zero( vec3_t* v )
 {
-	memset( v, 0, sizeof(vec3_t) );
+	*v = VEC3_ZERO;
 }
 
 const char* vec3_to_string( const vec3_t* v ) /* not thread safe */
