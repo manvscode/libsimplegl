@@ -43,10 +43,16 @@ extern "C" {
     #endif
 #endif
 
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
+
+/*
+ * Always include OpenGL and GLU headers
+ */
+#if __APPLE__
+#include <OpenGL/gl3.h>
+#include <OpenGL/glu.h>
 #else
 #include <GL/gl.h>
+#include <GL/glu.h>
 #endif
 
 #include <vec2.h>
@@ -83,6 +89,14 @@ extern "C" {
 	#endif
 #endif
 
+/*
+ * Texturing
+ */
+GLuint tex2d_create      ( void );
+void   tex2d_destroy     ( GLint texture );
+bool   tex2d_load        ( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, bool clamp );
+bool   tex2d_load_for_2d ( GLuint texture, const char* filename );
+bool   tex2d_load_for_3d ( GLuint texture, const char* filename, bool clamp );
 
 
 /*
@@ -93,10 +107,10 @@ typedef struct shader_info {
 	char*  filename;
 } shader_info_t;
 
-GLboolean     simplegl_program_from_shaders      ( GLuint* program, const shader_info_t* shaders, GLsizei count );
-GLboolean     simplegl_shader_create_from_source ( GLuint* shader, GLenum type, const GLchar* source );
+GLboolean     simplegl_program_from_shaders      ( GLuint* p_program, const shader_info_t* shaders, GLsizei count );
+GLboolean     simplegl_shader_create_from_source ( GLuint* p_shader, GLenum type, const GLchar* source );
 const GLchar* simplegl_shader_log                ( GLuint shader );
-GLboolean     simplegl_program_create            ( GLuint* program, GLuint *shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion );
+GLboolean     simplegl_program_create            ( GLuint* p_program, GLuint *p_shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion );
 const GLchar* simplegl_program_log               ( GLuint program );
 
 #ifdef __cplusplus
