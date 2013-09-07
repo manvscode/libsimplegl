@@ -43,6 +43,9 @@ extern "C" {
     #endif
 #endif
 
+#ifndef GL_GLEXT_PROTOTYPES
+#define GL_GLEXT_PROTOTYPES
+#endif
 
 /*
  * Always include OpenGL and GLU headers
@@ -93,7 +96,7 @@ extern "C" {
  * Texturing
  */
 GLuint tex2d_create      ( void );
-void   tex2d_destroy     ( GLint texture );
+void   tex2d_destroy     ( GLuint texture );
 bool   tex2d_load        ( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, bool clamp );
 bool   tex2d_load_for_2d ( GLuint texture, const char* filename );
 bool   tex2d_load_for_3d ( GLuint texture, const char* filename, bool clamp );

@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include "simplegl.h"
 
@@ -7,24 +9,24 @@ static char* shader_load( const char* path );
 
 GLboolean simplegl_program_from_shaders( GLuint* p_program, const shader_info_t* shaders, GLsizei count )
 {
-	shader_info_t* info;
+	const shader_info_t* info;
 	GLuint shader_names[ count ]; /* VLAs in C99 */
     GLsizei i;
 	GLboolean result = true;
 
 	assert( p_program && shaders );
 
-    for( i = 0; result && i < shader_count; i++ )
+    for( i = 0; result && i < count; i++ )
     {
-		info = shaders[ i ];
+		info = &shaders[ i ];
 
 		const char* shader_source_code = shader_load( info->filename );
 
 		result = simplegl_shader_create_from_source( &shader_names[ i ], info->type, shader_source_code );
-		free( shader_source_code );
+		free( (char*) shader_source_code );
     }
 
-	result = result && simplegl_program_create( p_program, shader_names, count, GLtrue /* delete shaders when program is deleted */ );
+	result = result && simplegl_program_create( p_program, shader_names, count, GL_TRUE /* delete shaders when program is deleted */ );
 
 	return result;
 }
@@ -47,12 +49,12 @@ GLboolean simplegl_shader_create_from_source( GLuint* p_shader, GLenum type, con
     }
 
     /* Load shader source */
-    glShaderSource( s, 1, source, NULL );
+    glShaderSource( s, 1, &source, NULL );
 
     glCompileShader( s );
 
     GLint compileStatus;
-    glGetShader( s, GL_COMPILE_STATUS, &compileStatus );
+    glGetShaderiv( s, GL_COMPILE_STATUS, &compileStatus );
 
     if( compileStatus == GL_FALSE )
     {
@@ -93,12 +95,12 @@ void simplegl_shader_error( GLuint shader )
 
     if( p_log )
     {
-        fprintf( stderr, "[Shader %zu Error] %s\n", shader, p_log );
-        free( p_log );
+        fprintf( stderr, "[Shader %u Error] %s\n", shader, p_log );
+        free( (void*) p_log );
     }
     else
     {
-        fprintf( stderr, "[Shader %zu Error] unknown\n", shader );
+        fprintf( stderr, "[Shader %u Error] unknown\n", shader );
     }
 }
 
@@ -122,7 +124,7 @@ GLboolean simplegl_program_create( GLuint* p_program, GLuint *shaders, GLsizei s
     {
         /* linker error */
         #ifdef SIMPLEGL_DEBUG
-        simplegl_program_error( p )
+        simplegl_program_error( p );
         #endif
         return GL_FALSE;
     }
@@ -136,7 +138,7 @@ GLboolean simplegl_program_create( GLuint* p_program, GLuint *shaders, GLsizei s
 		 */
 		for( i = 0; i < shader_count; i++ )
 		{
-			glDeleteShaders( shaders[ i ] );
+			glDeleteShader( shaders[ i ] );
 		}
 	}
 
@@ -169,12 +171,12 @@ void simplegl_program_error( GLuint program )
 
     if( p_log )
     {
-        fprintf( stderr, "[Program %zu Error] %s\n", program, p_log );
-        free( p_log );
+        fprintf( stderr, "[Program %u Error] %s\n", program, p_log );
+        free( (void*) p_log );
     }
     else
     {
-        fprintf( stderr, "[Program %zu Error] unknown\n", program );
+        fprintf( stderr, "[Program %u Error] unknown\n", program );
     }
 }
 

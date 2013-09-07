@@ -20,7 +20,7 @@ GLuint tex2d_create( void )
 	return texture;
 }
 
-void tex2d_destroy( GLint texture )
+void tex2d_destroy( GLuint texture )
 {
 	glDeleteTextures( 1, &texture );
 }

@@ -25,11 +25,11 @@ AH_BOTTOM([
 # If big endian define WORDS_BIGENDIAN
 AC_C_BIGENDIAN
 
-DFLAGS="-D SIMPLEGL_DEBUG"
+DFLAGS="-D GL_GLEXT_PROTOTYPES -D SIMPLEGL_DEBUG"
 
 CFLAGS="-Wall -g -ggdb -O0 $DFLAGS -I/usr/include -I/usr/local/include -I/usr/include"
 #CXXFLAGS="-Wall -g -ggdb -O0 $DFLAGS -I/usr/include -I/usr/local/include -I/usr/include"
-#LDFLAGS="-lGL -lGLU -lm"
+LDFLAGS="-lm -lGL -lGLU"
 #LDFLAGS="$LDFLAGS -L/System/Library/Frameworks/OpenGL.framework/Libraries -framework GLUT -framework OpenGL"
 
 
