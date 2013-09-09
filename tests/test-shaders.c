@@ -1,61 +1,86 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <vec2.h>
-#include <vec3.h>
-#include <mat2.h>
-#include <mat3.h>
+#include <GL/freeglut.h>
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #else
 #include <GL/gl.h>
 #endif
 
+#define ESC_KEY			27
+static unsigned short windowWidth  = 0;
+static unsigned short windowHeight = 0;
 
+static void initialize( void );
+static void deinitialize( void );
 
-
-
-
+static void render( void );
+static void resize( int width, int height );
+static void keyboard_keypress( unsigned char key, int x, int y );
 
 int main( int argc, char* argv[] )
 {
-	mat3_t matrix = MAT3_IDENITY;
+	glutInit( &argc, argv );
+	glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE );
 
-	printf( "x' = %s\n", vec3_to_string( mat3_x_vector(&matrix) ) );
-	printf( "y' = %s\n", vec3_to_string( mat3_y_vector(&matrix) ) );
-	printf( "z' = %s\n", vec3_to_string( mat3_z_vector(&matrix) ) );
+	initialize( );
+	glutInitWindowSize( 800, 600 );
+	int window = glutCreateWindow( "Test Shader" );
 
-	printf( "%s\n", mat3_to_string(&matrix) );
-
-
-	mat2_t A = MAT2_MATRIX(2, 1, 0.5, 3);
-	mat2_t B = MAT2_MATRIX(0.33, 7, 4, -3);
-
-	mat2_t C = mat2_mult_matrix( &A, &B );
-
-	printf( "%s\n", mat2_to_string(&C) );
-	printf( "x' = %s\n", vec2_to_string( mat2_x_vector(&C) ) );
-	printf( "y' = %s\n", vec2_to_string( mat2_y_vector(&C) ) );
+	glutDisplayFunc( render );
+	glutReshapeFunc( resize );
+	glutKeyboardFunc( keyboard_keypress );
+	//glutIdleFunc( idle );
+	//glutMouseFunc( mouse );
+	//glutMotionFunc( mouse_motion );
 
 
-#if 1
-	mat3_t D = MAT3_MATRIX(1, 0, 2, 3, 1, 1, 1, 5, 1);
-	mat3_t E = MAT3_MATRIX(1, 1, 1, 1, 1, 1, 1, 1, 1);
-	vec3_t a = VEC3_VECTOR(1,2,1);
-	vec3_t r = mat3_mult_vector( &D, &a );
+	glutSetOption( GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS );
 
-
-
-	printf( "det D = %lf\n", mat3_determinant(&D) );
-
-	printf( "%s\n", mat3_to_string(&D) );
-	printf( "%s\n", vec3_to_string(&a) );
-	printf( "%s\n", vec3_to_string(&r) );
-
-	mat3_t s = mat3_mult_matrix( &D, &E );
-	printf( "%s\n", mat3_to_string(&s) );
-	mat3_transpose( &s );
-	printf( "%s\n", mat3_to_string(&s) );
-#endif
-
+	glutMainLoop( );
+	deinitialize( );
 	return 0;
+}
+
+void initialize( void )
+{
+	printf( "initialize\n" );
+	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+}
+
+void deinitialize( void )
+{
+	printf( "deinitialize\n" );
+}
+
+void render( void )
+{
+	glutSwapBuffers( );
+}
+
+void resize( int width, int height )
+{
+	glViewport( 0, 0, width, height );
+
+
+	#define max( x, y )              ((x) ^ (((x) ^ (y)) & -((x) < (y))))
+	height = max( 1, height );
+
+	glOrtho( 0.0, width, 0.0, height, 0.0, 1.0 );
+
+	windowWidth  = width;
+	windowHeight = height;
+}
+
+void keyboard_keypress( unsigned char key, int x, int y )
+{
+	switch( key )
+	{
+		case ESC_KEY:
+			glutLeaveMainLoop( );
+			break;
+		default:
+			break;
+	}
+
 }

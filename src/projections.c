@@ -1,0 +1,64 @@
+#include <assert.h>
+#include "simplegl.h"
+
+
+mat4_t orthographic( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far )
+{
+	mat4_t projection = MAT4_MATRIX(
+		2.0 / (right - left)          , 0.0                           ,  0.0                      , 0.0,
+		0.0                           , 2.0 / (top - bottom)          ,  0.0                      , 0.0,
+		0.0                           , 0.0                           , -2.0 / (far - near)       , 0.0,
+		-(right + left)/(right - left), -(top + bottom)/(top - bottom), -(far + near)/(far - near), 1.0
+	);
+	return projection;
+}
+
+mat4_t frustum( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far )
+{
+	GLdouble A = 2.0 * near / (right - left);
+	GLdouble B = (right + left) / (right - left);
+	GLdouble C = 2.0 * near / (top - bottom);
+	GLdouble D = (top + bottom) / (top - bottom);
+	GLdouble E = -(far + near) / (far - near);
+	GLdouble F = -(2.0 * far * near) / (far - near);
+
+	mat4_t projection = MAT4_MATRIX(
+		  A, 0.0,   B, 0.0,
+		0.0,   C,   D, 0.0,
+		0.0, 0.0,   E,   F,
+		0.0, 0.0,-1.0, 0.0
+	);
+	return projection;
+}
+
+#define RADIANS_PER_DEGREE  (M_PI / 180.0)
+
+mat4_t perspective( GLdouble fovy, GLdouble aspect, GLdouble near, GLdouble far )
+{
+	GLdouble A = 1.0 / tan(fovy * 0.5 * RADIANS_PER_DEGREE);
+	GLdouble B = -far / (far - near);
+	GLdouble C = -(far * near)/ (far - near);
+
+	mat4_t projection = MAT4_MATRIX(
+		  A, 0.0, 0.0, 0.0,
+		0.0,   A, 0.0, 0.0,
+		0.0, 0.0,   B,-1.0,
+		0.0, 0.0,   C, 0.0
+	);
+	return projection;
+}
+
+mat4_t orientation( vec3_t* f, vec3_t* l, vec3_t* u )
+{
+	vec3_normalize( f );
+	vec3_normalize( l );
+	vec3_normalize( u );
+
+	mat4_t projection = MAT4_MATRIX(
+		l->x, l->y, l->z, 0.0,
+		u->x, u->y, u->z, 0.0,
+		f->x, f->y, f->z, 0.0,
+		0.0,   0.0,  0.0, 1.0
+	);
+	return projection;
+}

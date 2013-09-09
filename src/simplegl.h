@@ -58,14 +58,6 @@ extern "C" {
 #include <GL/glu.h>
 #endif
 
-#include <vec2.h>
-#include <vec3.h>
-#include <vec4.h>
-#include <mat2.h>
-#include <mat3.h>
-#include <mat4.h>
-
-
 #if defined(SIMPLEGL_MATH_USE_LONG_DOUBLE)
 	#ifndef SCALAR_T
 	#define SCALAR_T 
@@ -92,6 +84,15 @@ extern "C" {
 	#endif
 #endif
 
+#include <vec2.h>
+#include <vec3.h>
+#include <vec4.h>
+#include <mat2.h>
+#include <mat3.h>
+#include <mat4.h>
+
+
+
 /*
  * Texturing
  */
@@ -101,6 +102,13 @@ bool   tex2d_load        ( GLuint texture, const char* filename, GLint min_filte
 bool   tex2d_load_for_2d ( GLuint texture, const char* filename );
 bool   tex2d_load_for_3d ( GLuint texture, const char* filename, bool clamp );
 
+/*
+ * Projections
+ */
+mat4_t orthographic ( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far );
+mat4_t frustum      ( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far );
+mat4_t perspective  ( GLdouble fovy, GLdouble aspect, GLdouble near, GLdouble far );
+mat4_t orientation  ( vec3_t* forward, vec3_t* left, vec3_t* up );
 
 /*
  * Shaders

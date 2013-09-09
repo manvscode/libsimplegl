@@ -1,5 +1,5 @@
 # Add new files in alphabetical order. Thanks.
-libsimplegl_src = vec2.c vec3.c vec4.c mat2.c mat3.c mat4.c shaders.c textures.c
+libsimplegl_src = vec2.c vec3.c vec4.c mat2.c mat3.c mat4.c projections.c shaders.c textures.c
 
 # Add new files in alphabetical order. Thanks.
 libsimplegl_headers = vec2.h vec3.h vec4.h mat2.h mat3.h mat4.h simplegl.h
