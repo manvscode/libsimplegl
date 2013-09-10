@@ -17,7 +17,7 @@
 
 int main( int argc, char* argv[] )
 {
-	mat3_t matrix = MAT3_IDENITY;
+	mat3_t matrix = MAT3_IDENTITY;
 
 	printf( "x' = %s\n", vec3_to_string( mat3_x_vector(&matrix) ) );
 	printf( "y' = %s\n", vec3_to_string( mat3_y_vector(&matrix) ) );

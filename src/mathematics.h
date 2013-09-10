@@ -18,40 +18,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#ifndef _MAT3_H_
-#define _MAT3_H_
-#include <float.h>
-#include <limits.h>
-#if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
-#include <stdbool.h>
-#ifdef __restrict
-#undef __restrict
-#define __restrict restrict
-#endif
-#ifdef __inline
-#undef __inline
-#define __inline inline
-#endif
-#else
-#define bool int
-#define true 1
-#define false 0
-#ifdef __restrict
-#undef __restrict
-#define __restrict
-#endif
-#ifdef __inline
-#undef __inline
-#define __inline
-#endif
-#endif
+#ifndef _MATHEMATICS_H_
+#define _MATHEMATICS_H_
+#include <math.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <vec3.h>
-
-#if defined(MAT3_USE_LONG_DOUBLE)
+#if defined(SIMPLEGL_MATH_USE_LONG_DOUBLE)
 	#ifndef SCALAR_T
 	#define SCALAR_T 
 	typedef long double scaler_t;
@@ -59,7 +33,7 @@ extern "C" {
 	#ifndef SCALAR_EPSILON
 	#define SCALAR_EPSILON LDBL_EPSILON
 	#endif
-#elif defined(MAT3_USE_DOUBLE)
+#elif defined(SIMPLEGL_MATH_USE_DOUBLE)
 	#ifndef SCALAR_T
 	#define SCALAR_T 
 	typedef double scaler_t;
@@ -77,40 +51,16 @@ extern "C" {
 	#endif
 #endif
 
+#define RADIANS_PER_DEGREE  (M_PI / 180.0)
 
-/*
- * Three Dimensional Matrices
- */
-typedef struct mat3 {
-    scaler_t m[ 9 ];
-} mat3_t;
-
-extern const mat3_t MAT3_IDENTITY;
-extern const mat3_t MAT3_ZERO;
-
-/* |a d g|
- * |b e h|
- * |c f i|
- */
-#define MAT3_MATRIX(a,b,c,d,e,f,g,h,i)  { .m = { (a), (b), (c), (d), (e), (f), (g), (h), (i) } }
-
-void          mat3_identity    ( mat3_t* m );
-void          mat3_zero        ( mat3_t* m );
-scaler_t      mat3_determinant ( const mat3_t* m );
-mat3_t        mat3_mult_matrix ( const mat3_t* __restrict a, const mat3_t* __restrict b );
-vec3_t        mat3_mult_vector ( const mat3_t* __restrict m, const vec3_t* __restrict v );
-bool          mat3_invert      ( mat3_t* m );
-void          mat3_transpose   ( mat3_t* m );
-mat3_t        mat3_cofactor    ( mat3_t* m );
-void          mat3_adjoint     ( mat3_t* m );
-const char*   mat3_to_string   ( const mat3_t* m );
-
-#define mat3_x_vector( p_m )   ((vec3_t*) &(p_m)->m[0])
-#define mat3_y_vector( p_m )   ((vec3_t*) &(p_m)->m[3])
-#define mat3_z_vector( p_m )   ((vec3_t*) &(p_m)->m[6])
-
+#include "vec2.h"
+#include "vec3.h"
+#include "vec4.h"
+#include "mat2.h"
+#include "mat3.h"
+#include "mat4.h"
 
 #ifdef __cplusplus
 } /* C linkage */
 #endif
-#endif /* _MAT3_H_ */
+#endif /* _MATHEMATICS_H_ */

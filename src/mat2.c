@@ -24,7 +24,7 @@
 #include <assert.h>
 #include "mat2.h"
 
-const mat2_t MAT2_IDENITY = { .m = {
+const mat2_t MAT2_IDENTITY = { .m = {
 					1.0f, 0.0f,
 					0.0f, 1.0f
 				}};
@@ -44,7 +44,7 @@ void mat2_initialize( mat2_t* m, scaler_t a, scaler_t b, scaler_t c, scaler_t d 
 
 void mat2_identity( mat2_t* m )
 {
-	*m = MAT2_IDENITY;
+	*m = MAT2_IDENTITY;
 }
 
 void mat2_zero( mat2_t* m )

@@ -24,7 +24,7 @@
 #include <assert.h>
 #include "mat4.h"
 
-const mat4_t MAT4_IDENITY = { .m = {
+const mat4_t MAT4_IDENTITY = { .m = {
 					1.0f, 0.0f, 0.0f, 0.0f,
 					0.0f, 1.0f, 0.0f, 0.0f,
 					0.0f, 0.0f, 1.0f, 0.0f,
@@ -40,7 +40,7 @@ const mat4_t MAT4_ZERO = { .m = {
 
 void mat4_identity( mat4_t* m )
 {
-	*m = MAT4_IDENITY;
+	*m = MAT4_IDENTITY;
 }
 
 void mat4_zero( mat4_t* m )

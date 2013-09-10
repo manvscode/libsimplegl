@@ -24,23 +24,27 @@
 extern "C" {
 #endif
 #if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
-    #ifdef __restrict
-    #undef __restrict
-    #define __restrict restrict
-    #endif
-    #ifdef __inline
-    #undef __inline
-    #define __inline inline
-    #endif
-#else /* Not C99 */
-    #ifdef __restrict
-    #undef __restrict
-    #define __restrict
-    #endif
-    #ifdef __inline
-    #undef __inline
-    #define __inline
-    #endif
+#include <stdbool.h>
+#ifdef __restrict
+#undef __restrict
+#define __restrict restrict
+#endif
+#ifdef __inline
+#undef __inline
+#define __inline inline
+#endif
+#else
+#define bool int
+#define true 1
+#define false 0
+#ifdef __restrict
+#undef __restrict
+#define __restrict
+#endif
+#ifdef __inline
+#undef __inline
+#define __inline
+#endif
 #endif
 
 #ifndef GL_GLEXT_PROTOTYPES
@@ -58,40 +62,11 @@ extern "C" {
 #include <GL/glu.h>
 #endif
 
-#if defined(SIMPLEGL_MATH_USE_LONG_DOUBLE)
-	#ifndef SCALAR_T
-	#define SCALAR_T 
-	typedef long double scaler_t;
-	#endif
-	#ifndef SCALAR_EPSILON
-	#define SCALAR_EPSILON LDBL_EPSILON
-	#endif
-#elif defined(SIMPLEGL_MATH_USE_DOUBLE)
-	#ifndef SCALAR_T
-	#define SCALAR_T 
-	typedef double scaler_t;
-	#endif
-	#ifndef SCALAR_EPSILON
-	#define SCALAR_EPSILON DBL_EPSILON
-	#endif
-#else /* default: use float */
-	#ifndef SCALAR_T
-	#define SCALAR_T 
-	typedef float scaler_t;
-	#endif
-	#ifndef SCALAR_EPSILON
-	#define SCALAR_EPSILON FLT_EPSILON
-	#endif
-#endif
 
-#include <vec2.h>
-#include <vec3.h>
-#include <vec4.h>
-#include <mat2.h>
-#include <mat3.h>
-#include <mat4.h>
-
-
+/*
+ * Mathematics
+ */
+#include "mathematics.h"
 
 /*
  * Texturing
@@ -107,8 +82,19 @@ bool   tex2d_load_for_3d ( GLuint texture, const char* filename, bool clamp );
  */
 mat4_t orthographic ( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far );
 mat4_t frustum      ( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far );
-mat4_t perspective  ( GLdouble fovy, GLdouble aspect, GLdouble near, GLdouble far );
-mat4_t orientation  ( vec3_t* forward, vec3_t* left, vec3_t* up );
+mat4_t perspective  ( GLdouble fov, GLdouble aspect, GLdouble near, GLdouble far );
+mat4_t look_at      ( const pt3_t* p, const pt3_t* t, const vec3_t* u );
+
+/*
+ * Transformations
+ */
+mat4_t translate     ( const vec3_t* t );
+mat4_t scale         ( const vec3_t* s );
+mat4_t uniform_scale ( GLdouble scale );
+mat4_t rotate_x      ( GLdouble angle );
+mat4_t rotate_y      ( GLdouble angle );
+mat4_t rotate_z      ( GLdouble angle );
+mat4_t orientation   ( vec3_t* forward, vec3_t* left, vec3_t* up );
 
 /*
  * Shaders

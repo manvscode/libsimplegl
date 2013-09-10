@@ -1,4 +1,6 @@
+#include <math.h>
 #include <assert.h>
+#include "mathematics.h"
 #include "simplegl.h"
 
 
@@ -31,11 +33,10 @@ mat4_t frustum( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GL
 	return projection;
 }
 
-#define RADIANS_PER_DEGREE  (M_PI / 180.0)
 
-mat4_t perspective( GLdouble fovy, GLdouble aspect, GLdouble near, GLdouble far )
+mat4_t perspective( GLdouble fov, GLdouble aspect, GLdouble near, GLdouble far )
 {
-	GLdouble A = 1.0 / tan(fovy * 0.5 * RADIANS_PER_DEGREE);
+	GLdouble A = 1.0 / tan(fov * 0.5 * RADIANS_PER_DEGREE);
 	GLdouble B = -far / (far - near);
 	GLdouble C = -(far * near)/ (far - near);
 
@@ -46,19 +47,26 @@ mat4_t perspective( GLdouble fovy, GLdouble aspect, GLdouble near, GLdouble far 
 		0.0, 0.0,   C, 0.0
 	);
 	return projection;
+	//return MAT4_IDENTITY;
 }
 
-mat4_t orientation( vec3_t* f, vec3_t* l, vec3_t* u )
+mat4_t look_at( const pt3_t* p, const pt3_t* t, const vec3_t* u )
 {
-	vec3_normalize( f );
-	vec3_normalize( l );
-	vec3_normalize( u );
+	vec3_t z = VEC3_VECTOR( t->x - p->x, t->y - p->y, t->z - p->z );
+	vec3_normalize( &z );
+
+	vec3_t x = vec3_cross_product( &z, u );
+	vec3_normalize( &x );
+
+	vec3_t y = vec3_cross_product( &z, &x );
+	vec3_normalize( &y );
 
 	mat4_t projection = MAT4_MATRIX(
-		l->x, l->y, l->z, 0.0,
-		u->x, u->y, u->z, 0.0,
-		f->x, f->y, f->z, 0.0,
-		0.0,   0.0,  0.0, 1.0
+		  x.x,   x.y,   x.z, 0.0, /* x-axis */
+		  y.x,   y.y,   y.z, 0.0, /* y-axis */
+		  z.x,   z.y,   z.z, 0.0, /* z-axis */
+		-p->x, -p->y, -p->z, 1.0  /* translation */
 	);
 	return projection;
 }
+

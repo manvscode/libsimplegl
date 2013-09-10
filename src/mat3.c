@@ -24,7 +24,7 @@
 #include <assert.h>
 #include "mat3.h"
 
-const mat3_t MAT3_IDENITY = { .m = {
+const mat3_t MAT3_IDENTITY = { .m = {
 					1.0f, 0.0f, 0.0f,
 					0.0f, 1.0f, 0.0f,
 					0.0f, 0.0f, 1.0f
@@ -38,7 +38,7 @@ const mat3_t MAT3_ZERO = { .m = {
 
 void mat3_identity( mat3_t* m )
 {
-	*m = MAT3_IDENITY;
+	*m = MAT3_IDENTITY;
 }
 
 void mat3_zero( mat3_t* m )
