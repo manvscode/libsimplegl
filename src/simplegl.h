@@ -46,6 +46,7 @@ extern "C" {
 #define __inline
 #endif
 #endif
+#include <assert.h>
 
 #ifndef GL_GLEXT_PROTOTYPES
 #define GL_GLEXT_PROTOTYPES
@@ -62,11 +63,11 @@ extern "C" {
 #include <GL/glu.h>
 #endif
 
-
 /*
  * Mathematics
  */
 #include "mathematics.h"
+#include <math.h>
 
 /*
  * Texturing
@@ -100,15 +101,24 @@ mat4_t orientation   ( vec3_t* forward, vec3_t* left, vec3_t* up );
  * Shaders
  */
 typedef struct shader_info {
-	GLenum type;
-	char*  filename;
+	GLenum type; /* GL_VERTEX_SHADER | GL_FRAGMENT_SHADER */
+	const char* filename;
 } shader_info_t;
 
-GLboolean     simplegl_program_from_shaders      ( GLuint* p_program, const shader_info_t* shaders, GLsizei count );
-GLboolean     simplegl_shader_create_from_source ( GLuint* p_shader, GLenum type, const GLchar* source );
-const GLchar* simplegl_shader_log                ( GLuint shader );
-GLboolean     simplegl_program_create            ( GLuint* p_program, GLuint *p_shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion );
-const GLchar* simplegl_program_log               ( GLuint program );
+GLboolean     glsl_program_from_shaders      ( GLuint* p_program, const shader_info_t* shaders, GLsizei count, GLchar** shader_log, GLchar** program_log );
+GLchar*       glsl_shader_load               ( const char* path );
+GLboolean     glsl_shader_create_from_source ( GLuint* p_shader, GLenum type /* GL_VERTEX_SHADER | GL_FRAGMENT_SHADER */, const GLchar* source );
+GLboolean     glsl_program_create            ( GLuint* p_program, GLuint *p_shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion );
+GLchar*       glsl_log                       ( GLuint object /* program or shader */ );
+GLint         glsl_bind_attribute            ( GLuint program, const GLchar* attribute );
+
+
+#ifdef SIMPLEGL_DEBUG
+void check_gl( void );
+#define GL_ASSERT_NO_ERROR()    check_gl()
+#else
+#define GL_ASSERT_NO_ERROR()
+#endif
 
 #ifdef __cplusplus
 } /* C linkage */

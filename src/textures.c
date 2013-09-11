@@ -9,6 +9,7 @@ void _tex2d_create( GLuint* p_texture )
 	assert( p_texture );
 	glEnable( GL_TEXTURE_2D );
 	glGenTextures( 1, p_texture );
+	GL_ASSERT_NO_ERROR( );
 }
 
 GLuint tex2d_create( void )
@@ -16,6 +17,7 @@ GLuint tex2d_create( void )
 	GLuint texture = 0;
 	glEnable( GL_TEXTURE_2D );
 	glGenTextures( 1, &texture );
+	GL_ASSERT_NO_ERROR( );
 	assert( texture > 0 );
 	return texture;
 }
@@ -23,6 +25,7 @@ GLuint tex2d_create( void )
 void tex2d_destroy( GLuint texture )
 {
 	glDeleteTextures( 1, &texture );
+	GL_ASSERT_NO_ERROR( );
 }
 
 bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, bool clamp )
@@ -59,7 +62,9 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 		glEnable( GL_TEXTURE_2D );
 
 		glBindTexture( GL_TEXTURE_2D, texture );
+		GL_ASSERT_NO_ERROR( );
 		glTexImage2D( GL_TEXTURE_2D, 0, pixel_format, image.width, image.height, 0, pixel_format, GL_UNSIGNED_BYTE, image.pixels );
+		GL_ASSERT_NO_ERROR( );
 
 
 		//#if SIMPLEGL_2D
@@ -71,17 +76,23 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 		//#endif
 
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter > 0 ? min_filter : GL_LINEAR );
+		GL_ASSERT_NO_ERROR( );
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter > 0 ? mag_filter : GL_LINEAR );
+		GL_ASSERT_NO_ERROR( );
 
 		if( clamp )
 		{
 			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+			GL_ASSERT_NO_ERROR( );
 			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+			GL_ASSERT_NO_ERROR( );
 		}
 		else
 		{
 			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+			GL_ASSERT_NO_ERROR( );
 			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+			GL_ASSERT_NO_ERROR( );
 		}
 
 

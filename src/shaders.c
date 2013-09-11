@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include "simplegl.h"
 
-static __inline void simplegl_shader_error  ( GLuint shader );
-static __inline void simplegl_program_error ( GLuint program );
-static char* shader_load( const char* path );
+static __inline void glsl_shader_error  ( GLuint shader );
+static __inline void glsl_program_error ( GLuint program );
 
-GLboolean simplegl_program_from_shaders( GLuint* p_program, const shader_info_t* shaders, GLsizei count )
+
+GLboolean glsl_program_from_shaders( GLuint* p_program, const shader_info_t* shaders, GLsizei count, GLchar** shader_log, GLchar** program_log )
 {
 	const shader_info_t* info;
 	GLuint shader_names[ count ]; /* VLAs in C99 */
@@ -20,13 +21,38 @@ GLboolean simplegl_program_from_shaders( GLuint* p_program, const shader_info_t*
     {
 		info = &shaders[ i ];
 
-		const char* shader_source_code = shader_load( info->filename );
+		const char* shader_source_code = glsl_shader_load( info->filename );
 
-		result = simplegl_shader_create_from_source( &shader_names[ i ], info->type, shader_source_code );
+        #if defined(SIMPLEGL_DEBUG) && 0
+		fprintf( stdout, "-------------------- [ bof %s] ---------------------\n", info->filename );
+		fprintf( stdout, "%s", shader_source_code );
+		fprintf( stdout, "-------------------- [ eof %s] ---------------------\n", info->filename );
+		#endif
+
+		result = glsl_shader_create_from_source( &shader_names[ i ], info->type, shader_source_code );
 		free( (char*) shader_source_code );
+
     }
 
-	result = result && simplegl_program_create( p_program, shader_names, count, GL_TRUE /* delete shaders when program is deleted */ );
+	if( !result && shader_log )
+	{
+		*shader_log = glsl_log( shader_names[ i ] );
+	}
+	else
+	{
+		*shader_log = NULL;
+	}
+
+	result = result && glsl_program_create( p_program, shader_names, count, GL_TRUE /* delete shaders when program is deleted */ );
+
+	if( !result && program_log )
+	{
+		*program_log = glsl_log( *p_program );
+	}
+	else
+	{
+		*program_log = NULL;
+	}
 
 	return result;
 }
@@ -38,29 +64,71 @@ GLboolean simplegl_program_from_shaders( GLuint* p_program, const shader_info_t*
  *   type -- GL_VERTEX_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_GEOMETRY_SHADER, or GL_FRAGMENT_SHADER.
  * source -- shader source code
  */
-GLboolean simplegl_shader_create_from_source( GLuint* p_shader, GLenum type, const GLchar* source )
+GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const GLchar* source )
 {
 	assert( p_shader );
     GLuint s = glCreateShader( type );
+	GL_ASSERT_NO_ERROR( );
 
     if( !s )
     {
+        #ifdef SIMPLEGL_DEBUG
+		const char* type_str;
+		switch( type )
+		{
+			case GL_TESS_CONTROL_SHADER:
+				type_str = "tesselation control";
+				break;
+			case GL_TESS_EVALUATION_SHADER:
+				type_str = "tesselation evaluation";
+				break;
+			case GL_GEOMETRY_SHADER:
+				type_str = "geometry";
+				break;
+			case GL_FRAGMENT_SHADER:
+				type_str = "fragment";
+				break;
+			case GL_VERTEX_SHADER:
+			default:
+				type_str = "vertex";
+				break;
+		}
+		fprintf( stderr, "[GLSL Shader] Failed to create %s shader.\n", type_str );
+        #endif
         return GL_FALSE;
     }
 
     /* Load shader source */
+	#if 0
+	const GLchar* sources[ 2 ] = {
+		#ifdef GL_ES_VERSION_2_0
+		"#version 100\n"
+		"#define GLES2\n",
+		#else
+		"#version 130\n",
+		#endif
+		source
+	};
+	/* Hard coding the version in the sources doesn't look like a good idea */
+	glShaderSource( s, 2, sources, NULL );
+	#else
     glShaderSource( s, 1, &source, NULL );
+	#endif
+	GL_ASSERT_NO_ERROR( );
 
     glCompileShader( s );
+	GL_ASSERT_NO_ERROR( );
 
     GLint compileStatus;
     glGetShaderiv( s, GL_COMPILE_STATUS, &compileStatus );
+	GL_ASSERT_NO_ERROR( );
 
     if( compileStatus == GL_FALSE )
     {
         /* Compilation error */
         #ifdef SIMPLEGL_DEBUG
-        simplegl_shader_error( s );
+		fprintf( stderr, "[GLSL Shader] Failed to compile shader %u.\n", s );
+        glsl_shader_error( s );
         #endif
         return GL_FALSE;
     }
@@ -69,29 +137,9 @@ GLboolean simplegl_shader_create_from_source( GLuint* p_shader, GLenum type, con
     return GL_TRUE;
 }
 
-
-const GLchar* simplegl_shader_log( GLuint shader )
+void glsl_shader_error( GLuint shader )
 {
-    GLint log_length;
-	GLchar* p_log = NULL;
-    glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &log_length );
-
-	if( log_length > 0 )
-	{
-		p_log = malloc( sizeof(GLchar) * log_length );
-
-		if( p_log )
-		{
-			glGetShaderInfoLog( shader, log_length, NULL, p_log );
-		}
-	}
-
-    return p_log;
-}
-
-void simplegl_shader_error( GLuint shader )
-{
-    const GLchar* p_log = simplegl_shader_log( shader );
+    const GLchar* p_log = glsl_log( shader );
 
     if( p_log )
     {
@@ -104,11 +152,19 @@ void simplegl_shader_error( GLuint shader )
     }
 }
 
-GLboolean simplegl_program_create( GLuint* p_program, GLuint *shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion )
+GLboolean glsl_program_create( GLuint* p_program, GLuint *shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion )
 {
 	assert( p_program );
     GLuint p = glCreateProgram( );
     GLsizei i;
+
+	if( p <= 0 )
+	{
+		#ifdef SIMPLEGL_DEBUG
+		fprintf( stderr, "[GLSL Program] Failed to create program.\n" );
+		#endif
+		return GL_FALSE;
+	}
 
     for( i = 0; i < shader_count; i++ )
     {
@@ -124,7 +180,8 @@ GLboolean simplegl_program_create( GLuint* p_program, GLuint *shaders, GLsizei s
     {
         /* linker error */
         #ifdef SIMPLEGL_DEBUG
-        simplegl_program_error( p );
+		fprintf( stderr, "[GLSL Program] Failed to link program.\n" );
+        glsl_program_error( p );
         #endif
         return GL_FALSE;
     }
@@ -146,28 +203,10 @@ GLboolean simplegl_program_create( GLuint* p_program, GLuint *shaders, GLsizei s
     return GL_TRUE;
 }
 
-const GLchar* simplegl_program_log( GLuint program )
+
+void glsl_program_error( GLuint program )
 {
-    GLint log_length;
-    GLchar* p_log = NULL;
-    glGetProgramiv( program, GL_INFO_LOG_LENGTH, &log_length );
-
-	if( log_length > 0 )
-	{
-		p_log = malloc( sizeof(GLchar) * log_length );
-
-		if( p_log )
-		{
-			glGetProgramInfoLog( program, log_length, NULL, p_log );
-		}
-	}
-
-    return p_log;
-}
-
-void simplegl_program_error( GLuint program )
-{
-    const GLchar* p_log = simplegl_program_log( program );
+    const GLchar* p_log = glsl_log( program );
 
     if( p_log )
     {
@@ -180,10 +219,63 @@ void simplegl_program_error( GLuint program )
     }
 }
 
-char* shader_load( const char* path )
+GLint glsl_bind_attribute( GLuint program, const GLchar* attribute )
+{
+	GLuint result = glGetAttribLocation( program, attribute );
+	GL_ASSERT_NO_ERROR( );
+
+	if( result == -1 )
+	{
+		#ifdef SIMPLEGL_DEBUG
+		fprintf( stderr, "[GLSL Program] Could not bind attribute %s\n", attribute );
+		#endif
+	}
+
+	return result;
+}
+
+GLchar* glsl_log( GLuint object )
+{
+    GLint log_length = 0;
+	GLchar* p_log    = NULL;
+
+	if( glIsShader( object ) )
+	{
+    	glGetShaderiv( object, GL_INFO_LOG_LENGTH, &log_length );
+	}
+	else if( glIsProgram( object ) )
+	{
+    	glGetProgramiv( object, GL_INFO_LOG_LENGTH, &log_length );
+	}
+
+	if( log_length > 0 )
+	{
+		p_log = malloc( sizeof(GLchar) * log_length );
+
+		memset( p_log, 0, sizeof(GLchar) * log_length );
+
+		if( p_log )
+		{
+			if( glIsShader( object ) )
+			{
+				glGetShaderInfoLog( object, log_length, NULL, p_log );
+			}
+			else if( glIsProgram( object ) )
+			{
+				glGetProgramInfoLog( object, log_length, NULL, p_log );
+			}
+		}
+
+		p_log[ log_length - 1 ] ='\0';
+	}
+
+    return p_log;
+}
+
+GLchar* glsl_shader_load( const char* path )
 {
 	FILE* file = fopen( path, "r" );
-	char* result = NULL;
+	GLchar* result = NULL;
 
 	if( file )
 	{
@@ -193,17 +285,17 @@ char* shader_load( const char* path )
 
 		if( file_size > 0 )
 		{
-			result = (char*) malloc( sizeof(char) * (file_size + 1) );
+			result = (GLchar*) malloc( sizeof(GLchar) * (file_size + 1) );
 
 			if( result )
 			{
 				char* buffer = result;
 				while( !feof( file ) )
 				{
-					size_t bytes_read = fread( buffer, sizeof(char), file_size, file );
+					size_t bytes_read = fread( buffer, sizeof(GLchar), file_size, file );
 					buffer += bytes_read;
 				}
-				buffer[ file_size + 1 ] = '\0';
+				buffer[ file_size ] = '\0';
 			}
 		}
 

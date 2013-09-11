@@ -47,7 +47,6 @@ mat4_t perspective( GLdouble fov, GLdouble aspect, GLdouble near, GLdouble far )
 		0.0, 0.0,   C, 0.0
 	);
 	return projection;
-	//return MAT4_IDENTITY;
 }
 
 mat4_t look_at( const pt3_t* p, const pt3_t* t, const vec3_t* u )
