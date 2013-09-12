@@ -104,13 +104,19 @@ typedef struct shader_info {
 	GLenum type; /* GL_VERTEX_SHADER | GL_FRAGMENT_SHADER */
 	const char* filename;
 } shader_info_t;
+#define shader_info_count( array )  (sizeof(array) / sizeof(array[0]))
 
 GLboolean     glsl_program_from_shaders      ( GLuint* p_program, const shader_info_t* shaders, GLsizei count, GLchar** shader_log, GLchar** program_log );
-GLchar*       glsl_shader_load               ( const char* path );
-GLboolean     glsl_shader_create_from_source ( GLuint* p_shader, GLenum type /* GL_VERTEX_SHADER | GL_FRAGMENT_SHADER */, const GLchar* source );
 GLboolean     glsl_program_create            ( GLuint* p_program, GLuint *p_shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion );
-GLchar*       glsl_log                       ( GLuint object /* program or shader */ );
+GLboolean     glsl_shader_create_from_source ( GLuint* p_shader, GLenum type /* GL_VERTEX_SHADER | GL_FRAGMENT_SHADER */, const GLchar* source );
+GLuint        glsl_create                    ( GLenum type );
+GLboolean     glsl_destroy                   ( GLuint object /* program or shader */ );
+GLchar*       glsl_shader_load               ( const char* path );
+GLboolean     glsl_shader_compile            ( GLuint shader, const GLchar* source );
+GLboolean     glsl_attach_shader             ( GLuint program, GLuint shader );
+GLboolean     glsl_link_program              ( GLuint program );
 GLint         glsl_bind_attribute            ( GLuint program, const GLchar* attribute );
+GLchar*       glsl_log                       ( GLuint object /* program or shader */ );
 
 
 #ifdef SIMPLEGL_DEBUG

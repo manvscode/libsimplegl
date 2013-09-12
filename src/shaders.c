@@ -57,6 +57,58 @@ GLboolean glsl_program_from_shaders( GLuint* p_program, const shader_info_t* sha
 	return result;
 }
 
+/*
+ * Create a program by attaching and linking a collection of shaders.
+ */
+GLboolean glsl_program_create( GLuint* p_program, GLuint *shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion )
+{
+	assert( p_program );
+    GLuint p = glCreateProgram( );
+    GLsizei i;
+
+	if( p <= 0 )
+	{
+		#ifdef SIMPLEGL_DEBUG
+		fprintf( stderr, "[GLSL] Failed to create program.\n" );
+		#endif
+		return GL_FALSE;
+	}
+
+    for( i = 0; i < shader_count; i++ )
+    {
+        glAttachShader( p, shaders[ i ] );
+    }
+
+    GLint link_status;
+    glGetProgramiv(	p, GL_LINK_STATUS, &link_status );
+
+    if( link_status == GL_FALSE )
+    {
+        /* linker error */
+        #ifdef SIMPLEGL_DEBUG
+		fprintf( stderr, "[GLSL] Failed to link program.\n" );
+        glsl_program_error( p );
+        #endif
+        return GL_FALSE;
+    }
+
+	if( mark_shaders_for_deletion )
+	{
+		/*
+		 *  Mark all of the attached shaders to be
+		 *  deleted when the program gets deleted
+		 *  with glDeleteProgram().
+		 */
+		for( i = 0; i < shader_count; i++ )
+		{
+			glDeleteShader( shaders[ i ] );
+		}
+	}
+
+    *p_program = p;
+    return GL_TRUE;
+}
+
 /*  Creates, compiles and links shader program.
  *
  * Parameters:
@@ -93,7 +145,7 @@ GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const G
 				type_str = "vertex";
 				break;
 		}
-		fprintf( stderr, "[GLSL Shader] Failed to create %s shader.\n", type_str );
+		fprintf( stderr, "[GLSL] Failed to create %s shader.\n", type_str );
         #endif
         return GL_FALSE;
     }
@@ -127,7 +179,7 @@ GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const G
     {
         /* Compilation error */
         #ifdef SIMPLEGL_DEBUG
-		fprintf( stderr, "[GLSL Shader] Failed to compile shader %u.\n", s );
+		fprintf( stderr, "[GLSL] Failed to compile shader %u.\n", s );
         glsl_shader_error( s );
         #endif
         return GL_FALSE;
@@ -137,86 +189,145 @@ GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const G
     return GL_TRUE;
 }
 
-void glsl_shader_error( GLuint shader )
+GLuint glsl_create( GLenum type )
 {
-    const GLchar* p_log = glsl_log( shader );
+	GLuint object = 0;
 
-    if( p_log )
-    {
-        fprintf( stderr, "[Shader %u Error] %s\n", shader, p_log );
-        free( (void*) p_log );
-    }
-    else
-    {
-        fprintf( stderr, "[Shader %u Error] unknown\n", shader );
-    }
-}
-
-GLboolean glsl_program_create( GLuint* p_program, GLuint *shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion )
-{
-	assert( p_program );
-    GLuint p = glCreateProgram( );
-    GLsizei i;
-
-	if( p <= 0 )
+	switch( type )
 	{
-		#ifdef SIMPLEGL_DEBUG
-		fprintf( stderr, "[GLSL Program] Failed to create program.\n" );
-		#endif
-		return GL_FALSE;
+		case GL_PROGRAM:
+			object = glCreateProgram( );
+			break;
+		case GL_VERTEX_SHADER: /* fall through */
+		case GL_FRAGMENT_SHADER: /* fall through */
+		case GL_GEOMETRY_SHADER: /* fall through */
+		case GL_TESS_CONTROL_SHADER: /* fall through */
+		case GL_TESS_EVALUATION_SHADER:
+    		object = glCreateShader( type );
+			break;
+		default:
+			break;
 	}
 
-    for( i = 0; i < shader_count; i++ )
-    {
-        glAttachShader( p, shaders[ i ] );
-    }
+	return object;
+}
 
-    glLinkProgram( p );
+GLboolean glsl_destroy( GLuint object /* program or shader */ )
+{
+	GLboolean result = GL_FALSE;
 
-    GLint link_status;
-    glGetProgramiv(	p, GL_LINK_STATUS, &link_status );
-
-    if( link_status == GL_FALSE )
-    {
-        /* linker error */
-        #ifdef SIMPLEGL_DEBUG
-		fprintf( stderr, "[GLSL Program] Failed to link program.\n" );
-        glsl_program_error( p );
-        #endif
-        return GL_FALSE;
-    }
-
-	if( mark_shaders_for_deletion )
+	if( glIsProgram( object ) )
 	{
-		/*
-		 *  Mark all of the attached shaders to be
-		 *  deleted when the program gets deleted
-		 *  with glDeleteProgram().
-		 */
-		for( i = 0; i < shader_count; i++ )
+		glDeleteProgram( object );
+		result = GL_TRUE;
+	}
+	else if( glIsShader( object ) )
+	{
+		glDeleteShader( object );
+		result = GL_TRUE;
+	}
+
+	return result;
+}
+
+/*
+ * Load a shader program into a string buffer.
+ */
+GLchar* glsl_shader_load( const char* path )
+{
+	FILE* file = fopen( path, "r" );
+	GLchar* result = NULL;
+
+	if( file )
+	{
+		fseek( file, 0, SEEK_END );
+		size_t file_size = ftell( file ); /* TODO: what if size is 0 */
+		fseek( file, 0, SEEK_SET );
+
+		if( file_size > 0 )
 		{
-			glDeleteShader( shaders[ i ] );
+			result = (GLchar*) malloc( sizeof(GLchar) * (file_size + 1) );
+
+			if( result )
+			{
+				char* buffer = result;
+				while( !feof( file ) )
+				{
+					size_t bytes_read = fread( buffer, sizeof(GLchar), file_size, file );
+					buffer += bytes_read;
+				}
+				buffer[ file_size ] = '\0';
+			}
 		}
+
+		fclose( file );
 	}
 
-    *p_program = p;
-    return GL_TRUE;
+	return result;
 }
 
-
-void glsl_program_error( GLuint program )
+GLboolean glsl_shader_compile( GLuint shader, const GLchar* source )
 {
-    const GLchar* p_log = glsl_log( program );
+	GLboolean result = GL_TRUE;
 
-    if( p_log )
-    {
-        fprintf( stderr, "[Program %u Error] %s\n", program, p_log );
-        free( (void*) p_log );
-    }
-    else
-    {
-        fprintf( stderr, "[Program %u Error] unknown\n", program );
-    }
+	if( glIsShader(shader) )
+	{
+		glShaderSource( shader, 1, &source, NULL );
+		glCompileShader( shader );
+
+		GLint compileStatus;
+		glGetShaderiv( shader, GL_COMPILE_STATUS, &compileStatus );
+
+		if( !compileStatus )
+		{
+			/* Compilation error */
+			#ifdef SIMPLEGL_DEBUG
+			fprintf( stderr, "[GLSL] Failed to compile shader %u.\n", shader );
+			glsl_shader_error( shader );
+			#endif
+		}
+
+		result = (compileStatus == GL_TRUE);
+	}
+
+	return result;
+}
+
+GLboolean glsl_attach_shader( GLuint program, GLuint shader )
+{
+	if( glIsProgram(program) && glIsShader(shader) )
+	{
+        glAttachShader( program, shader );
+		return GL_TRUE;
+	}
+
+	return GL_FALSE;
+}
+
+GLboolean glsl_link_program( GLuint program )
+{
+	GLboolean result = GL_FALSE;
+
+	if( glIsProgram(program) )
+	{
+		glLinkProgram( program );
+
+		GLint link_status;
+		glGetProgramiv(	program, GL_LINK_STATUS, &link_status );
+
+		if( !link_status )
+		{
+			/* linker error */
+			#ifdef SIMPLEGL_DEBUG
+			fprintf( stderr, "[GLSL] Failed to link program.\n" );
+			glsl_program_error( program );
+			#endif
+		}
+
+		result = (link_status == GL_TRUE);
+	}
+
+	return result;
 }
 
 GLint glsl_bind_attribute( GLuint program, const GLchar* attribute )
@@ -227,7 +338,7 @@ GLint glsl_bind_attribute( GLuint program, const GLchar* attribute )
 	if( result == -1 )
 	{
 		#ifdef SIMPLEGL_DEBUG
-		fprintf( stderr, "[GLSL Program] Could not bind attribute %s\n", attribute );
+		fprintf( stderr, "[GLSL] Could not bind attribute %s\n", attribute );
 		#endif
 	}
 
@@ -272,35 +383,33 @@ GLchar* glsl_log( GLuint object )
     return p_log;
 }
 
-GLchar* glsl_shader_load( const char* path )
+void glsl_shader_error( GLuint shader )
 {
-	FILE* file = fopen( path, "r" );
-	GLchar* result = NULL;
+    const GLchar* p_log = glsl_log( shader );
 
-	if( file )
-	{
-		fseek( file, 0, SEEK_END );
-		size_t file_size = ftell( file ); /* TODO: what if size is 0 */
-		fseek( file, 0, SEEK_SET );
-
-		if( file_size > 0 )
-		{
-			result = (GLchar*) malloc( sizeof(GLchar) * (file_size + 1) );
-
-			if( result )
-			{
-				char* buffer = result;
-				while( !feof( file ) )
-				{
-					size_t bytes_read = fread( buffer, sizeof(GLchar), file_size, file );
-					buffer += bytes_read;
-				}
-				buffer[ file_size ] = '\0';
-			}
-		}
-
-		fclose( file );
-	}
-
-	return result;
+    if( p_log )
+    {
+        fprintf( stderr, "[Shader %u Error] %s\n", shader, p_log );
+        free( (void*) p_log );
+    }
+    else
+    {
+        fprintf( stderr, "[Shader %u Error] unknown\n", shader );
+    }
 }
+
+void glsl_program_error( GLuint program )
+{
+    const GLchar* p_log = glsl_log( program );
+
+    if( p_log )
+    {
+        fprintf( stderr, "[Program %u Error] %s\n", program, p_log );
+        free( (void*) p_log );
+    }
+    else
+    {
+        fprintf( stderr, "[Program %u Error] unknown\n", program );
+    }
+}
+
