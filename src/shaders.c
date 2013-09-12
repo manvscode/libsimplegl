@@ -128,12 +128,16 @@ GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const G
 		const char* type_str;
 		switch( type )
 		{
+			#ifdef GL_TESS_CONTROL_SHADER
 			case GL_TESS_CONTROL_SHADER:
 				type_str = "tesselation control";
 				break;
+			#endif
+			#ifdef GL_TESS_EVALUATION_SHADER
 			case GL_TESS_EVALUATION_SHADER:
 				type_str = "tesselation evaluation";
 				break;
+			#endif
 			case GL_GEOMETRY_SHADER:
 				type_str = "geometry";
 				break;
@@ -195,17 +199,22 @@ GLuint glsl_create( GLenum type )
 
 	switch( type )
 	{
-		case GL_PROGRAM:
-			object = glCreateProgram( );
-			break;
 		case GL_VERTEX_SHADER: /* fall through */
 		case GL_FRAGMENT_SHADER: /* fall through */
 		case GL_GEOMETRY_SHADER: /* fall through */
+		#ifdef GL_TESS_EVALUATION_SHADER /* Missing on Mac OS X */
 		case GL_TESS_CONTROL_SHADER: /* fall through */
+		#endif
+		#ifdef GL_TESS_EVALUATION_SHADER /* Missing on Mac OS X */
 		case GL_TESS_EVALUATION_SHADER:
+		#endif
     		object = glCreateShader( type );
 			break;
+		#ifdef GL_PROGRAM /* Missing on Mac OS X */
+		case GL_PROGRAM:
+		#endif
 		default:
+			object = glCreateProgram( );
 			break;
 	}
 

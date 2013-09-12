@@ -20,12 +20,16 @@ void check_gl( void )
 		case GL_INVALID_OPERATION:
 			error_str = "Invalid operation";
 			break;
+		#ifdef GL_STACK_OVERFLOW
 		case GL_STACK_OVERFLOW:
 			error_str = "Stack overflow";
 			break;
+		#endif
+		#ifdef GL_STACK_UNDERFLOW
 		case GL_STACK_UNDERFLOW:
 			error_str = "Stack underflow";
 			break;
+		#endif
 		case GL_OUT_OF_MEMORY:
 			error_str = "Out of memory";
 			break;
