@@ -1,153 +1,88 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <GL/glew.h>
-#include <GL/freeglut.h>
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
-#else
-#include <GL/gl.h>
-#endif
-#include "../src/simplegl.h"
-
-#define ESC_KEY			27
-
-static void initialize( void );
-static void deinitialize( void );
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 
 static void render( void );
-static void resize( int width, int height );
-static void keyboard_keypress( unsigned char key, int x, int y );
+static void gl_info( void );
+static void dump_sdl_error( void );
 
-GLuint program;
-GLint attribute_vertex;
-GLint attribute_color;
+SDL_Window* window = NULL;
+SDL_GLContext ctx = NULL;
+
+GLuint program = 0;
+GLint attribute_vertex = 0;
+GLint attribute_color = 0;
+
 
 int main( int argc, char* argv[] )
 {
-	glutInit( &argc, argv );
-	glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE );
-
-	glutInitWindowSize( 800, 800 );
-	int window = glutCreateWindow( "Test Shader" );
-
-	#if 0
-	GLenum err = glewInit( );
-	if( GLEW_OK != err )
+	if( SDL_Init(SDL_INIT_VIDEO) < 0 )
 	{
-		/* Problem: glewInit failed, something is seriously wrong. */
-		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+		goto quit;
 	}
-	#endif
 
-	initialize( );
+	//SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
+	//SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 2 );
+	//SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
 
-	glutDisplayFunc( render );
-	glutReshapeFunc( resize );
-	glutKeyboardFunc( keyboard_keypress );
-	//glutIdleFunc( idle );
-	//glutMouseFunc( mouse );
-	//glutMotionFunc( mouse_motion );
+	window = SDL_CreateWindow( "Test Shaders", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+
+	if( window == NULL )
+	{
+		dump_sdl_error( );
+		goto quit;
+	}
+
+	ctx = SDL_GL_CreateContext( window );
+
+	if( !ctx )
+	{
+		dump_sdl_error( );
+		goto quit;
+	}
+
+	dump_sdl_error( );
+
+	gl_info( );
 
 
-	glutSetOption( GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS );
+	render( );
 
-	glutMainLoop( );
-	deinitialize( );
+quit:
+	if( ctx ) SDL_GL_DeleteContext( ctx );
+	if( window ) SDL_DestroyWindow( window );
+	SDL_Quit( );
 	return 0;
 }
 
-void initialize( void )
-{
-	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
-
-	//glEnable( GL_BLEND );
-	//glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-
-	GLchar* shader_log  = NULL;
-	GLchar* program_log = NULL;
-	const shader_info_t shaders[] = {
-		{ GL_VERTEX_SHADER,   "./tests/test-shaders.vert" },
-		{ GL_FRAGMENT_SHADER, "./tests/test-shaders.frag" }
-	};
-
-	if( !glsl_program_from_shaders( &program, shaders, shader_info_count(shaders), &shader_log, &program_log ) )
-	{
-		if( shader_log )
-		{
-			printf( " [Shader Log] %s\n", shader_log );
-			free( shader_log );
-		}
-		if( program_log )
-		{
-			printf( "[Program Log] %s\n", program_log );
-			free( program_log );
-		}
-
-		glutLeaveMainLoop( );
-		return;
-	}
-
-	attribute_vertex = glsl_bind_attribute( program, "vertex" );
-	attribute_color  = glsl_bind_attribute( program, "color" );
-
-	GLdouble vertices[] = {
-		 0.8,  0.8,
-		-0.8, -0.8,
-		 0.8, -0.8,
-	};
-
-	GLfloat colors[] = {
-		1.0, 0.0, 0.0,
-		0.0, 1.0, 0.0,
-		0.0, 0.0, 1.0
-	};
-
-	glVertexAttribPointer( attribute_vertex, 2, GL_DOUBLE, GL_FALSE, 0, vertices );
-	glVertexAttribPointer( attribute_color, 3, GL_FLOAT, GL_FALSE, 0, colors );
-}
-
-void deinitialize( void )
-{
-	glDeleteProgram( program );
-}
-
-void render( void )
+void render( )
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+	glClearColor( 1.0, 0.0, 0.0, 1.0 );
 
-	glEnableVertexAttribArray( attribute_vertex );
-	glEnableVertexAttribArray( attribute_color );
-	glUseProgram( program );
-	glDisableVertexAttribArray( attribute_vertex );
-	glDisableVertexAttribArray( attribute_color );
-
-	glDrawArrays( GL_TRIANGLES, 0, 3 );
-
-	glutSwapBuffers( );
-	GL_ASSERT_NO_ERROR();
+	SDL_GL_SwapWindow( window );
 }
 
-void resize( int width, int height )
+void gl_info( void )
 {
-	glViewport( 0, 0, width, height );
+	const char* renderer     = (const char*) glGetString(GL_RENDERER);
+	const char* version      = (const char*) glGetString(GL_VERSION);
+	const char* glsl_version = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
 
-
-	#define max( x, y )              ((x) ^ (((x) ^ (y)) & -((x) < (y))))
-	height = max( 1, height );
-
-	//glOrtho( 0.0, width, 0.0, height, 0.0, 1.0 );
+	fprintf( stdout, "[GL] Renderer: %s\n", renderer ? renderer : "unknown" );
+	fprintf( stdout, "[GL] Version: %s\n", version ? version : "unknown" );
+	fprintf( stdout, "[GL] Shading Language: %s\n", glsl_version ? glsl_version : "unknown" );
 }
 
-void keyboard_keypress( unsigned char key, int x, int y )
+
+void dump_sdl_error( void )
 {
-	switch( key )
+	const char* sdl_error = SDL_GetError( );
+
+	if( sdl_error && *sdl_error != '\0' )
 	{
-		case ESC_KEY:
-			glutLeaveMainLoop( );
-			break;
-		default:
-			break;
+		fprintf( stderr, "[SDL] %s\n", sdl_error );
 	}
-
 }

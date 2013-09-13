@@ -4,6 +4,17 @@
 #include <assert.h>
 #include "simplegl.h"
 
+void dump_gl_info( void )
+{
+	const char* renderer     = (const char*) glGetString(GL_RENDERER);
+	const char* version      = (const char*) glGetString(GL_VERSION);
+	const char* glsl_version = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+
+	fprintf( stdout, "[GL] Renderer: %s\n", renderer ? renderer : "unknown" );
+	fprintf( stdout, "[GL] Version: %s\n", version ? version : "unknown" );
+	fprintf( stdout, "[GL] Shading Language: %s\n", glsl_version ? glsl_version : "unknown" );
+}
+
 void check_gl( void )
 {
     GLenum error = glGetError();

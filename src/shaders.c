@@ -196,27 +196,50 @@ GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const G
 GLuint glsl_create( GLenum type )
 {
 	GLuint object = 0;
+	const char* type_str;
 
 	switch( type )
 	{
-		case GL_VERTEX_SHADER: /* fall through */
-		case GL_FRAGMENT_SHADER: /* fall through */
-		case GL_GEOMETRY_SHADER: /* fall through */
+		case GL_VERTEX_SHADER:
+			type_str = "vertex shader";
+    		object = glCreateShader( type );
+			break;
+		case GL_FRAGMENT_SHADER:
+			type_str = "fragment shader";
+    		object = glCreateShader( type );
+			break;
+		case GL_GEOMETRY_SHADER:
+			type_str = "geometry shader";
+    		object = glCreateShader( type );
+			break;
 		#ifdef GL_TESS_EVALUATION_SHADER /* Missing on Mac OS X */
-		case GL_TESS_CONTROL_SHADER: /* fall through */
+		case GL_TESS_CONTROL_SHADER:
+			type_str = "tesselation control shader";
+    		object = glCreateShader( type );
+			break;
 		#endif
 		#ifdef GL_TESS_EVALUATION_SHADER /* Missing on Mac OS X */
 		case GL_TESS_EVALUATION_SHADER:
-		#endif
+			type_str = "tesselation evaluation shader";
     		object = glCreateShader( type );
 			break;
+		#endif
 		#ifdef GL_PROGRAM /* Missing on Mac OS X */
 		case GL_PROGRAM:
 		#endif
 		default:
+			type_str = "program";
+			break;
 			object = glCreateProgram( );
 			break;
 	}
+
+	#ifdef SIMPLEGL_DEBUG
+	if( !object )
+	{
+		fprintf( stderr, "[GLSL] Failed to create %s.\n", type_str );
+	}
+	#endif
 
 	return object;
 }

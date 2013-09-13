@@ -57,7 +57,6 @@ extern "C" {
  */
 #if __APPLE__
 #include <OpenGL/gl3.h>
-//#include <OpenGL/glu.h>
 #else
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -118,9 +117,13 @@ GLboolean     glsl_link_program              ( GLuint program );
 GLint         glsl_bind_attribute            ( GLuint program, const GLchar* attribute );
 GLchar*       glsl_log                       ( GLuint object /* program or shader */ );
 
+/*
+ * Miscellaneous
+ */ 
+void dump_gl_info ( void );
+void check_gl     ( void );
 
 #ifdef SIMPLEGL_DEBUG
-void check_gl( void );
 #define GL_ASSERT_NO_ERROR()    check_gl()
 #else
 #define GL_ASSERT_NO_ERROR()
