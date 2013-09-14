@@ -1,6 +1,5 @@
-#AM_CFLAGS = -std=c99 -Wall -pedantic -O3 -I$(top_builddir)/src/ -I/usr/local/include/ -L$(top_builddir)/lib/  -L/usr/local/lib
-AM_CFLAGS = -std=c99 -pg -g -ggdb -O0 -I$(top_builddir)/src/ -I. -I.. -I/usr/local/include/ -L$(top_builddir)/lib/  #-L/usr/local/lib
-AM_CXXFLAGS = -std=c++0x -pg -g -ggdb -O0 -I$(top_builddir)/src/ -I. -I.. -I/usr/local/include/ -L$(top_builddir)/lib/ # -L/usr/local/lib
+AM_CFLAGS = -std=c99 -pg -g -ggdb -O0 -I$(top_builddir)/src/ -I. -I.. -I/usr/local/include/ -L$(top_builddir)/lib/ 
+AM_CXXFLAGS = -std=c++0x -pg -g -ggdb -O0 -I$(top_builddir)/src/ -I. -I.. -I/usr/local/include/ -L$(top_builddir)/lib/
 LDADD = -limageio #-lGL
 
 bin_PROGRAMS = \
@@ -10,5 +9,6 @@ $(top_builddir)/bin/test-shaders
 __top_builddir__bin_test_math_SOURCES    = test-math.c
 __top_builddir__bin_test_math_LDFLAGS    = -lGL $(top_builddir)/lib/.libs/libsimplegl.a
 __top_builddir__bin_test_shaders_SOURCES = test-shaders.c
-__top_builddir__bin_test_shaders_LDFLAGS = -lGL -lSDL2 $(top_builddir)/lib/.libs/libsimplegl.a
+__top_builddir__bin_test_shaders_CFLAGS  = -D_THREAD_SAFE -DHAVE_OPENGL
+__top_builddir__bin_test_shaders_LDFLAGS = -lGL -lSDL2 -framework OpenGL $(top_builddir)/lib/.libs/libsimplegl.a
 

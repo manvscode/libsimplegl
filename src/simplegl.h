@@ -94,6 +94,7 @@ mat4_t uniform_scale ( GLdouble scale );
 mat4_t rotate_x      ( GLdouble angle );
 mat4_t rotate_y      ( GLdouble angle );
 mat4_t rotate_z      ( GLdouble angle );
+mat4_t rotate_xyz    ( const char* order, ... );
 mat4_t orientation   ( vec3_t* forward, vec3_t* left, vec3_t* up );
 
 /*
@@ -114,17 +115,20 @@ GLchar*       glsl_shader_load               ( const char* path );
 GLboolean     glsl_shader_compile            ( GLuint shader, const GLchar* source );
 GLboolean     glsl_attach_shader             ( GLuint program, GLuint shader );
 GLboolean     glsl_link_program              ( GLuint program );
-GLint         glsl_bind_attribute            ( GLuint program, const GLchar* attribute );
+GLint         glsl_bind_attribute            ( GLuint program, const GLchar* name );
+GLint         glsl_bind_uniform              ( GLuint program, const GLchar* name );
 GLchar*       glsl_log                       ( GLuint object /* program or shader */ );
 
 /*
  * Miscellaneous
  */ 
-void dump_gl_info ( void );
-void check_gl     ( void );
+void      dump_gl_info ( void );
+GLenum    check_gl     ( void );
+GLfloat* tetrahedron   ( GLfloat scale, GLsizei* count );
+GLfloat* cube          ( GLfloat scale, GLsizei* count );
 
 #ifdef SIMPLEGL_DEBUG
-#define GL_ASSERT_NO_ERROR()    check_gl()
+#define GL_ASSERT_NO_ERROR()    assert(check_gl() == GL_NO_ERROR);
 #else
 #define GL_ASSERT_NO_ERROR()
 #endif

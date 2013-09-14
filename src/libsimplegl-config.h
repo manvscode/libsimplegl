@@ -16,7 +16,7 @@
 #define HAVE_FLOAT_H 1
 
 /* Define to 1 if you have the `floor' function. */
-#define HAVE_FLOOR 1
+/* #undef HAVE_FLOOR */
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
@@ -26,7 +26,7 @@
 
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */
-#define HAVE_MALLOC 1
+#define HAVE_MALLOC 0
 
 /* Define to 1 if you have the <math.h> header file. */
 #define HAVE_MATH_H 1
@@ -35,16 +35,16 @@
 #define HAVE_MEMORY_H 1
 
 /* Define to 1 if you have the `memset' function. */
-#define HAVE_MEMSET 1
+/* #undef HAVE_MEMSET */
 
 /* Define to 1 if you have the `sqrt' function. */
-#define HAVE_SQRT 1
+/* #undef HAVE_SQRT */
 
 /* Define to 1 if you have the `sqrtf' function. */
-#define HAVE_SQRTF 1
+/* #undef HAVE_SQRTF */
 
 /* Define to 1 if you have the `sqrtl' function. */
-#define HAVE_SQRTL 1
+/* #undef HAVE_SQRTL */
 
 /* Define to 1 if stdbool.h conforms to C99. */
 #define HAVE_STDBOOL_H 1
@@ -141,7 +141,7 @@
 /* #undef int32_t */
 
 /* Define to rpl_malloc if the replacement function should be used. */
-/* #undef malloc */
+#define malloc rpl_malloc
 
 /* Define to `unsigned int' if <sys/types.h> does not define. */
 /* #undef size_t */

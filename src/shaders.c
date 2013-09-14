@@ -23,12 +23,6 @@ GLboolean glsl_program_from_shaders( GLuint* p_program, const shader_info_t* sha
 
 		const char* shader_source_code = glsl_shader_load( info->filename );
 
-        #if defined(SIMPLEGL_DEBUG) && 0
-		fprintf( stdout, "-------------------- [ bof %s] ---------------------\n", info->filename );
-		fprintf( stdout, "%s", shader_source_code );
-		fprintf( stdout, "-------------------- [ eof %s] ---------------------\n", info->filename );
-		#endif
-
 		result = glsl_shader_create_from_source( &shader_names[ i ], info->type, shader_source_code );
 		free( (char*) shader_source_code );
 
@@ -76,21 +70,20 @@ GLboolean glsl_program_create( GLuint* p_program, GLuint *shaders, GLsizei shade
 
     for( i = 0; i < shader_count; i++ )
     {
-        glAttachShader( p, shaders[ i ] );
+		glsl_attach_shader( p, shaders[ i ] );
     }
 
-    GLint link_status;
-    glGetProgramiv(	p, GL_LINK_STATUS, &link_status );
-
-    if( link_status == GL_FALSE )
+    if( !glsl_link_program( p ) )
     {
         /* linker error */
         #ifdef SIMPLEGL_DEBUG
 		fprintf( stderr, "[GLSL] Failed to link program.\n" );
         glsl_program_error( p );
         #endif
+		glsl_destroy( p );
         return GL_FALSE;
     }
+
 
 	if( mark_shaders_for_deletion )
 	{
@@ -101,7 +94,7 @@ GLboolean glsl_program_create( GLuint* p_program, GLuint *shaders, GLsizei shade
 		 */
 		for( i = 0; i < shader_count; i++ )
 		{
-			glDeleteShader( shaders[ i ] );
+			glsl_destroy( shaders[ i ] );
 		}
 	}
 
@@ -273,7 +266,7 @@ GLchar* glsl_shader_load( const char* path )
 	if( file )
 	{
 		fseek( file, 0, SEEK_END );
-		size_t file_size = ftell( file ); /* TODO: what if size is 0 */
+		long file_size = ftell( file ); /* TODO: what if size is 0 */
 		fseek( file, 0, SEEK_SET );
 
 		if( file_size > 0 )
@@ -283,17 +276,27 @@ GLchar* glsl_shader_load( const char* path )
 			if( result )
 			{
 				char* buffer = result;
-				while( !feof( file ) )
+				long size    = file_size;
+
+				while( !feof( file ) && size > 0 )
 				{
-					size_t bytes_read = fread( buffer, sizeof(GLchar), file_size, file );
+					size_t bytes_read = fread( buffer, sizeof(GLchar), size, file );
 					buffer += bytes_read;
+					size   -= bytes_read;
 				}
-				buffer[ file_size ] = '\0';
 			}
+
+			result[ file_size ] = '\0';
 		}
 
 		fclose( file );
 	}
+
+	#if defined(SIMPLEGL_DEBUG) && 0
+	fprintf( stdout, "-------------------- [ bof %s] ---------------------\n", path );
+	fprintf( stdout, "%s", result );
+	fprintf( stdout, "-------------------- [ eof %s] ---------------------\n", path );
+	#endif
 
 	return result;
 }
@@ -362,20 +365,36 @@ GLboolean glsl_link_program( GLuint program )
 	return result;
 }
 
-GLint glsl_bind_attribute( GLuint program, const GLchar* attribute )
+GLint glsl_bind_attribute( GLuint program, const GLchar* name )
 {
-	GLuint result = glGetAttribLocation( program, attribute );
+	GLuint result = glGetAttribLocation( program, name );
 	GL_ASSERT_NO_ERROR( );
 
 	if( result == -1 )
 	{
 		#ifdef SIMPLEGL_DEBUG
-		fprintf( stderr, "[GLSL] Could not bind attribute %s\n", attribute );
+		fprintf( stderr, "[GLSL] Could not bind attribute %s\n", name );
 		#endif
 	}
 
 	return result;
 }
+
+GLint glsl_bind_uniform( GLuint program, const GLchar* name )
+{
+	GLuint result = glGetUniformLocation( program, name );
+	GL_ASSERT_NO_ERROR( );
+
+	if( result == -1 )
+	{
+		#ifdef SIMPLEGL_DEBUG
+		fprintf( stderr, "[GLSL] Could not bind uniform %s\n", name );
+		#endif
+	}
+
+	return result;
+}
+
 
 GLchar* glsl_log( GLuint object )
 {
