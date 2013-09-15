@@ -1,119 +1,267 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+//#include <libcollections/.h>
 #include <assert.h>
 #include "simplegl.h"
 
+
+#define SQRT_OF_2       (1.414213562373095)
+
+static const GLfloat tetrahedron_vertices[] = {
+	 1.0,  0.0, -1.0/SQRT_OF_2,
+	-1.0,  0.0, -1.0/SQRT_OF_2,
+	 0.0,  1.0,  1.0/SQRT_OF_2,
+	 0.0, -1.0,  1.0/SQRT_OF_2,
+};
+
+static GLushort tetrahedron_indices[] = {
+	0, 1, 2,
+	0, 1, 3,
+	0, 2, 1,
+
+	0, 2, 3,
+	0, 3, 1,
+	0, 3, 2,
+
+	1, 0, 2,
+	1, 0, 3,
+	1, 2, 3,
+
+	1, 2, 0,
+	1, 3, 2,
+	1, 3, 0,
 /*
-v  1  0  0
-v  0  -1  0
-v  -1  0  0
-v  0  1  0
-v  0  0  1
-v  0  0  -1
+	2, 0, 1,
+	2, 0, 3,
+	2, 1, 0,
 
-f  2  1  5
-f  3  2  5
-f  4  3  5
-f  1  4  5
-f  1  2  6
-f  2  3  6
-f  3  4  6
-f  4  1  6
+	2, 1, 3,
+	2, 3, 0,
+	2, 3, 1,
 
+	3, 0, 1,
+	3, 0, 2,
+	3, 1, 0,
+
+	3, 1, 2,
+	3, 2, 0,
+	3, 2, 1
 */
+};
+static GLfloat tetrahedron_tex_coords[] = {
+	0.0, 0.0,
+	3.0, 0.0,
+	1.5, 2.59807621,
 
-static const GLfloat tetrahedron_list[] = {
-	0,-1,0,   1,0,0,   0,0,1,
-	-1,0,0,   0,-1,0,   0,0,1,
-	0,1,0,   -1,0,0,   0,0,1,
-	1,0,0,   0,1,0,   0,0,1,
-	1,0,0,   0,-1,0,   0,0,-1,
-	0,-1,0,   -1,0,0,   0,0,-1,
-	-1,0,0,   0,1,0,   0,0,-1,
-	0,1,0,   1,0,0,   0,0,-1
+	0.0, 0.0,
+	3.0, 0.0,
+	1.5, 2.59807621,
+
+	0.0, 0.0,
+	3.0, 0.0,
+	1.5, 2.59807621,
+
+	0.0, 0.0,
+	3.0, 0.0,
+	1.5, 2.59807621
+};
+
+static const GLfloat tetrahedron_colors[] = {
+	1.0, 0.0, 0.0,
+	0.0, 1.0, 0.0,
+	0.0, 0.0, 1.0,
+	1.0, 1.0, 1.0,
 };
 
 
 
-static const GLfloat cube_vertices_strip[] = {
-	// Front face
-	-1,-1,1,  1,-1,1,  -1,1,1,  -1,1,1,  1,-1,1,  1,1,1,
-	//  Back  face
-	1,-1,-1,  -1,-1,-1,  1,1,-1,  1,1,-1,  -1,-1,-1,  -1,1,-1,
-	//  Right  face
-	1,-1,1,  1,-1,-1,  1,1,1,   1,1,1,  1,-1,-1,   1,1,-1,
-	//  Left  face
-	-1,-1,-1,  -1,-1,1,  -1,1,-1,  -1,1,-1,  -1,-1,1,  -1,1,1,
-	//  Bottom  face
-	-1,-1,-1,  1,-1,-1,  -1,-1,1,  -1,-1,1,  1,-1,-1,   1,-1,1,
-	//  Top  face
-	-1,1,1,  1,1,1,  -1,1,-1,  -1,1,-1,  1,1,1,   1,1,-1
+static GLfloat cube_vertices[] = {
+	// front
+	-1.0, -1.0,  1.0,
+	1.0, -1.0,  1.0,
+	1.0,  1.0,  1.0,
+	-1.0,  1.0,  1.0,
+	// back
+	-1.0, -1.0, -1.0,
+	1.0, -1.0, -1.0,
+	1.0,  1.0, -1.0,
+	-1.0,  1.0, -1.0,
 };
 
-static const GLfloat cube_tex_coords_strip[] = {
-        // Front face
-        0,0, 1,0, 0,1, 1,1,
-        // Right face
-        0,0, 1,0, 0,1, 1,1,
-        // Back face
-        0,0, 1,0, 0,1, 1,1,
-        // Left face
-        0,0, 1,0, 0,1, 1,1,
-        // Bottom face
-        0,0, 1,0, 0,1, 1,1,
-        // Top face
-        0,0, 1,0, 0,1, 1,1
-    };
+static GLushort cube_indices[] = {
+	// front
+	0, 1, 2,
+	2, 3, 0,
+	// top
+	3, 2, 6,
+	6, 7, 3,
+	// back
+	7, 6, 5,
+	5, 4, 7,
+	// bottom
+	4, 5, 1,
+	1, 0, 4,
+	// left
+	4, 0, 3,
+	3, 7, 4,
+	// right
+	1, 5, 6,
+	6, 2, 1,
+};
 
-GLfloat* tetrahedron( GLfloat scale, GLsizei* size )
+static GLfloat cube_tex_coords[] = {
+	// front
+	0.0, 0.0,
+	1.0, 0.0,
+	1.0, 1.0,
+	0.0, 1.0,
+	//
+	0.0, 0.0,
+	1.0, 0.0,
+	1.0, 1.0,
+	0.0, 1.0,
+	//
+	0.0, 0.0,
+	1.0, 0.0,
+	1.0, 1.0,
+	0.0, 1.0,
+	//
+	0.0, 0.0,
+	1.0, 0.0,
+	1.0, 1.0,
+	0.0, 1.0,
+	//
+	0.0, 0.0,
+	1.0, 0.0,
+	1.0, 1.0,
+	0.0, 1.0,
+	//
+	0.0, 0.0,
+	1.0, 0.0,
+	1.0, 1.0,
+	0.0, 1.0
+};
+
+static GLfloat cube_colors[] = {
+	// front colors
+	1.0, 0.0, 0.0,
+	0.0, 1.0, 0.0,
+	0.0, 0.0, 1.0,
+	1.0, 1.0, 1.0,
+	// back colors
+	1.0, 0.0, 0.0,
+	0.0, 1.0, 0.0,
+	0.0, 0.0, 1.0,
+	1.0, 1.0, 1.0,
+};
+
+void polyhedra_create( polyhedra_t* polyhedra )
 {
-	GLsizei array_size = sizeof(tetrahedron_list) / sizeof(tetrahedron_list[0]);
-	GLfloat* result = (GLfloat*) malloc( sizeof(GLfloat) * array_size );
-
-	if( result )
+	if( polyhedra )
 	{
-		for( GLsizei i = 0; i < array_size; i++ )
+		polyhedra->vertices         = NULL;
+		polyhedra->vertices_count   = 0;
+		polyhedra->indices          = NULL;
+		polyhedra->indices_count    = 0;
+		polyhedra->tex_coords       = NULL;
+		polyhedra->tex_coords_count = 0;
+		polyhedra->colors           = NULL;
+		polyhedra->colors_count     = 0;
+	}
+}
+
+void polyhedra_destroy( polyhedra_t* polyhedra )
+{
+	if( polyhedra )
+	{
+		free( polyhedra->vertices );
+		free( polyhedra->indices );
+		free( polyhedra->tex_coords );
+		free( polyhedra->colors );
+	}
+}
+
+GLboolean tetrahedron( polyhedra_t* polyhedra, GLfloat scale )
+{
+	if( polyhedra )
+	{
+		polyhedra->vertices_count = sizeof(tetrahedron_vertices) / sizeof(tetrahedron_vertices[0]);
+		polyhedra->vertices = (GLfloat*) malloc( sizeof(GLfloat) * polyhedra->vertices_count );
+		if( !polyhedra->vertices ) goto failure;
+
+		for( int i = 0; i < polyhedra->vertices_count; i++ )
 		{
-			result[ i ] = tetrahedron_list[ i ] * scale;
+			polyhedra->vertices[ i ] = tetrahedron_vertices[ i ] * scale;
 		}
 
-		*size = array_size;
-		printf( "Vertices in Tetrahedon: %d\n", *size / 3 );
+		polyhedra->indices_count = sizeof(tetrahedron_indices) / sizeof(tetrahedron_indices[0]);
+		polyhedra->indices = (GLushort*) malloc( sizeof(GLushort) * polyhedra->indices_count );
+		if( !polyhedra->indices ) goto failure;
+		memcpy( polyhedra->indices, tetrahedron_indices, polyhedra->indices_count * sizeof(GLushort) );
+
+		polyhedra->tex_coords_count = sizeof(tetrahedron_tex_coords) / sizeof(tetrahedron_tex_coords[0]);
+		polyhedra->tex_coords = (GLfloat*) malloc( sizeof(GLfloat) * polyhedra->tex_coords_count );
+		if( !polyhedra->tex_coords ) goto failure;
+		memcpy( polyhedra->tex_coords, tetrahedron_tex_coords, polyhedra->tex_coords_count * sizeof(GLfloat) );
+
+		polyhedra->colors_count = sizeof(tetrahedron_colors) / sizeof(tetrahedron_colors[0]);
+		polyhedra->colors = (GLfloat*) malloc( sizeof(GLfloat) * polyhedra->colors_count );
+		if( !polyhedra->colors ) goto failure;
+		memcpy( polyhedra->colors, tetrahedron_colors, polyhedra->colors_count * sizeof(GLfloat) );
+
 	}
 
-	return result;
+	return GL_TRUE;
+failure:
+	if( polyhedra->vertices )   free( polyhedra->vertices );
+	if( polyhedra->indices )    free( polyhedra->indices );
+	if( polyhedra->tex_coords ) free( polyhedra->tex_coords );
+	if( polyhedra->colors )     free( polyhedra->colors );
+
+	return GL_FALSE;
 }
 
-GLfloat* cube( GLfloat scale, GLsizei* size )
+GLboolean cube( polyhedra_t* polyhedra, GLfloat scale )
 {
-	GLsizei strip_size = sizeof(cube_vertices_strip) / sizeof(cube_vertices_strip[0]);
-	GLfloat* result = (GLfloat*) malloc( sizeof(GLfloat) * strip_size );
-
-	if( result )
+	if( polyhedra )
 	{
-		for( GLsizei i = 0; i < strip_size; i++ )
+		polyhedra->vertices_count = sizeof(cube_vertices) / sizeof(cube_vertices[0]);
+		polyhedra->vertices = (GLfloat*) malloc( sizeof(GLfloat) * polyhedra->vertices_count );
+		assert( polyhedra->vertices );
+		if( !polyhedra->vertices ) goto failure;
+
+		for( int i = 0; i < polyhedra->vertices_count; i++ )
 		{
-			result[ i ] = cube_vertices_strip[ i ] * scale;
+			polyhedra->vertices[ i ] = cube_vertices[ i ] * scale;
 		}
 
-		*size = strip_size;
+		polyhedra->indices_count = sizeof(cube_indices) / sizeof(cube_indices[0]);
+		polyhedra->indices = (GLushort*) malloc( sizeof(GLushort) * polyhedra->indices_count );
+		assert( polyhedra->indices );
+		if( !polyhedra->indices ) goto failure;
+		memcpy( polyhedra->indices, cube_indices, polyhedra->indices_count * sizeof(GLushort) );
 
-		printf( "Vertices in Cube: %d\n", *size / 3 );
+		polyhedra->tex_coords_count = sizeof(cube_tex_coords) / sizeof(cube_tex_coords[0]);
+		polyhedra->tex_coords = (GLfloat*) malloc( sizeof(GLfloat) * polyhedra->tex_coords_count );
+		assert( polyhedra->tex_coords );
+		if( !polyhedra->tex_coords ) goto failure;
+		memcpy( polyhedra->tex_coords, cube_tex_coords, polyhedra->tex_coords_count * sizeof(GLfloat) );
+
+		polyhedra->colors_count = sizeof(cube_colors) / sizeof(cube_colors[0]);
+		polyhedra->colors = (GLfloat*) malloc( sizeof(GLfloat) * polyhedra->colors_count );
+		assert( polyhedra->colors );
+		if( !polyhedra->colors ) goto failure;
+		memcpy( polyhedra->colors, cube_colors, polyhedra->colors_count * sizeof(GLfloat) );
 	}
 
-	return result;
+	return GL_TRUE;
+failure:
+	if( polyhedra->vertices )   free( polyhedra->vertices );
+	if( polyhedra->indices )    free( polyhedra->indices );
+	if( polyhedra->tex_coords ) free( polyhedra->tex_coords );
+	if( polyhedra->colors )     free( polyhedra->colors );
+
+	return GL_FALSE;
 }
 
-GLfloat* cube_tex_coords( void )
-{
-	GLsizei strip_size = sizeof(cube_tex_coords_strip) / sizeof(cube_tex_coords_strip[0]);
-	GLfloat* result = (GLfloat*) malloc( sizeof(GLfloat) * strip_size );
-
-	if( result )
-	{
-		memcpy( result, cube_tex_coords_strip, strip_size );
-	}
-
-	return result;
-}

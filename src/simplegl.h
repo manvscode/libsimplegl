@@ -120,12 +120,35 @@ GLint         glsl_bind_uniform              ( GLuint program, const GLchar* nam
 GLchar*       glsl_log                       ( GLuint object /* program or shader */ );
 
 /*
+ * Buffers
+ */
+GLboolean buffer_create  ( GLuint* id, const void* geometry, size_t element_size, size_t count, GLenum target /*GL_ARRAY_BUFFER*/, GLenum usage /*GL_STATIC_DRAW*/ );
+GLboolean buffer_destroy ( const GLuint* id );
+
+/*
+ * Objects
+ */
+typedef struct polyhedra {
+	GLfloat* vertices;
+	size_t vertices_count;
+	GLushort* indices;
+	size_t indices_count;
+	GLfloat* tex_coords;
+	size_t tex_coords_count;
+	GLfloat* colors;
+	size_t colors_count;
+} polyhedra_t;
+
+void      polyhedra_create  ( polyhedra_t* polyhedra );
+void      polyhedra_destroy ( polyhedra_t* polyhedra );
+GLboolean tetrahedron       ( polyhedra_t* polyhedra, GLfloat scale );
+GLboolean cube              ( polyhedra_t* polyhedra, GLfloat scale );
+
+/*
  * Miscellaneous
  */ 
 void      dump_gl_info ( void );
 GLenum    check_gl     ( void );
-GLfloat* tetrahedron   ( GLfloat scale, GLsizei* count );
-GLfloat* cube          ( GLfloat scale, GLsizei* count );
 
 #ifdef SIMPLEGL_DEBUG
 #define GL_ASSERT_NO_ERROR()    assert(check_gl() == GL_NO_ERROR);

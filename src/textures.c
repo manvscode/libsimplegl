@@ -1,4 +1,5 @@
 #include <libimageio/imageio.h>
+#include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include "simplegl.h"
@@ -7,7 +8,8 @@
 void _tex2d_create( GLuint* p_texture )
 {
 	assert( p_texture );
-	glEnable( GL_TEXTURE_2D );
+	//glEnable( GL_TEXTURE_2D );
+	GL_ASSERT_NO_ERROR( );
 	glGenTextures( 1, p_texture );
 	GL_ASSERT_NO_ERROR( );
 }
@@ -15,7 +17,8 @@ void _tex2d_create( GLuint* p_texture )
 GLuint tex2d_create( void )
 {
 	GLuint texture = 0;
-	glEnable( GL_TEXTURE_2D );
+	//glEnable( GL_TEXTURE_2D );
+	GL_ASSERT_NO_ERROR( );
 	glGenTextures( 1, &texture );
 	GL_ASSERT_NO_ERROR( );
 	assert( texture > 0 );
@@ -42,14 +45,23 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 		if( strcasecmp( "png", extension ) == 0 )
 		{
 			format = PNG;
+			#ifdef SIMPLEGL_DEBUG
+			printf( "Loading TGA: %s\n", filename );
+			#endif
 		}
 		else if( strcasecmp( "bmp", extension ) == 0 )
 		{
 			format = BMP;
+			#ifdef SIMPLEGL_DEBUG
+			printf( "Loading TGA: %s\n", filename );
+			#endif
 		}
 		else if( strcasecmp( "tga", extension ) == 0 )
 		{
 			format = TGA;
+			#ifdef SIMPLEGL_DEBUG
+			printf( "Loading TGA: %s\n", filename );
+			#endif
 		}
 	}
 
@@ -59,7 +71,7 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 	{
 		GLenum pixel_format = image.bits_per_pixel == 32 ? GL_RGBA : GL_RGB;
 
-		glEnable( GL_TEXTURE_2D );
+		//glEnable( GL_TEXTURE_2D );
 
 		glBindTexture( GL_TEXTURE_2D, texture );
 		GL_ASSERT_NO_ERROR( );
@@ -96,7 +108,7 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 		}
 
 
-		/* Dispose of image */
+		// Dispose of image
 		imageio_image_destroy( &image );
 		result = true;
 	}
