@@ -41,8 +41,8 @@ int main( int argc, char* argv[] )
 	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
-	//flags |= SDL_WINDOW_FULLSCREEN;
-	window = SDL_CreateWindow( "Test Shaders", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, flags );
+	flags |= SDL_WINDOW_FULLSCREEN;
+	window = SDL_CreateWindow( "Test Shaders", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags );
 
 	if( window == NULL )
 	{
@@ -84,7 +84,7 @@ void initialize( void )
 	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
 	glEnable( GL_DEPTH_TEST );
-	glEnable( GL_CULL_FACE );
+	glDisable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
 	GL_ASSERT_NO_ERROR( );
 
@@ -135,7 +135,7 @@ void initialize( void )
 	{
 		glActiveTexture( GL_TEXTURE0 );
 		GL_ASSERT_NO_ERROR( );
-		tex2d_load_for_3d( texture, "./tests/checkered.png", false );
+		tex2d_load_for_3d( texture, "./tests/checkered.png", true );
 		GL_ASSERT_NO_ERROR( );
   		//glBindTexture( GL_TEXTURE_2D, texture_id );
   		//glUniform1i( uniform_texture, /*GL_TEXTURE*/ 0 );
@@ -153,7 +153,7 @@ void initialize( void )
 	glBindVertexArray( vao );
 	GL_ASSERT_NO_ERROR( );
 
-	#if 1
+	#if 0
 	tetrahedron( &polyhedra, 3.0f );
 	#else
 	cube( &polyhedra, 3.0f );
@@ -241,7 +241,10 @@ void render( )
 	static float angle = 0.0;
 	if( angle >= 360.0f ) angle = 0.0f;
 	#if 0
-	vec3_t translation = VEC3_VECTOR( 0.0, 0.0, -15 );
+	int width; int height;
+	SDL_GetWindowSize( window, &width, &height );
+	GLfloat aspect = ((GLfloat)width) / height;
+	vec3_t translation = VEC3_VECTOR( 0.0, 0.0, -10 );
 	mat4_t projection = orthographic( -10.0, 10.0, -6.0*aspect, 6.0*aspect, -100.0, 100.0 );
 	mat4_t rotation = rotate_xyz( "yx", angle, -5.0 );
 	angle += 0.1f;
@@ -249,9 +252,11 @@ void render( )
 	transform = mat4_mult_matrix( &transform, &rotation );
 	mat4_t model_view = mat4_mult_matrix( &projection, &transform );
 	#else
-	GLfloat aspect = 480.0f/640.0f;
+	int width; int height;
+	SDL_GetWindowSize( window, &width, &height );
+	GLfloat aspect = ((GLfloat)height) / width;
 	vec3_t translation = VEC3_VECTOR( 0.0, 0.0, -10 );
-	mat4_t projection = perspective( 78.0, aspect, 0.1, 100.0 );
+	mat4_t projection = perspective( 60.0, aspect, 0.1, 100.0 );
 	mat4_t rotation = rotate_xyz( "yzx", angle, angle / 2.0, -angle / 2.0 );
 	angle += 0.03;
 	mat4_t transform = translate( &translation );
