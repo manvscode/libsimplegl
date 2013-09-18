@@ -27,11 +27,11 @@ AC_C_BIGENDIAN
 
 
 
-DFLAGS="-D GL_GLEXT_PROTOTYPES -D SIMPLEGL_DEBUG"
+DFLAGS="-D GL_GLEXT_PROTOTYPES"
 
-CFLAGS="-Wall -g -ggdb -O0 $DFLAGS -I/usr/include -I/usr/local/include -I/usr/include "
-#CXXFLAGS="-Wall -g -ggdb -O0 $DFLAGS -I/usr/include -I/usr/local/include -I/usr/include"
-LDFLAGS="-lm -lGL -lGLU"
+CFLAGS="-Wall -O3 $DFLAGS -I/usr/include -I/usr/local/include -I/usr/include "
+#CFLAGS="-Wall -g -ggdb -O0 $DFLAGS -I/usr/include -I/usr/local/include -I/usr/include "
+LDFLAGS="-l3dmath -lm"
 #LDFLAGS="$LDFLAGS -L/System/Library/Frameworks/OpenGL.framework/Libraries -framework GLUT -framework OpenGL"
 
 

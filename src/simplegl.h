@@ -65,7 +65,7 @@ extern "C" {
 /*
  * Mathematics
  */
-#include "mathematics.h"
+#include <lib3dmath/mathematics.h>
 #include <math.h>
 
 /*

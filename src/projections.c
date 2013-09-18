@@ -1,6 +1,6 @@
 #include <math.h>
 #include <assert.h>
-#include "mathematics.h"
+#include <lib3dmath/mathematics.h>
 #include "simplegl.h"
 
 

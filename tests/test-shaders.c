@@ -41,7 +41,7 @@ int main( int argc, char* argv[] )
 	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
-	flags |= SDL_WINDOW_FULLSCREEN;
+	//flags |= SDL_WINDOW_FULLSCREEN;
 	window = SDL_CreateWindow( "Test Shaders", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags );
 
 	if( window == NULL )
