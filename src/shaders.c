@@ -390,12 +390,12 @@ GLint glsl_bind_attribute( GLuint program, const GLchar* name )
 	GLuint result = glGetAttribLocation( program, name );
 	GL_ASSERT_NO_ERROR( );
 
+	#ifdef SIMPLEGL_DEBUG
 	if( result == -1 )
 	{
-		#ifdef SIMPLEGL_DEBUG
 		fprintf( stderr, "[GLSL] Could not bind attribute %s\n", name );
-		#endif
 	}
+	#endif
 
 	return result;
 }
@@ -405,12 +405,12 @@ GLint glsl_bind_uniform( GLuint program, const GLchar* name )
 	GLuint result = glGetUniformLocation( program, name );
 	GL_ASSERT_NO_ERROR( );
 
+	#ifdef SIMPLEGL_DEBUG
 	if( result == -1 )
 	{
-		#ifdef SIMPLEGL_DEBUG
 		fprintf( stderr, "[GLSL] Could not bind uniform %s\n", name );
-		#endif
 	}
+	#endif
 
 	return result;
 }

@@ -85,17 +85,39 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 		}
 	}
 
-	//glPushAttrib( GL_ENABLE_BIT );
-
 	if( imageio_image_load( &image, filename, format ) )
 	{
-		GLenum pixel_format = image.bits_per_pixel == 32 ? GL_RGBA : GL_RGB;
+		tex2d_setup_texture( texture, image.width, image.height, image.bits_per_pixel, image.pixels, min_filter, mag_filter, clamp );
+
+		// Dispose of image
+		imageio_image_destroy( &image );
+		result = true;
+	}
+
+	return result;
+}
+
+bool tex2d_load_for_2d( GLuint texture, const char* filename )
+{
+	return tex2d_load( texture, filename, GL_NEAREST, GL_NEAREST, true );
+}
+
+bool tex2d_load_for_3d( GLuint texture, const char* filename, bool clamp )
+{
+	return tex2d_load( texture, filename, GL_LINEAR, GL_LINEAR, clamp );
+}
+
+void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte bit_depth, const void* pixels, GLint min_filter, GLint mag_filter, bool clamp )
+{
+	//glPushAttrib( GL_ENABLE_BIT );
+
+		GLenum pixel_format = bit_depth == 32 ? GL_RGBA : GL_RGB;
 
 		//glEnable( GL_TEXTURE_2D );
 
 		glBindTexture( GL_TEXTURE_2D, texture );
 		GL_ASSERT_NO_ERROR( );
-		glTexImage2D( GL_TEXTURE_2D, 0, pixel_format, image.width, image.height, 0, pixel_format, GL_UNSIGNED_BYTE, image.pixels );
+		glTexImage2D( GL_TEXTURE_2D, 0, pixel_format, width, height, 0, pixel_format, GL_UNSIGNED_BYTE, pixels );
 		GL_ASSERT_NO_ERROR( );
 
 
@@ -128,22 +150,5 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 		}
 
 
-		// Dispose of image
-		imageio_image_destroy( &image );
-		result = true;
-	}
-
 	//glPopAttrib( );
-	return result;
 }
-
-bool tex2d_load_for_2d( GLuint texture, const char* filename )
-{
-	return tex2d_load( texture, filename, GL_NEAREST, GL_NEAREST, true );
-}
-
-bool tex2d_load_for_3d( GLuint texture, const char* filename, bool clamp )
-{
-	return tex2d_load( texture, filename, GL_LINEAR, GL_LINEAR, clamp );
-}
-
