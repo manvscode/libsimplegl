@@ -27,6 +27,7 @@ AC_C_BIGENDIAN
 
 
 
+#DFLAGS="-D GL_GLEXT_PROTOTYPES -D SIMPLEGL_DEBUG"
 DFLAGS="-D GL_GLEXT_PROTOTYPES"
 
 CFLAGS="-Wall -O3 $DFLAGS -I/usr/include -I/usr/local/include -I/usr/include "

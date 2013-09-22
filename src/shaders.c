@@ -32,41 +32,22 @@ GLboolean glsl_program_from_shaders( GLuint* p_program, const shader_info_t* sha
 {
 	const shader_info_t* info;
 	GLuint shader_names[ count ]; /* VLAs in C99 */
-    GLsizei i;
+	GLsizei i;
 	GLboolean result = true;
 
 	assert( p_program && shaders );
 
-    for( i = 0; result && i < count; i++ )
-    {
+	for( i = 0; result && i < count; i++ )
+	{
 		info = &shaders[ i ];
 
 		const char* shader_source_code = glsl_shader_load( info->filename );
 
-		result = glsl_shader_create_from_source( &shader_names[ i ], info->type, shader_source_code );
+		result = glsl_shader_create_from_source( &shader_names[ i ], info->type, shader_source_code, shader_log );
 		free( (char*) shader_source_code );
-
-    }
-
-	if( !result && shader_log )
-	{
-		*shader_log = glsl_log( shader_names[ i ] );
-	}
-	else
-	{
-		*shader_log = NULL;
 	}
 
-	result = result && glsl_program_create( p_program, shader_names, count, GL_TRUE /* delete shaders when program is deleted */ );
-
-	if( !result && program_log )
-	{
-		*program_log = glsl_log( *p_program );
-	}
-	else
-	{
-		*program_log = NULL;
-	}
+	result = result && glsl_program_create( p_program, shader_names, count, GL_TRUE /* delete shaders when program is deleted */, program_log );
 
 	return result;
 }
@@ -74,35 +55,35 @@ GLboolean glsl_program_from_shaders( GLuint* p_program, const shader_info_t* sha
 /*
  * Create a program by attaching and linking a collection of shaders.
  */
-GLboolean glsl_program_create( GLuint* p_program, GLuint *shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion )
+GLboolean glsl_program_create( GLuint* p_program, GLuint *shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion, GLchar** program_log )
 {
 	assert( p_program );
-    GLuint p = glCreateProgram( );
-    GLsizei i;
+	GLuint p = glCreateProgram( );
+	GLsizei i;
 
 	if( p <= 0 )
 	{
 		#ifdef SIMPLEGL_DEBUG
 		fprintf( stderr, "[GLSL] Failed to create program.\n" );
 		#endif
-		return GL_FALSE;
+		goto failure;
 	}
 
-    for( i = 0; i < shader_count; i++ )
-    {
-		glsl_attach_shader( p, shaders[ i ] );
-    }
 
-    if( !glsl_link_program( p ) )
-    {
-        /* linker error */
-        #ifdef SIMPLEGL_DEBUG
+	for( i = 0; i < shader_count; i++ )
+	{
+		glsl_attach_shader( p, shaders[ i ] );
+	}
+
+	if( !glsl_link_program( p ) )
+	{
+		/* linker error */
+		#ifdef SIMPLEGL_DEBUG
 		fprintf( stderr, "[GLSL] Failed to link program.\n" );
-        glsl_program_error( p );
-        #endif
-		glsl_destroy( p );
-        return GL_FALSE;
-    }
+		glsl_program_error( p );
+		#endif
+		goto failure;
+	}
 
 
 	if( mark_shaders_for_deletion )
@@ -118,8 +99,27 @@ GLboolean glsl_program_create( GLuint* p_program, GLuint *shaders, GLsizei shade
 		}
 	}
 
-    *p_program = p;
-    return GL_TRUE;
+	*p_program = p;
+
+	if( program_log )
+	{
+		*program_log = NULL;
+	}
+
+	return GL_TRUE;
+
+failure:
+	if( program_log )
+	{
+		*program_log = glsl_log( *p_program );
+	}
+
+	if( p )
+	{
+		glsl_destroy( p );
+	}
+
+	return GL_FALSE;
 }
 
 /*  Creates, compiles and links shader program.
@@ -129,15 +129,15 @@ GLboolean glsl_program_create( GLuint* p_program, GLuint *shaders, GLsizei shade
  *   type -- GL_VERTEX_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_GEOMETRY_SHADER, or GL_FRAGMENT_SHADER.
  * source -- shader source code
  */
-GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const GLchar* source )
+GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const GLchar* source, GLchar** shader_log )
 {
 	assert( p_shader );
-    GLuint s = glCreateShader( type );
+	GLuint s = glCreateShader( type );
 	GL_ASSERT_NO_ERROR( );
 
-    if( !s )
-    {
-        #ifdef SIMPLEGL_DEBUG
+	if( !s )
+	{
+		#ifdef SIMPLEGL_DEBUG
 		const char* type_str;
 		switch( type )
 		{
@@ -163,47 +163,67 @@ GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const G
 				break;
 		}
 		fprintf( stderr, "[GLSL] Failed to create %s shader.\n", type_str );
-        #endif
-        return GL_FALSE;
-    }
+		#endif
+		goto failure;
+	}
 
-    /* Load shader source */
+
+	/* Load shader source */
 	#if 0
 	const GLchar* sources[ 2 ] = {
-		#ifdef GL_ES_VERSION_2_0
+	#ifdef GL_ES_VERSION_2_0
 		"#version 100\n"
-		"#define GLES2\n",
-		#else
+			"#define GLES2\n",
+	#else
 		"#version 130\n",
-		#endif
+	#endif
 		source
 	};
 	/* Hard coding the version in the sources doesn't look like a good idea */
 	glShaderSource( s, 2, sources, NULL );
 	#else
-    glShaderSource( s, 1, &source, NULL );
+	glShaderSource( s, 1, &source, NULL );
 	#endif
 	GL_ASSERT_NO_ERROR( );
 
-    glCompileShader( s );
+	glCompileShader( s );
 	GL_ASSERT_NO_ERROR( );
 
-    GLint compileStatus;
-    glGetShaderiv( s, GL_COMPILE_STATUS, &compileStatus );
+	GLint compileStatus;
+	glGetShaderiv( s, GL_COMPILE_STATUS, &compileStatus );
 	GL_ASSERT_NO_ERROR( );
 
-    if( compileStatus == GL_FALSE )
-    {
-        /* Compilation error */
-        #ifdef SIMPLEGL_DEBUG
+	if( compileStatus == GL_FALSE )
+	{
+		/* Compilation error */
+		#ifdef SIMPLEGL_DEBUG
 		fprintf( stderr, "[GLSL] Failed to compile shader %u.\n", s );
-        glsl_shader_error( s );
-        #endif
-        return GL_FALSE;
-    }
+		glsl_shader_error( s );
+		#endif
+		goto failure;
+	}
 
-    *p_shader = s;
-    return GL_TRUE;
+	if( shader_log )
+	{
+		*shader_log = NULL;
+	}
+
+	*p_shader = s;
+
+	return GL_TRUE;
+
+failure:
+	if( shader_log )
+	{
+		*shader_log = glsl_log( s );
+	}
+
+	if( s )
+	{
+		glsl_destroy( s );
+	}
+
+	return GL_FALSE;
 }
 
 GLuint glsl_create( GLenum type )
@@ -215,26 +235,26 @@ GLuint glsl_create( GLenum type )
 	{
 		case GL_VERTEX_SHADER:
 			type_str = "vertex shader";
-    		object = glCreateShader( type );
+			object = glCreateShader( type );
 			break;
 		case GL_FRAGMENT_SHADER:
 			type_str = "fragment shader";
-    		object = glCreateShader( type );
+			object = glCreateShader( type );
 			break;
 		case GL_GEOMETRY_SHADER:
 			type_str = "geometry shader";
-    		object = glCreateShader( type );
+			object = glCreateShader( type );
 			break;
 		#ifdef GL_TESS_EVALUATION_SHADER /* Missing on Mac OS X */
 		case GL_TESS_CONTROL_SHADER:
 			type_str = "tesselation control shader";
-    		object = glCreateShader( type );
+			object = glCreateShader( type );
 			break;
 		#endif
 		#ifdef GL_TESS_EVALUATION_SHADER /* Missing on Mac OS X */
 		case GL_TESS_EVALUATION_SHADER:
 			type_str = "tesselation evaluation shader";
-    		object = glCreateShader( type );
+			object = glCreateShader( type );
 			break;
 		#endif
 		#ifdef GL_PROGRAM /* Missing on Mac OS X */
@@ -312,11 +332,11 @@ GLchar* glsl_shader_load( const char* path )
 		fclose( file );
 	}
 
-	#if defined(SIMPLEGL_DEBUG) && 0
+#if defined(SIMPLEGL_DEBUG) && 0
 	fprintf( stdout, "-------------------- [ bof %s] ---------------------\n", path );
 	fprintf( stdout, "%s", result );
 	fprintf( stdout, "-------------------- [ eof %s] ---------------------\n", path );
-	#endif
+#endif
 
 	return result;
 }
@@ -352,7 +372,7 @@ GLboolean glsl_attach_shader( GLuint program, GLuint shader )
 {
 	if( glIsProgram(program) && glIsShader(shader) )
 	{
-        glAttachShader( program, shader );
+		glAttachShader( program, shader );
 		return GL_TRUE;
 	}
 
@@ -373,10 +393,10 @@ GLboolean glsl_link_program( GLuint program )
 		if( !link_status )
 		{
 			/* linker error */
-			#ifdef SIMPLEGL_DEBUG
+#ifdef SIMPLEGL_DEBUG
 			fprintf( stderr, "[GLSL] Failed to link program.\n" );
 			glsl_program_error( program );
-			#endif
+#endif
 		}
 
 		result = (link_status == GL_TRUE);
@@ -390,12 +410,12 @@ GLint glsl_bind_attribute( GLuint program, const GLchar* name )
 	GLuint result = glGetAttribLocation( program, name );
 	GL_ASSERT_NO_ERROR( );
 
-	#ifdef SIMPLEGL_DEBUG
+#ifdef SIMPLEGL_DEBUG
 	if( result == -1 )
 	{
 		fprintf( stderr, "[GLSL] Could not bind attribute %s\n", name );
 	}
-	#endif
+#endif
 
 	return result;
 }
@@ -405,12 +425,12 @@ GLint glsl_bind_uniform( GLuint program, const GLchar* name )
 	GLuint result = glGetUniformLocation( program, name );
 	GL_ASSERT_NO_ERROR( );
 
-	#ifdef SIMPLEGL_DEBUG
+#ifdef SIMPLEGL_DEBUG
 	if( result == -1 )
 	{
 		fprintf( stderr, "[GLSL] Could not bind uniform %s\n", name );
 	}
-	#endif
+#endif
 
 	return result;
 }
@@ -418,16 +438,16 @@ GLint glsl_bind_uniform( GLuint program, const GLchar* name )
 
 GLchar* glsl_log( GLuint object )
 {
-    GLint log_length = 0;
+	GLint log_length = 0;
 	GLchar* p_log    = NULL;
 
 	if( glIsShader( object ) )
 	{
-    	glGetShaderiv( object, GL_INFO_LOG_LENGTH, &log_length );
+		glGetShaderiv( object, GL_INFO_LOG_LENGTH, &log_length );
 	}
 	else if( glIsProgram( object ) )
 	{
-    	glGetProgramiv( object, GL_INFO_LOG_LENGTH, &log_length );
+		glGetProgramiv( object, GL_INFO_LOG_LENGTH, &log_length );
 	}
 
 	if( log_length > 0 )
@@ -451,36 +471,36 @@ GLchar* glsl_log( GLuint object )
 		p_log[ log_length - 1 ] ='\0';
 	}
 
-    return p_log;
+	return p_log;
 }
 
 void glsl_shader_error( GLuint shader )
 {
-    const GLchar* p_log = glsl_log( shader );
+	const GLchar* p_log = glsl_log( shader );
 
-    if( p_log )
-    {
-        fprintf( stderr, "[Shader %u Error] %s\n", shader, p_log );
-        free( (void*) p_log );
-    }
-    else
-    {
-        fprintf( stderr, "[Shader %u Error] unknown\n", shader );
-    }
+	if( p_log )
+	{
+		fprintf( stderr, "[Shader %u Error] %s\n", shader, p_log );
+		free( (void*) p_log );
+	}
+	else
+	{
+		fprintf( stderr, "[Shader %u Error] unknown\n", shader );
+	}
 }
 
 void glsl_program_error( GLuint program )
 {
-    const GLchar* p_log = glsl_log( program );
+	const GLchar* p_log = glsl_log( program );
 
-    if( p_log )
-    {
-        fprintf( stderr, "[Program %u Error] %s\n", program, p_log );
-        free( (void*) p_log );
-    }
-    else
-    {
-        fprintf( stderr, "[Program %u Error] unknown\n", program );
-    }
+	if( p_log )
+	{
+		fprintf( stderr, "[Program %u Error] %s\n", program, p_log );
+		free( (void*) p_log );
+	}
+	else
+	{
+		fprintf( stderr, "[Program %u Error] unknown\n", program );
+	}
 }
 
