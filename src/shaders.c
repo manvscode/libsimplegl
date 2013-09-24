@@ -24,8 +24,10 @@
 #include <assert.h>
 #include "simplegl.h"
 
+#ifdef SIMPLEGL_DEBUG
 static __inline void glsl_shader_error  ( GLuint shader );
 static __inline void glsl_program_error ( GLuint program );
+#endif
 
 
 GLboolean glsl_program_from_shaders( GLuint* p_program, const shader_info_t* shaders, GLsizei count, GLchar** shader_log, GLchar** program_log )
@@ -393,10 +395,10 @@ GLboolean glsl_link_program( GLuint program )
 		if( !link_status )
 		{
 			/* linker error */
-#ifdef SIMPLEGL_DEBUG
+			#ifdef SIMPLEGL_DEBUG
 			fprintf( stderr, "[GLSL] Failed to link program.\n" );
 			glsl_program_error( program );
-#endif
+			#endif
 		}
 
 		result = (link_status == GL_TRUE);
@@ -410,12 +412,12 @@ GLint glsl_bind_attribute( GLuint program, const GLchar* name )
 	GLuint result = glGetAttribLocation( program, name );
 	GL_ASSERT_NO_ERROR( );
 
-#ifdef SIMPLEGL_DEBUG
+	#ifdef SIMPLEGL_DEBUG
 	if( result == -1 )
 	{
 		fprintf( stderr, "[GLSL] Could not bind attribute %s\n", name );
 	}
-#endif
+	#endif
 
 	return result;
 }
@@ -425,12 +427,12 @@ GLint glsl_bind_uniform( GLuint program, const GLchar* name )
 	GLuint result = glGetUniformLocation( program, name );
 	GL_ASSERT_NO_ERROR( );
 
-#ifdef SIMPLEGL_DEBUG
+	#ifdef SIMPLEGL_DEBUG
 	if( result == -1 )
 	{
 		fprintf( stderr, "[GLSL] Could not bind uniform %s\n", name );
 	}
-#endif
+	#endif
 
 	return result;
 }
@@ -474,6 +476,7 @@ GLchar* glsl_log( GLuint object )
 	return p_log;
 }
 
+#ifdef SIMPLEGL_DEBUG
 void glsl_shader_error( GLuint shader )
 {
 	const GLchar* p_log = glsl_log( shader );
@@ -503,4 +506,4 @@ void glsl_program_error( GLuint program )
 		fprintf( stderr, "[Program %u Error] unknown\n", program );
 	}
 }
-
+#endif
