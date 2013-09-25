@@ -46,6 +46,8 @@ int main( int argc, char* argv[] )
 
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );
+	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLEBUFFERS, 1 );
+	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 4 );
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 	//flags |= SDL_WINDOW_FULLSCREEN;

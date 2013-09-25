@@ -163,17 +163,18 @@ axes_3d_t axes_3d_create( GLfloat line_width )
 			glGenVertexArrays( 1, &axes->vao );
 			assert( axes->vao > 0 );
 			glBindVertexArray( axes->vao );
+
 			glBindBuffer( GL_ARRAY_BUFFER, axes->vbo );
 			GL_ASSERT_NO_ERROR( );
 
 			glEnableVertexAttribArray( attribute_vertex );
 			glVertexAttribPointer( attribute_vertex, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, 0 );
-			glDisableVertexAttribArray( attribute_vertex );
+			//glDisableVertexAttribArray( attribute_vertex );
 			GL_ASSERT_NO_ERROR( );
 
 			glEnableVertexAttribArray( attribute_color );
 			glVertexAttribPointer( attribute_color, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, (const void*) (sizeof(GLfloat) * 3) );
-			glDisableVertexAttribArray( attribute_color );
+			//glDisableVertexAttribArray( attribute_color );
 			GL_ASSERT_NO_ERROR( );
 
 			glBindVertexArray( 0 );
@@ -227,18 +228,16 @@ void axes_3d_render( axes_3d_t axes, const GLfloat* model_view )
 	GL_ASSERT_NO_ERROR( );
 
 	glBindVertexArray( axes->vao );
-		GL_ASSERT_NO_ERROR( );
-
-		glEnableVertexAttribArray( axes->attribute_vertex );
-		glEnableVertexAttribArray( axes->attribute_color );
+		//glEnableVertexAttribArray( axes->attribute_vertex );
+		//glEnableVertexAttribArray( axes->attribute_color );
 		GL_ASSERT_NO_ERROR( );
 		glUniformMatrix4fv( axes->uniform_model_view, 1, GL_FALSE, model_view );
 
 		glDrawArrays( GL_LINES, 0, AXES_ARRAY_LENGTH );
 		GL_ASSERT_NO_ERROR( );
 
-		glDisableVertexAttribArray( axes->attribute_vertex );
-		glDisableVertexAttribArray( axes->attribute_color );
+		//glDisableVertexAttribArray( axes->attribute_vertex );
+		//glDisableVertexAttribArray( axes->attribute_color );
 
 	glBindVertexArray( 0 );
 	GL_ASSERT_NO_ERROR( );

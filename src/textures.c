@@ -54,7 +54,7 @@ void tex2d_destroy( GLuint texture )
 bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, bool clamp )
 {
 	bool result = false;
-	const char* extension = strchr( filename, '.' );
+	const char* extension = strrchr( filename, '.' );
 	image_file_format_t format = PNG;
 	image_t image;
 
@@ -93,6 +93,12 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 		imageio_image_destroy( &image );
 		result = true;
 	}
+	#ifdef SIMPLEGL_DEBUG
+	else
+	{
+		fprintf( stderr, "Failed to load: %s\n", filename );
+	}
+	#endif
 
 	return result;
 }

@@ -59,6 +59,8 @@ int main( int argc, char* argv[] )
 
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );
+	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLEBUFFERS, 1 );
+	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 4 );
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 	//flags |= SDL_WINDOW_FULLSCREEN;
@@ -108,12 +110,11 @@ void initialize( void )
 	glCullFace( GL_BACK );
 	GL_ASSERT_NO_ERROR( );
 
-	glEnable( GL_LINE_SMOOTH );
-	glEnable( GL_POLYGON_SMOOTH );
-
-
 	glEnable( GL_BLEND );
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+	glEnable( GL_LINE_SMOOTH );
+	glEnable( GL_POLYGON_SMOOTH );
+	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
 	GLchar* shader_log  = NULL;
 	GLchar* program_log = NULL;
