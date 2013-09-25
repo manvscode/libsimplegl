@@ -264,8 +264,8 @@ GLuint glsl_create( GLenum type )
 		#endif
 		default:
 			type_str = "program";
-			break;
 			object = glCreateProgram( );
+			assert( glIsProgram( object ) );
 			break;
 	}
 

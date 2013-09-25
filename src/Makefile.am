@@ -1,5 +1,5 @@
 # Add new files in alphabetical order. Thanks.
-libsimplegl_src = buffers.c projections.c shaders.c textures.c transformations.c simplegl.c objects.c
+libsimplegl_src = 3d-axes.c buffers.c projections.c shaders.c textures.c transformations.c simplegl.c objects.c
 
 # Add new files in alphabetical order. Thanks.
 libsimplegl_headers = simplegl.h

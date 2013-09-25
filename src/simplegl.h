@@ -52,6 +52,10 @@ extern "C" {
 #define GL_GLEXT_PROTOTYPES
 #endif
 
+#ifndef GL_PROGRAM
+#define GL_PROGRAM  0
+#endif
+
 /*
  * Always include OpenGL and GLU headers
  */
@@ -144,6 +148,17 @@ void      polyhedra_create  ( polyhedra_t* polyhedra );
 void      polyhedra_destroy ( polyhedra_t* polyhedra );
 GLboolean tetrahedron       ( polyhedra_t* polyhedra, GLfloat scale );
 GLboolean cube              ( polyhedra_t* polyhedra, GLfloat scale );
+
+/*
+ * 3D Axes Helper
+ * (x-axis,y-axis,z-axis) --> (red,green,blue)
+ */
+struct axes_3d;
+typedef struct axes_3d* axes_3d_t;
+
+axes_3d_t axes_3d_create  ( void );
+void      axes_3d_destroy ( axes_3d_t* axes );
+void      axes_3d_render  ( axes_3d_t axes, const GLfloat* model_view_matrix );
 
 /*
  * Miscellaneous
