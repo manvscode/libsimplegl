@@ -104,7 +104,7 @@ void initialize( void )
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 	GL_ASSERT_NO_ERROR( );
 
-	axes = axes_3d_create( );
+	axes = axes_3d_create( 1.0f );
 
 	glPointSize( 1.0 );
 

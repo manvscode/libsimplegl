@@ -66,9 +66,10 @@ struct axes_3d {
 	GLint  attribute_vertex;
 	GLint  attribute_color;
 	GLint  uniform_model_view;
+	GLfloat line_width;
 };
 
-axes_3d_t axes_3d_create( void )
+axes_3d_t axes_3d_create( GLfloat line_width )
 {
 	GLuint program         = 0;
 	GLuint vertex_shader   = 0;
@@ -78,6 +79,33 @@ axes_3d_t axes_3d_create( void )
 
 	if( axes )
 	{
+		GLfloat range[ 2 ];
+
+		if( glIsEnabled( GL_LINE_SMOOTH ) )
+		{
+			glGetFloatv( GL_ALIASED_LINE_WIDTH_RANGE, range );
+
+			if( line_width < range[ 0 ] || line_width > range[ 1 ] )
+			{
+				#ifdef SIMPLEGL_DEBUG
+				fprintf( stdout, "[GL] Line width must be within [%f, %f]\n", range[0], range[1] );
+				#endif
+				goto failure;
+			}
+		}
+		else
+		{
+			glGetFloatv( GL_SMOOTH_LINE_WIDTH_RANGE, range );
+
+			if( line_width < range[ 0 ] || line_width > range[ 1 ] )
+			{
+				#ifdef SIMPLEGL_DEBUG
+				fprintf( stdout, "[GL] Line width must be within [%f, %f]\n", range[0], range[1] );
+				#endif
+				goto failure;
+			}
+		}
+
 		program = glsl_create( GL_PROGRAM );
 
 		if( !program )
@@ -130,11 +158,13 @@ axes_3d_t axes_3d_create( void )
 		if( buffer_create( &axes->vbo, axes_and_colors, sizeof(GLfloat), AXES_ARRAY_LENGTH, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 		{
 			glBindBuffer( GL_ARRAY_BUFFER, 0 );
+			GL_ASSERT_NO_ERROR( );
 
 			glGenVertexArrays( 1, &axes->vao );
 			assert( axes->vao > 0 );
 			glBindVertexArray( axes->vao );
 			glBindBuffer( GL_ARRAY_BUFFER, axes->vbo );
+			GL_ASSERT_NO_ERROR( );
 
 			glEnableVertexAttribArray( attribute_vertex );
 			glVertexAttribPointer( attribute_vertex, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, 0 );
@@ -157,12 +187,16 @@ axes_3d_t axes_3d_create( void )
 		axes->attribute_vertex   = attribute_vertex;
 		axes->attribute_color    = attribute_color;
 		axes->uniform_model_view = uniform_model_view;
+		axes->line_width         = line_width;
 		GL_ASSERT_NO_ERROR( );
 	}
 
 	return axes;
 
 failure:
+	#ifdef SIMPLEGL_DEBUG
+	fprintf( stdout, "[GL] Unable to create 3D axes\n" );
+	#endif
 	if( vertex_shader ) glsl_destroy( vertex_shader );
 	if( fragment_shader ) glsl_destroy( fragment_shader );
 	if( program ) glsl_destroy( program );
@@ -184,21 +218,30 @@ void axes_3d_destroy( axes_3d_t* axes )
 
 void axes_3d_render( axes_3d_t axes, const GLfloat* model_view )
 {
-	float current_line_width = 1.0f;
+	GLfloat current_line_width;
 	glGetFloatv( GL_LINE_WIDTH, &current_line_width );
-	glLineWidth( 1.0f );
+	glLineWidth( axes->line_width );
+	GL_ASSERT_NO_ERROR( );
 
 	glUseProgram( axes->program );
-
-	glEnableVertexAttribArray( axes->attribute_vertex );
-	glEnableVertexAttribArray( axes->attribute_color );
-	glUniformMatrix4fv( axes->uniform_model_view, 1, GL_FALSE, model_view );
+	GL_ASSERT_NO_ERROR( );
 
 	glBindVertexArray( axes->vao );
-	glDrawArrays( GL_LINES, 0, AXES_ARRAY_LENGTH );
+		GL_ASSERT_NO_ERROR( );
 
-	glDisableVertexAttribArray( axes->attribute_vertex );
-	glDisableVertexAttribArray( axes->attribute_color );
+		glEnableVertexAttribArray( axes->attribute_vertex );
+		glEnableVertexAttribArray( axes->attribute_color );
+		GL_ASSERT_NO_ERROR( );
+		glUniformMatrix4fv( axes->uniform_model_view, 1, GL_FALSE, model_view );
+
+		glDrawArrays( GL_LINES, 0, AXES_ARRAY_LENGTH );
+		GL_ASSERT_NO_ERROR( );
+
+		glDisableVertexAttribArray( axes->attribute_vertex );
+		glDisableVertexAttribArray( axes->attribute_color );
+
+	glBindVertexArray( 0 );
+	GL_ASSERT_NO_ERROR( );
 
 	glLineWidth( current_line_width );
 }

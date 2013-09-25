@@ -156,9 +156,9 @@ GLboolean cube              ( polyhedra_t* polyhedra, GLfloat scale );
 struct axes_3d;
 typedef struct axes_3d* axes_3d_t;
 
-axes_3d_t axes_3d_create  ( void );
+axes_3d_t axes_3d_create  ( GLfloat line_width );
 void      axes_3d_destroy ( axes_3d_t* axes );
-void      axes_3d_render  ( axes_3d_t axes, const GLfloat* model_view_matrix );
+void      axes_3d_render  ( axes_3d_t axes, const GLfloat* model_view );
 
 /*
  * Miscellaneous

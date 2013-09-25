@@ -168,16 +168,16 @@ void initialize( void )
 
 	polyhedra_create( &polyhedra );
 
-	glGenVertexArrays( 1, &vao );
-	GL_ASSERT_NO_ERROR( );
-	glBindVertexArray( vao );
-	GL_ASSERT_NO_ERROR( );
 
 	#if 0
 	tetrahedron( &polyhedra, 3.0f );
 	#else
 	cube( &polyhedra, 3.0f );
 	#endif
+
+	glGenVertexArrays( 1, &vao );
+	GL_ASSERT_NO_ERROR( );
+	glBindVertexArray( vao );
 
 	if( buffer_create( &vbo_vertices, polyhedra.vertices, sizeof(GLfloat), polyhedra.vertices_count, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
@@ -234,6 +234,7 @@ void initialize( void )
 	}
 
 	glPointSize( 1.0 );
+
 
 
 	int width; int height;
@@ -294,7 +295,7 @@ void render( )
 
 
 	glBindTexture( GL_TEXTURE_2D, texture );
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibo_indices );
+	glBindVertexArray( vao );
 	glDrawElements( GL_TRIANGLES, polyhedra.indices_count, GL_UNSIGNED_SHORT, 0 );
 
 
