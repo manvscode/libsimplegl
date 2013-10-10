@@ -23,6 +23,15 @@
 #include "math.h"
 #include "simplegl.h"
 
+static const mat4_t changed_handedness = MAT4_MATRIX(
+	// convert from our coordinate system (looking down X)
+	// to OpenGL's coordinate system (looking down -Z)
+	0, 0, -1, 0,
+	-1, 0, 0, 0,
+	0, 1, 0, 0,
+	0, 0, 0, 1
+);
+
 mat4_t translate( const vec3_t* t )
 {
 	mat4_t transform = MAT4_MATRIX(

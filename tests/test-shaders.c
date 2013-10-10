@@ -21,6 +21,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../src/simplegl.h"
+#include <lib3dmath/vec3.h>
+#include <lib3dmath/quat.h>
 #include <SDL2/SDL.h>
 
 static void initialize     ( void );
@@ -104,6 +106,7 @@ void initialize( void )
 {
 	dump_gl_info( );
 	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
 	glEnable( GL_DEPTH_TEST );
 	glDisable( GL_CULL_FACE );
@@ -279,8 +282,10 @@ void render( )
 	GLfloat aspect = ((GLfloat)height) / width;
 	vec3_t translation = VEC3_VECTOR( 0.0, 0.0, -10 );
 	mat4_t projection = perspective( 60.0, aspect, 0.1, 100.0 );
-	mat4_t rotation = rotate_xyz( "yzx", angle, angle / 2.0, -angle / 2.0 );
-	angle += 0.03;
+	vec3_t axis = VEC3_VECTOR( -0.5f, -0.25f, 0.75f );
+	quat_t q1 = quat_from_axis3_angle( &axis, angle );
+	mat4_t rotation = quat_to_mat4( &q1 );
+	angle += 0.003;
 	mat4_t transform = translate( &translation );
 	transform = mat4_mult_matrix( &transform, &rotation );
 	mat4_t model_view = mat4_mult_matrix( &projection, &transform );

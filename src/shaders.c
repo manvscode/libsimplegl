@@ -57,7 +57,7 @@ GLboolean glsl_program_from_shaders( GLuint* p_program, const shader_info_t* sha
 /*
  * Create a program by attaching and linking a collection of shaders.
  */
-GLboolean glsl_program_create( GLuint* p_program, GLuint *shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion, GLchar** program_log )
+GLboolean glsl_program_create( GLuint* p_program, const GLuint *shaders, GLsizei shader_count, GLboolean mark_shaders_for_deletion, GLchar** program_log )
 {
 	assert( p_program );
 	GLuint p = glCreateProgram( );
