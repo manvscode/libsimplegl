@@ -55,7 +55,7 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 {
 	bool result = false;
 	const char* extension = strrchr( filename, '.' );
-	image_file_format_t format = PNG;
+	image_file_format_t format = IMAGEIO_PNG;
 	image_t image;
 
 	if( extension )
@@ -64,21 +64,21 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 
 		if( strcasecmp( "png", extension ) == 0 )
 		{
-			format = PNG;
+			format = IMAGEIO_PNG;
 			#ifdef SIMPLEGL_DEBUG
 			printf( "Loading TGA: %s\n", filename );
 			#endif
 		}
 		else if( strcasecmp( "bmp", extension ) == 0 )
 		{
-			format = BMP;
+			format = IMAGEIO_BMP;
 			#ifdef SIMPLEGL_DEBUG
 			printf( "Loading TGA: %s\n", filename );
 			#endif
 		}
 		else if( strcasecmp( "tga", extension ) == 0 )
 		{
-			format = TGA;
+			format = IMAGEIO_TGA;
 			#ifdef SIMPLEGL_DEBUG
 			printf( "Loading TGA: %s\n", filename );
 			#endif
@@ -87,6 +87,15 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 
 	if( imageio_image_load( &image, filename, format ) )
 	{
+		if( format == IMAGEIO_PNG )
+		{
+			/* These pesky PNG files need to be flipped vertically to be
+			 * correctly oriented for OpenGL.
+			 */
+			imageio_flip_vertically( image.width, image.height, image.bits_per_pixel >> 3, image.pixels );
+		}
+
+
 		tex2d_setup_texture( texture, image.width, image.height, image.bits_per_pixel, image.pixels, min_filter, mag_filter, clamp );
 
 		// Dispose of image
