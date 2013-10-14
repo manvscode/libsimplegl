@@ -35,6 +35,8 @@ void dump_gl_info( void )
 	fprintf( stdout, "[GL] Renderer: %s\n", renderer ? renderer : "unknown" );
 	fprintf( stdout, "[GL] Version: %s\n", version ? version : "unknown" );
 	fprintf( stdout, "[GL] Shading Language: %s\n", glsl_version ? glsl_version : "unknown" );
+
+	#ifdef GL_NUM_EXTENSIONS
 	fprintf( stdout, "[GL] Extensions: " );
 
 	int extensionsCount = 0;
@@ -44,7 +46,7 @@ void dump_gl_info( void )
 	{
 		printf( "%s%s", glGetStringi( GL_EXTENSIONS, i ), i < (extensionsCount - 1) ? ", " : "\n" );
 	}
-
+	#endif
 }
 
 GLenum check_gl( void )

@@ -20,6 +20,7 @@
  */
 #ifndef _SIMPLEGL_H_
 #define _SIMPLEGL_H_
+#include <stdlib.h>
 #include <float.h>
 #include <limits.h>
 #include <assert.h>
@@ -51,10 +52,22 @@ extern "C" {
  * Always include OpenGL and GLU headers
  */
 #if __APPLE__
-#include <OpenGL/gl3.h>
-#else
-#include <GL/gl.h>
-#include <GL/glu.h>
+	#include "TargetConditionals.h"
+	#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+	#include <OpenGLES/ES2/gl.h>
+    #include <OpenGLES/ES2/glext.h>
+    #if GL_OES_vertex_array_object
+    #define glBindVertexArray(array)        glBindVertexArrayOES(array) 
+    #define glDeleteVertexArrays(n, arrays) glDeleteVertexArraysOES(n, arrays)
+    #define glGenVertexArrays(n, arrays)    glGenVertexArraysOES(n, arrays)  
+    #define glIsVertexArray(array)          glIsVertexArrayOES(array)  
+    #endif
+	#else
+	#include <OpenGL/gl3.h>
+	#endif
+#else /* Windows / Linux */
+	#include <GL/gl.h>
+	#include <GL/glu.h>
 #endif
 
 #ifndef GL_PROGRAM
@@ -80,9 +93,9 @@ void   tex2d_setup_texture ( GLuint texture, GLsizei width, GLsizei height, GLby
 /*
  * Projections
  */
-mat4_t orthographic ( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far );
-mat4_t frustum      ( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far );
-mat4_t perspective  ( GLdouble fov, GLdouble aspect, GLdouble near, GLdouble far );
+mat4_t orthographic ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far );
+mat4_t frustum      ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far );
+mat4_t perspective  ( GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far );
 mat4_t look_at      ( const pt3_t* p, const pt3_t* t, const vec3_t* u );
 
 /*
@@ -90,10 +103,10 @@ mat4_t look_at      ( const pt3_t* p, const pt3_t* t, const vec3_t* u );
  */
 mat4_t translate     ( const vec3_t* t );
 mat4_t scale         ( const vec3_t* s );
-mat4_t uniform_scale ( GLdouble scale );
-mat4_t rotate_x      ( GLdouble angle );
-mat4_t rotate_y      ( GLdouble angle );
-mat4_t rotate_z      ( GLdouble angle );
+mat4_t uniform_scale ( GLfloat scale );
+mat4_t rotate_x      ( GLfloat angle );
+mat4_t rotate_y      ( GLfloat angle );
+mat4_t rotate_z      ( GLfloat angle );
 mat4_t rotate_xyz    ( const char* order, ... );
 mat4_t orientation   ( vec3_t* forward, vec3_t* left, vec3_t* up );
 

@@ -24,7 +24,7 @@
 #include "simplegl.h"
 
 
-mat4_t orthographic( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far )
+mat4_t orthographic( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far )
 {
 	return MAT4_LITERAL(
 		2.0 / (right - left)          , 0.0                           ,  0.0                      , 0.0,
@@ -34,14 +34,14 @@ mat4_t orthographic( GLdouble left, GLdouble right, GLdouble bottom, GLdouble to
 	);
 }
 
-mat4_t frustum( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far )
+mat4_t frustum( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far )
 {
-	GLdouble A = 2.0 * near / (right - left);
-	GLdouble B = (right + left) / (right - left);
-	GLdouble C = 2.0 * near / (top - bottom);
-	GLdouble D = (top + bottom) / (top - bottom);
-	GLdouble E = -(far + near) / (far - near);
-	GLdouble F = -(2.0 * far * near) / (far - near);
+	GLfloat A = 2.0 * near / (right - left);
+	GLfloat B = (right + left) / (right - left);
+	GLfloat C = 2.0 * near / (top - bottom);
+	GLfloat D = (top + bottom) / (top - bottom);
+	GLfloat E = -(far + near) / (far - near);
+	GLfloat F = -(2.0 * far * near) / (far - near);
 
 	return MAT4_LITERAL(
 		  A, 0.0,   B, 0.0,
@@ -52,11 +52,11 @@ mat4_t frustum( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GL
 }
 
 
-mat4_t perspective( GLdouble fov, GLdouble aspect, GLdouble near, GLdouble far )
+mat4_t perspective( GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far )
 {
-	GLdouble A = 1.0 / tan(fov * 0.5 * RADIANS_PER_DEGREE);
-	GLdouble B = -far / (far - near);
-	GLdouble C = -(far * near)/ (far - near);
+	GLfloat A = 1.0 / tan(fov * 0.5 * RADIANS_PER_DEGREE);
+	GLfloat B = -far / (far - near);
+	GLfloat C = -(far * near)/ (far - near);
 
 	return MAT4_LITERAL(
 		  A, 0.0, 0.0, 0.0,

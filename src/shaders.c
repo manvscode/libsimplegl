@@ -153,9 +153,11 @@ GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const G
 				type_str = "tesselation evaluation";
 				break;
 			#endif
+			#ifdef GL_GEOMETRY_SHADER
 			case GL_GEOMETRY_SHADER:
 				type_str = "geometry";
 				break;
+			#endif
 			case GL_FRAGMENT_SHADER:
 				type_str = "fragment";
 				break;
@@ -243,10 +245,12 @@ GLuint glsl_create( GLenum type )
 			type_str = "fragment shader";
 			object = glCreateShader( type );
 			break;
+		#ifdef GL_GEOMETRY_SHADER
 		case GL_GEOMETRY_SHADER:
 			type_str = "geometry shader";
 			object = glCreateShader( type );
 			break;
+		#endif
 		#ifdef GL_TESS_EVALUATION_SHADER /* Missing on Mac OS X */
 		case GL_TESS_CONTROL_SHADER:
 			type_str = "tesselation control shader";
@@ -326,9 +330,9 @@ GLchar* glsl_shader_load( const char* path )
 					buffer += bytes_read;
 					size   -= bytes_read;
 				}
+                
+                result[ file_size ] = '\0';
 			}
-
-			result[ file_size ] = '\0';
 		}
 
 		fclose( file );

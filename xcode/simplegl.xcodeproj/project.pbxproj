@@ -1,0 +1,289 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0862A05F180BA90600746336 /* libsimplegl-config.h in Headers */ = {isa = PBXBuildFile; fileRef = 0862A055180BA90600746336 /* libsimplegl-config.h */; };
+		0862A060180BA90600746336 /* simplegl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0862A056180BA90600746336 /* simplegl.h */; };
+		0862A061180BA90600746336 /* 3d-axes.c in Sources */ = {isa = PBXBuildFile; fileRef = 0862A057180BA90600746336 /* 3d-axes.c */; };
+		0862A062180BA90600746336 /* buffers.c in Sources */ = {isa = PBXBuildFile; fileRef = 0862A058180BA90600746336 /* buffers.c */; };
+		0862A063180BA90600746336 /* objects.c in Sources */ = {isa = PBXBuildFile; fileRef = 0862A059180BA90600746336 /* objects.c */; };
+		0862A064180BA90600746336 /* projections.c in Sources */ = {isa = PBXBuildFile; fileRef = 0862A05A180BA90600746336 /* projections.c */; };
+		0862A065180BA90600746336 /* shaders.c in Sources */ = {isa = PBXBuildFile; fileRef = 0862A05B180BA90600746336 /* shaders.c */; };
+		0862A066180BA90600746336 /* simplegl.c in Sources */ = {isa = PBXBuildFile; fileRef = 0862A05C180BA90600746336 /* simplegl.c */; };
+		0862A067180BA90600746336 /* textures.c in Sources */ = {isa = PBXBuildFile; fileRef = 0862A05D180BA90600746336 /* textures.c */; };
+		0862A068180BA90600746336 /* transformations.c in Sources */ = {isa = PBXBuildFile; fileRef = 0862A05E180BA90600746336 /* transformations.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0862A04E180BA8C700746336 /* libsimplegl.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsimplegl.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		0862A055180BA90600746336 /* libsimplegl-config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "libsimplegl-config.h"; path = "../src/libsimplegl-config.h"; sourceTree = "<group>"; };
+		0862A056180BA90600746336 /* simplegl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplegl.h; path = ../src/simplegl.h; sourceTree = "<group>"; };
+		0862A057180BA90600746336 /* 3d-axes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "3d-axes.c"; path = "../src/3d-axes.c"; sourceTree = "<group>"; };
+		0862A058180BA90600746336 /* buffers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buffers.c; path = ../src/buffers.c; sourceTree = "<group>"; };
+		0862A059180BA90600746336 /* objects.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = objects.c; path = ../src/objects.c; sourceTree = "<group>"; };
+		0862A05A180BA90600746336 /* projections.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = projections.c; path = ../src/projections.c; sourceTree = "<group>"; };
+		0862A05B180BA90600746336 /* shaders.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shaders.c; path = ../src/shaders.c; sourceTree = "<group>"; };
+		0862A05C180BA90600746336 /* simplegl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = simplegl.c; path = ../src/simplegl.c; sourceTree = "<group>"; };
+		0862A05D180BA90600746336 /* textures.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = textures.c; path = ../src/textures.c; sourceTree = "<group>"; };
+		0862A05E180BA90600746336 /* transformations.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = transformations.c; path = ../src/transformations.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0862A04B180BA8C700746336 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0862A045180BA8C700746336 = {
+			isa = PBXGroup;
+			children = (
+				0862A069180BA90D00746336 /* src */,
+				0862A04F180BA8C700746336 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0862A04F180BA8C700746336 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0862A04E180BA8C700746336 /* libsimplegl.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0862A069180BA90D00746336 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				0862A055180BA90600746336 /* libsimplegl-config.h */,
+				0862A056180BA90600746336 /* simplegl.h */,
+				0862A057180BA90600746336 /* 3d-axes.c */,
+				0862A058180BA90600746336 /* buffers.c */,
+				0862A059180BA90600746336 /* objects.c */,
+				0862A05A180BA90600746336 /* projections.c */,
+				0862A05B180BA90600746336 /* shaders.c */,
+				0862A05C180BA90600746336 /* simplegl.c */,
+				0862A05D180BA90600746336 /* textures.c */,
+				0862A05E180BA90600746336 /* transformations.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		0862A04C180BA8C700746336 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0862A05F180BA90600746336 /* libsimplegl-config.h in Headers */,
+				0862A060180BA90600746336 /* simplegl.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		0862A04D180BA8C700746336 /* simplegl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0862A052180BA8C700746336 /* Build configuration list for PBXNativeTarget "simplegl" */;
+			buildPhases = (
+				0862A04A180BA8C700746336 /* Sources */,
+				0862A04B180BA8C700746336 /* Frameworks */,
+				0862A04C180BA8C700746336 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = simplegl;
+			productName = simplegl;
+			productReference = 0862A04E180BA8C700746336 /* libsimplegl.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0862A046180BA8C700746336 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Joe Marrero";
+			};
+			buildConfigurationList = 0862A049180BA8C700746336 /* Build configuration list for PBXProject "simplegl" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 0862A045180BA8C700746336;
+			productRefGroup = 0862A04F180BA8C700746336 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0862A04D180BA8C700746336 /* simplegl */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0862A04A180BA8C700746336 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0862A061180BA90600746336 /* 3d-axes.c in Sources */,
+				0862A067180BA90600746336 /* textures.c in Sources */,
+				0862A063180BA90600746336 /* objects.c in Sources */,
+				0862A064180BA90600746336 /* projections.c in Sources */,
+				0862A068180BA90600746336 /* transformations.c in Sources */,
+				0862A062180BA90600746336 /* buffers.c in Sources */,
+				0862A066180BA90600746336 /* simplegl.c in Sources */,
+				0862A065180BA90600746336 /* shaders.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0862A050180BA8C700746336 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		0862A051180BA8C700746336 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		0862A053180BA8C700746336 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/manvscode/projects/libsimplegl/simplegl,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Debug;
+		};
+		0862A054180BA8C700746336 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/manvscode/projects/libsimplegl/simplegl,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0862A049180BA8C700746336 /* Build configuration list for PBXProject "simplegl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0862A050180BA8C700746336 /* Debug */,
+				0862A051180BA8C700746336 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0862A052180BA8C700746336 /* Build configuration list for PBXNativeTarget "simplegl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0862A053180BA8C700746336 /* Debug */,
+				0862A054180BA8C700746336 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0862A046180BA8C700746336 /* Project object */;
+}

@@ -52,7 +52,7 @@ mat4_t scale( const vec3_t* s )
 	);
 }
 
-mat4_t uniform_scale( GLdouble s )
+mat4_t uniform_scale( GLfloat s )
 {
 	return MAT4_LITERAL(
 		  s, 0.0, 0.0, 0.0,
@@ -62,10 +62,10 @@ mat4_t uniform_scale( GLdouble s )
 	);
 }
 
-mat4_t rotate_x( GLdouble a )
+mat4_t rotate_x( GLfloat a )
 {
-	GLdouble s = sin( a );
-	GLdouble c = cos( a );
+	GLfloat s = sinf( a );
+	GLfloat c = cosf( a );
 
 	return MAT4_LITERAL(
 		1.0, 0.0, 0.0, 0.0,
@@ -75,10 +75,10 @@ mat4_t rotate_x( GLdouble a )
 	);
 }
 
-mat4_t rotate_y( GLdouble a )
+mat4_t rotate_y( GLfloat a )
 {
-	GLdouble s = sin( a );
-	GLdouble c = cos( a );
+	GLfloat s = sinf( a );
+	GLfloat c = cosf( a );
 
 	return MAT4_LITERAL(
 		  c, 0.0,   s, 0.0,
@@ -88,10 +88,10 @@ mat4_t rotate_y( GLdouble a )
 	);
 }
 
-mat4_t rotate_z( GLdouble a )
+mat4_t rotate_z( GLfloat a )
 {
-	GLdouble s = sin( a );
-	GLdouble c = cos( a );
+	GLfloat s = sinf( a );
+	GLfloat c = cosf( a );
 
 	return MAT4_LITERAL(
 		  c,  -s, 0.0, 0.0,
@@ -114,7 +114,7 @@ mat4_t rotate_xyz( const char* order, ... )
 			case 'x':
 			case 'X':
 			{
-				GLdouble angle = va_arg( list, GLdouble );
+				double angle = va_arg( list, double );
 				mat4_t r = rotate_x( angle );
 				result = mat4_mult_matrix( &result, &r );
 				break;
@@ -122,7 +122,7 @@ mat4_t rotate_xyz( const char* order, ... )
 			case 'y':
 			case 'Y':
 			{
-				GLdouble angle = va_arg( list, GLdouble );
+				double angle = va_arg( list, double );
 				mat4_t r = rotate_y( angle );
 				result = mat4_mult_matrix( &result, &r );
 				break;
@@ -130,7 +130,7 @@ mat4_t rotate_xyz( const char* order, ... )
 			case 'z':
 			case 'Z':
 			{
-				GLdouble angle = va_arg( list, GLdouble );
+				double angle = va_arg( list, double );
 				mat4_t r = rotate_z( angle );
 				result = mat4_mult_matrix( &result, &r );
 				break;
@@ -145,7 +145,7 @@ mat4_t rotate_xyz( const char* order, ... )
 }
 
 /*
-mat4_t rotate_xyz( GLdouble xa, GLdouble ya, GLdouble za )
+mat4_t rotate_xyz( GLfloat xa, GLfloat ya, GLfloat za )
 {
 	mat4_t result = MAT4_IDENTITY;
 

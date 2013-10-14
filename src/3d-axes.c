@@ -79,6 +79,7 @@ axes_3d_t axes_3d_create( GLfloat line_width )
 
 	if( axes )
 	{
+		#ifdef GL_LINE_SMOOTH
 		GLfloat range[ 2 ];
 
 		if( glIsEnabled( GL_LINE_SMOOTH ) )
@@ -105,6 +106,7 @@ axes_3d_t axes_3d_create( GLfloat line_width )
 				goto failure;
 			}
 		}
+		#endif
 
 		program = glsl_create( GL_PROGRAM );
 
