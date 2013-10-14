@@ -23,7 +23,7 @@
 #include "math.h"
 #include "simplegl.h"
 
-static const mat4_t changed_handedness = MAT4_MATRIX(
+static const mat4_t changed_handedness = MAT4_LITERAL(
 	// convert from our coordinate system (looking down X)
 	// to OpenGL's coordinate system (looking down -Z)
 	0, 0, -1, 0,
@@ -34,35 +34,32 @@ static const mat4_t changed_handedness = MAT4_MATRIX(
 
 mat4_t translate( const vec3_t* t )
 {
-	mat4_t transform = MAT4_MATRIX(
+	return MAT4_LITERAL(
 		 1.0,  0.0,  0.0,  0.0,
 		 0.0,  1.0,  0.0,  0.0,
 		 0.0,  0.0,  1.0,  0.0,
 	 	t->x, t->y, t->z,  1.0
 	);
-	return transform;
 }
 
 mat4_t scale( const vec3_t* s )
 {
-	mat4_t transform = MAT4_MATRIX(
+	return MAT4_LITERAL(
 		s->x,  0.0,  0.0,  0.0,
 		 0.0, s->y,  0.0,  0.0,
 	 	 0.0,  0.0, s->z,  0.0,
 	 	 0.0,  0.0,  0.0,  1.0
 	);
-	return transform;
 }
 
 mat4_t uniform_scale( GLdouble s )
 {
-	mat4_t transform = MAT4_MATRIX(
+	return MAT4_LITERAL(
 		  s, 0.0, 0.0, 0.0,
 		0.0,   s, 0.0, 0.0,
 	 	0.0, 0.0,   s, 0.0,
 	 	0.0, 0.0, 0.0, 1.0
 	);
-	return transform;
 }
 
 mat4_t rotate_x( GLdouble a )
@@ -70,13 +67,12 @@ mat4_t rotate_x( GLdouble a )
 	GLdouble s = sin( a );
 	GLdouble c = cos( a );
 
-	mat4_t transform = MAT4_MATRIX(
+	return MAT4_LITERAL(
 		1.0, 0.0, 0.0, 0.0,
 		0.0,   c,  -s, 0.0,
 	 	0.0,   s,   c, 0.0,
 	 	0.0, 0.0, 0.0, 1.0
 	);
-	return transform;
 }
 
 mat4_t rotate_y( GLdouble a )
@@ -84,13 +80,12 @@ mat4_t rotate_y( GLdouble a )
 	GLdouble s = sin( a );
 	GLdouble c = cos( a );
 
-	mat4_t transform = MAT4_MATRIX(
+	return MAT4_LITERAL(
 		  c, 0.0,   s, 0.0,
 		0.0, 1.0, 0.0, 0.0,
 	 	 -s, 0.0,   c, 0.0,
 	 	0.0, 0.0, 0.0, 1.0
 	);
-	return transform;
 }
 
 mat4_t rotate_z( GLdouble a )
@@ -98,13 +93,12 @@ mat4_t rotate_z( GLdouble a )
 	GLdouble s = sin( a );
 	GLdouble c = cos( a );
 
-	mat4_t transform = MAT4_MATRIX(
+	return MAT4_LITERAL(
 		  c,  -s, 0.0, 0.0,
 		  s,   c, 0.0, 0.0,
 	 	0.0, 0.0, 1.0, 0.0,
 	 	0.0, 0.0, 0.0, 1.0
 	);
-	return transform;
 }
 
 mat4_t rotate_xyz( const char* order, ... )
@@ -180,7 +174,7 @@ mat4_t orientation( vec3_t* f, vec3_t* l, vec3_t* u )
 	vec3_normalize( l );
 	vec3_normalize( u );
 
-	mat4_t transform = MAT4_MATRIX(
+	mat4_t transform = MAT4_LITERAL(
 		l->x, l->y, l->z, 0.0,
 		u->x, u->y, u->z, 0.0,
 		f->x, f->y, f->z, 0.0,

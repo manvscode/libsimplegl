@@ -132,7 +132,7 @@ void render( )
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)height) / width;
-	vec3_t translation = VEC3_VECTOR( 0.0, 0.0, -2.0f );
+	vec3_t translation = VEC3_LITERAL( 0.0, 0.0, -2.0f );
 	mat4_t projection = perspective( 45.0, aspect, 0.00005, 100.0 );
 	mat4_t rotation = rotate_xyz( "xy", -15.0f * RADIANS_PER_DEGREE, angle );
 	angle += 0.005;

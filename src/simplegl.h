@@ -20,40 +20,31 @@
  */
 #ifndef _SIMPLEGL_H_
 #define _SIMPLEGL_H_
+#include <float.h>
+#include <limits.h>
+#include <assert.h>
+/*
+ * Mathematics
+ */
+#include <lib3dmath/mathematics.h>
+#include <lib3dmath/vec2.h>
+#include <lib3dmath/vec3.h>
+#include <lib3dmath/vec4.h>
+#include <lib3dmath/mat2.h>
+#include <lib3dmath/mat3.h>
+#include <lib3dmath/mat4.h>
+#include <math.h>
+#if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
+#include <stdbool.h>
+#else
+#error "Need a C99 compiler."
+#endif
 #ifdef __cplusplus
 extern "C" {
 #endif
-#if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
-#include <stdbool.h>
-#ifdef __restrict
-#undef __restrict
-#define __restrict restrict
-#endif
-#ifdef __inline
-#undef __inline
-#define __inline inline
-#endif
-#else
-#define bool int
-#define true 1
-#define false 0
-#ifdef __restrict
-#undef __restrict
-#define __restrict
-#endif
-#ifdef __inline
-#undef __inline
-#define __inline
-#endif
-#endif
-#include <assert.h>
 
 #ifndef GL_GLEXT_PROTOTYPES
 #define GL_GLEXT_PROTOTYPES
-#endif
-
-#ifndef GL_PROGRAM
-#define GL_PROGRAM  0
 #endif
 
 /*
@@ -64,6 +55,10 @@ extern "C" {
 #else
 #include <GL/gl.h>
 #include <GL/glu.h>
+#endif
+
+#ifndef GL_PROGRAM
+#define GL_PROGRAM  0
 #endif
 
 /*

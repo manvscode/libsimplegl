@@ -270,7 +270,7 @@ void render( )
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)width) / height;
-	vec3_t translation = VEC3_VECTOR( 0.0, 0.0, -10 );
+	vec3_t translation = VEC3_LITERAL( 0.0, 0.0, -10 );
 	mat4_t projection = orthographic( -10.0, 10.0, -6.0*aspect, 6.0*aspect, -100.0, 100.0 );
 	mat4_t rotation = rotate_xyz( "yx", angle, -5.0 );
 	angle += 0.1f;
@@ -281,9 +281,9 @@ void render( )
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)height) / width;
-	vec3_t translation = VEC3_VECTOR( 0.0, 0.0, -10 );
+	vec3_t translation = VEC3_LITERAL( 0.0, 0.0, -10 );
 	mat4_t projection = perspective( 60.0, aspect, 0.1, 100.0 );
-	vec3_t axis = VEC3_VECTOR( -0.5f, -0.25f, 0.75f );
+	vec3_t axis = VEC3_LITERAL( -0.5f, -0.25f, 0.75f );
 	quat_t q1 = quat_from_axis3_angle( &axis, angle );
 	mat4_t rotation = quat_to_mat4( &q1 );
 	angle += 0.003;
