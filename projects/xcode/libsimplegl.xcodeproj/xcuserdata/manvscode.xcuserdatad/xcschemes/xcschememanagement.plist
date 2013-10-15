@@ -4,15 +4,17 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>simplegl.xcscheme</key>
+		<key>libsimplegl.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>3</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0862A04D180BA8C700746336</key>
+		<key>08F9B7AB180DD0E000DC30C4</key>
 		<dict>
 			<key>primary</key>
 			<true/>

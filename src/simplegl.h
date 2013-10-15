@@ -51,21 +51,25 @@ extern "C" {
 /*
  * Always include OpenGL and GLU headers
  */
-#if __APPLE__
-	#include "TargetConditionals.h"
-	#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+#if _WIN64
+	#error "Not supported yet."
+#elif _WIN32
+	#error "Not supported yet."
+#elif __APPLE__
+	#if defined(SIMPLEGL_IOS)
 	#include <OpenGLES/ES2/gl.h>
-    #include <OpenGLES/ES2/glext.h>
-    #if GL_OES_vertex_array_object
-    #define glBindVertexArray(array)        glBindVertexArrayOES(array) 
-    #define glDeleteVertexArrays(n, arrays) glDeleteVertexArraysOES(n, arrays)
-    #define glGenVertexArrays(n, arrays)    glGenVertexArraysOES(n, arrays)  
-    #define glIsVertexArray(array)          glIsVertexArrayOES(array)  
-    #endif
+	//#include <OpenGLES/ES2/glext.h>
+	#if GL_OES_vertex_array_object
+	#define glBindVertexArray(array)        glBindVertexArrayOES(array) 
+	#define glDeleteVertexArrays(n, arrays) glDeleteVertexArraysOES(n, arrays)
+	#define glGenVertexArrays(n, arrays)    glGenVertexArraysOES(n, arrays)  
+	#define glIsVertexArray(array)          glIsVertexArrayOES(array)  
+	#define glClearColor                    glClearColorf
+	#endif
 	#else
 	#include <OpenGL/gl3.h>
 	#endif
-#else /* Windows / Linux */
+#else 
 	#include <GL/gl.h>
 	#include <GL/glu.h>
 #endif

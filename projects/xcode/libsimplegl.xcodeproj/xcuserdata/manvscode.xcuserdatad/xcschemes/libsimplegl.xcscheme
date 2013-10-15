@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0862A04D180BA8C700746336"
+               BlueprintIdentifier = "08F9B7AB180DD0E000DC30C4"
                BuildableName = "libsimplegl.a"
-               BlueprintName = "simplegl"
-               ReferencedContainer = "container:simplegl.xcodeproj">
+               BlueprintName = "libsimplegl"
+               ReferencedContainer = "container:libsimplegl.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
