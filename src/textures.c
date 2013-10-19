@@ -28,19 +28,13 @@
 void _tex2d_create( GLuint* p_texture )
 {
 	assert( p_texture );
-	//glEnable( GL_TEXTURE_2D );
-	GL_ASSERT_NO_ERROR( );
 	glGenTextures( 1, p_texture );
-	GL_ASSERT_NO_ERROR( );
 }
 
 GLuint tex2d_create( void )
 {
 	GLuint texture = 0;
-	//glEnable( GL_TEXTURE_2D );
-	GL_ASSERT_NO_ERROR( );
 	glGenTextures( 1, &texture );
-	GL_ASSERT_NO_ERROR( );
 	assert( texture > 0 );
 	return texture;
 }
@@ -48,10 +42,9 @@ GLuint tex2d_create( void )
 void tex2d_destroy( GLuint texture )
 {
 	glDeleteTextures( 1, &texture );
-	GL_ASSERT_NO_ERROR( );
 }
 
-bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, bool clamp )
+bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags )
 {
 	bool result = false;
 	const char* extension = strrchr( filename, '.' );
@@ -87,6 +80,17 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 
 	if( imageio_image_load( &image, filename, format ) )
 	{
+		#if TARGET_OS_IPHONE
+		if( !is_power_of_2(image.width) || !is_power_of_2(image.height) )
+		{
+			/* iOS devices require texture dimensions to be
+			 * a power of 2.
+			 */
+			imageio_image_destroy( &image );
+			goto failure;
+		}
+		#endif
+
 		if( format == IMAGEIO_PNG )
 		{
 			/* These pesky PNG files need to be flipped vertically to be
@@ -95,8 +99,8 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 			imageio_flip_vertically( image.width, image.height, image.bits_per_pixel >> 3, image.pixels );
 		}
 
-
-		tex2d_setup_texture( texture, image.width, image.height, image.bits_per_pixel, image.pixels, min_filter, mag_filter, clamp );
+		tex2d_setup_texture( texture, image.width, image.height, image.bits_per_pixel, image.pixels, min_filter, mag_filter, flags );
+		assert( glIsTexture(texture) );
 
 		// Dispose of image
 		imageio_image_destroy( &image );
@@ -109,61 +113,89 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 	}
 	#endif
 
+failure:
 	return result;
 }
 
 bool tex2d_load_for_2d( GLuint texture, const char* filename )
 {
-	return tex2d_load( texture, filename, GL_NEAREST, GL_NEAREST, true );
+	return tex2d_load( texture, filename, GL_LINEAR, GL_LINEAR, TEX2D_CLAMP_S | TEX2D_CLAMP_T );
 }
 
-bool tex2d_load_for_3d( GLuint texture, const char* filename, bool clamp )
+bool tex2d_load_for_3d( GLuint texture, const char* filename, GLubyte flags )
 {
-	return tex2d_load( texture, filename, GL_LINEAR, GL_LINEAR, clamp );
+	return tex2d_load( texture, filename, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, flags );
 }
 
-void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte bit_depth, const void* pixels, GLint min_filter, GLint mag_filter, bool clamp )
+
+void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte bit_depth, const GLvoid* pixels, GLint min_filter, GLint mag_filter, GLubyte flags )
 {
-	//glPushAttrib( GL_ENABLE_BIT );
+	glBindTexture( GL_TEXTURE_2D, texture );
 
-		GLenum pixel_format = bit_depth == 32 ? GL_RGBA : GL_RGB;
+	#if 0
+	if( mipmap_count <= 0 )
+	{
+		mipmap_count = 1;
+	}
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0 );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipmap_count - 1 );
+	#endif
 
-		//glEnable( GL_TEXTURE_2D );
-
-		glBindTexture( GL_TEXTURE_2D, texture );
+	if( flags & TEX2D_COMPRESS )
+	{
+		GLenum pixel_format = (bit_depth == 32 ? GL_COMPRESSED_RGBA : GL_COMPRESSED_RGB);
+		glCompressedTexImage2D( GL_TEXTURE_2D, 0, pixel_format, width, height, 0 /*must be zero*/, width * height * (bit_depth >> 3), pixels );
 		GL_ASSERT_NO_ERROR( );
-		glTexImage2D( GL_TEXTURE_2D, 0, pixel_format, width, height, 0, pixel_format, GL_UNSIGNED_BYTE, pixels );
+	}
+	else
+	{
+		GLenum pixel_format = (bit_depth == 32 ? GL_RGBA : GL_RGB);
+		GLint border = (flags & TEX2D_BORDER) ? 1 : 0;
+		glTexImage2D( GL_TEXTURE_2D, 0, pixel_format, width, height, border, pixel_format, GL_UNSIGNED_BYTE, pixels );
 		GL_ASSERT_NO_ERROR( );
+	}
+
+	bool generate_mipmaps = false;
+
+	switch( min_filter )
+	{
+		case GL_NEAREST_MIPMAP_LINEAR:
+		case GL_NEAREST_MIPMAP_NEAREST:
+		case GL_LINEAR_MIPMAP_LINEAR:
+		case GL_LINEAR_MIPMAP_NEAREST:
+			generate_mipmaps = true;
+			break;
+		default:
+			break;
+	}
+
+	switch( mag_filter )
+	{
+		case GL_NEAREST_MIPMAP_LINEAR:
+		case GL_NEAREST_MIPMAP_NEAREST:
+		case GL_LINEAR_MIPMAP_LINEAR:
+		case GL_LINEAR_MIPMAP_NEAREST:
+			/* Only GL_LINEAR and GL_NEAREST are valid magnification filters */
+			assert( false );
+			break;
+		default:
+			break;
+	}
+
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter );
+	GL_ASSERT_NO_ERROR( );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter );
+	GL_ASSERT_NO_ERROR( );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (flags & TEX2D_CLAMP_S) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
+	GL_ASSERT_NO_ERROR( );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (flags & TEX2D_CLAMP_T) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
+	GL_ASSERT_NO_ERROR( );
 
 
-		//#if SIMPLEGL_2D
-		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-		//#else
-		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-		//#endif
 
-		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter > 0 ? min_filter : GL_LINEAR );
-		GL_ASSERT_NO_ERROR( );
-		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter > 0 ? mag_filter : GL_LINEAR );
-		GL_ASSERT_NO_ERROR( );
-
-		if( clamp )
-		{
-			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-			GL_ASSERT_NO_ERROR( );
-			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-			GL_ASSERT_NO_ERROR( );
-		}
-		else
-		{
-			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-			GL_ASSERT_NO_ERROR( );
-			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-			GL_ASSERT_NO_ERROR( );
-		}
-
-
-	//glPopAttrib( );
+	if( generate_mipmaps )
+	{
+		glGenerateMipmap( GL_TEXTURE_2D );
+	}
+	GL_ASSERT_NO_ERROR( );
 }

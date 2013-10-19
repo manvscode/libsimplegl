@@ -25,7 +25,7 @@ DFLAGS="-D GL_GLEXT_PROTOTYPES $DFLAGS"
 
 CFLAGS="$CFLAGS $DFLAGS "
 #CFLAGS="-Wall -g -ggdb -O0 $DFLAGS -I/usr/include -I/usr/local/include "
-LDFLAGS="$LDFLAGS -l3dmath -lm -framework OpenGL -framework OpenGLES"
+LDFLAGS="$LDFLAGS -l3dmath -lm -framework OpenGL"
 
 
 AC_CHECK_HEADERS([float.h])

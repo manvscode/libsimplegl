@@ -51,7 +51,7 @@ int main( int argc, char* argv[] )
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 	//flags |= SDL_WINDOW_FULLSCREEN;
-	window = SDL_CreateWindow( "Test 3D Axes", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags );
+	window = SDL_CreateWindow( "3D Axes", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags );
 
 	if( window == NULL )
 	{

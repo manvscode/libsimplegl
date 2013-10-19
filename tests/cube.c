@@ -60,13 +60,17 @@ int main( int argc, char* argv[] )
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
 
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );
+	SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 8 );
+	SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 8 );
+	SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 8 );
+	SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 8 );
+	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 8 );
 	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLEBUFFERS, 1 );
-	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 4 );
+	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 8 );
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 	//flags |= SDL_WINDOW_FULLSCREEN;
-	window = SDL_CreateWindow( "Test Shaders", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags );
+	window = SDL_CreateWindow( "Cube", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags );
 
 	if( window == NULL )
 	{
@@ -123,8 +127,8 @@ void initialize( void )
 	GLchar* shader_log  = NULL;
 	GLchar* program_log = NULL;
 	const shader_info_t shaders[] = {
-		{ GL_VERTEX_SHADER,   "./tests/test-shaders.v.glsl" },
-		{ GL_FRAGMENT_SHADER, "./tests/test-shaders.f.glsl" }
+		{ GL_VERTEX_SHADER,   "./tests/cube.v.glsl" },
+		{ GL_FRAGMENT_SHADER, "./tests/cube.f.glsl" }
 	};
 
 	if( !glsl_program_from_shaders( &program, shaders, shader_info_count(shaders), &shader_log, &program_log ) )
@@ -160,7 +164,7 @@ void initialize( void )
 	{
 		glActiveTexture( GL_TEXTURE0 );
 		GL_ASSERT_NO_ERROR( );
-		tex2d_load_for_3d( texture, "./tests/checkered.png", true );
+		tex2d_load_for_3d( texture, "./tests/checkered.png", TEX2D_CLAMP_S | TEX2D_CLAMP_T );
 		GL_ASSERT_NO_ERROR( );
   		//glBindTexture( GL_TEXTURE_2D, texture_id );
   		//glUniform1i( uniform_texture, /*GL_TEXTURE*/ 0 );
@@ -282,11 +286,11 @@ void render( )
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)height) / width;
 	vec3_t translation = VEC3_LITERAL( 0.0, 0.0, -10 );
-	mat4_t projection = perspective( 60.0, aspect, 0.1, 100.0 );
-	vec3_t axis = VEC3_LITERAL( -0.5f, -0.25f, 0.75f );
+	mat4_t projection = perspective( 80.0, aspect, 0.1, 100.0 );
+	vec3_t axis = VEC3_LITERAL( -0.8f, -0.25f, 0.75f );
 	quat_t q1 = quat_from_axis3_angle( &axis, angle );
 	mat4_t rotation = quat_to_mat4( &q1 );
-	angle += 0.003;
+	angle += 0.03;
 	mat4_t transform = translate( &translation );
 	transform = mat4_mult_matrix( &transform, &rotation );
 	mat4_t model_view = mat4_mult_matrix( &projection, &transform );

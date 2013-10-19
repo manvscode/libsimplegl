@@ -56,15 +56,18 @@ extern "C" {
 #elif _WIN32
 	#error "Not supported yet."
 #elif __APPLE__
-	#if defined(SIMPLEGL_IOS)
+	#include "TargetConditionals.h"
+	#if TARGET_OS_IPHONE
 	#include <OpenGLES/ES2/gl.h>
-	//#include <OpenGLES/ES2/glext.h>
+	#include <OpenGLES/ES2/glext.h>
 	#if GL_OES_vertex_array_object
 	#define glBindVertexArray(array)        glBindVertexArrayOES(array) 
 	#define glDeleteVertexArrays(n, arrays) glDeleteVertexArraysOES(n, arrays)
 	#define glGenVertexArrays(n, arrays)    glGenVertexArraysOES(n, arrays)  
-	#define glIsVertexArray(array)          glIsVertexArrayOES(array)  
-	#define glClearColor                    glClearColorf
+	#define glIsVertexArray(array)          glIsVertexArrayOES(array)
+	//#ifndef glClearColor
+	//#define glClearColor                  glClearColorf
+	//#endif
 	#endif
 	#else
 	#include <OpenGL/gl3.h>
@@ -87,12 +90,19 @@ extern "C" {
 /*
  * Texturing
  */
+#define TEX2D_CLAMP_S       (0x01)
+#define TEX2D_CLAMP_T       (0x02)
+#define TEX2D_REPEAT_S      (~TEX2D_CLAMP_S)
+#define TEX2D_REPEAT_T      (~TEX2D_CLAMP_T)
+#define TEX2D_COMPRESS      (0x04)
+#define TEX2D_BORDER        (0x08)
+
 GLuint tex2d_create        ( void );
 void   tex2d_destroy       ( GLuint texture );
-bool   tex2d_load          ( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, bool clamp );
+bool   tex2d_load          ( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags );
 bool   tex2d_load_for_2d   ( GLuint texture, const char* filename );
-bool   tex2d_load_for_3d   ( GLuint texture, const char* filename, bool clamp );
-void   tex2d_setup_texture ( GLuint texture, GLsizei width, GLsizei height, GLbyte bit_depth, const void* pixels, GLint min_filter, GLint mag_filter, bool clamp );
+bool   tex2d_load_for_3d   ( GLuint texture, const char* filename, GLubyte flags );
+void   tex2d_setup_texture ( GLuint texture, GLsizei width, GLsizei height, GLbyte bit_depth, const GLvoid* pixels, GLint min_filter, GLint mag_filter, GLubyte flags );
 
 /*
  * Projections
