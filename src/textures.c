@@ -143,7 +143,12 @@ void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte 
 
 	if( flags & TEX2D_COMPRESS )
 	{
+		#if TARGET_OS_IPHONE
+		GLenum pixel_format = (bit_depth == 32 ? GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG);
+		#else
 		GLenum pixel_format = (bit_depth == 32 ? GL_COMPRESSED_RGBA : GL_COMPRESSED_RGB);
+		#endif
+
 		glCompressedTexImage2D( GL_TEXTURE_2D, 0, pixel_format, width, height, 0 /*must be zero*/, width * height * (bit_depth >> 3), pixels );
 		GL_ASSERT_NO_ERROR( );
 	}
@@ -169,14 +174,16 @@ void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte 
 			break;
 	}
 
+	/* Only GL_LINEAR and GL_NEAREST are valid magnification filters */
 	switch( mag_filter )
 	{
 		case GL_NEAREST_MIPMAP_LINEAR:
 		case GL_NEAREST_MIPMAP_NEAREST:
+			mag_filter = GL_NEAREST;
+			break;
 		case GL_LINEAR_MIPMAP_LINEAR:
 		case GL_LINEAR_MIPMAP_NEAREST:
-			/* Only GL_LINEAR and GL_NEAREST are valid magnification filters */
-			assert( false );
+			mag_filter = GL_LINEAR;
 			break;
 		default:
 			break;
@@ -190,8 +197,6 @@ void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte 
 	GL_ASSERT_NO_ERROR( );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (flags & TEX2D_CLAMP_T) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
 	GL_ASSERT_NO_ERROR( );
-
-
 
 	if( generate_mipmaps )
 	{

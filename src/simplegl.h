@@ -149,7 +149,7 @@ GLchar*       glsl_log                       ( GLuint object /* program or shade
 /*
  * Buffers
  */
-GLboolean buffer_create  ( GLuint* id, const void* geometry, size_t element_size, size_t count, GLenum target /*GL_ARRAY_BUFFER*/, GLenum usage /*GL_STATIC_DRAW*/ );
+GLboolean buffer_create  ( GLuint* id, const GLvoid* geometry, size_t element_size, size_t count, GLenum target /*GL_ARRAY_BUFFER*/, GLenum usage /*GL_STATIC_DRAW*/ );
 GLboolean buffer_destroy ( const GLuint* id );
 
 /*
