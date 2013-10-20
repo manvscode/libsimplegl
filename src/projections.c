@@ -71,10 +71,10 @@ mat4_t look_at( const pt3_t* p, const pt3_t* t, const vec3_t* u )
 	vec3_t z = VEC3_LITERAL( t->x - p->x, t->y - p->y, t->z - p->z );
 	vec3_normalize( &z );
 
-	vec3_t x = vec3_cross_product( z, *u );
+	vec3_t x = vec3_cross_product( &z, u );
 	vec3_normalize( &x );
 
-	vec3_t y = vec3_cross_product( z, x );
+	vec3_t y = vec3_cross_product( &z, &x );
 	vec3_normalize( &y );
 
 	return MAT4_LITERAL(

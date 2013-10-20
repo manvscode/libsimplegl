@@ -59,14 +59,14 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 		{
 			format = IMAGEIO_PNG;
 			#ifdef SIMPLEGL_DEBUG
-			printf( "Loading TGA: %s\n", filename );
+			printf( "Loading PNG: %s\n", filename );
 			#endif
 		}
 		else if( strcasecmp( "bmp", extension ) == 0 )
 		{
 			format = IMAGEIO_BMP;
 			#ifdef SIMPLEGL_DEBUG
-			printf( "Loading TGA: %s\n", filename );
+			printf( "Loading BMP: %s\n", filename );
 			#endif
 		}
 		else if( strcasecmp( "tga", extension ) == 0 )
@@ -133,6 +133,7 @@ void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte 
 	glBindTexture( GL_TEXTURE_2D, texture );
 
 	#if 0
+	GLint mipmap_count = 5;
 	if( mipmap_count <= 0 )
 	{
 		mipmap_count = 1;
@@ -150,14 +151,14 @@ void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte 
 		#endif
 
 		glCompressedTexImage2D( GL_TEXTURE_2D, 0, pixel_format, width, height, 0 /*must be zero*/, width * height * (bit_depth >> 3), pixels );
-		GL_ASSERT_NO_ERROR( );
+		assert(check_gl() == GL_NO_ERROR);
 	}
 	else
 	{
 		GLenum pixel_format = (bit_depth == 32 ? GL_RGBA : GL_RGB);
 		GLint border = (flags & TEX2D_BORDER) ? 1 : 0;
 		glTexImage2D( GL_TEXTURE_2D, 0, pixel_format, width, height, border, pixel_format, GL_UNSIGNED_BYTE, pixels );
-		GL_ASSERT_NO_ERROR( );
+		assert(check_gl() == GL_NO_ERROR);
 	}
 
 	bool generate_mipmaps = false;
@@ -190,17 +191,17 @@ void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte 
 	}
 
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter );
-	GL_ASSERT_NO_ERROR( );
+	assert(check_gl() == GL_NO_ERROR);
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter );
-	GL_ASSERT_NO_ERROR( );
+	assert(check_gl() == GL_NO_ERROR);
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (flags & TEX2D_CLAMP_S) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
-	GL_ASSERT_NO_ERROR( );
+	assert(check_gl() == GL_NO_ERROR);
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (flags & TEX2D_CLAMP_T) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
-	GL_ASSERT_NO_ERROR( );
+	assert(check_gl() == GL_NO_ERROR);
 
 	if( generate_mipmaps )
 	{
 		glGenerateMipmap( GL_TEXTURE_2D );
 	}
-	GL_ASSERT_NO_ERROR( );
+	assert(check_gl() == GL_NO_ERROR);
 }
