@@ -79,8 +79,10 @@ GLenum check_gl( void )
 			error_str = "Out of memory";
 			break;
 		case GL_NO_ERROR:
-		default:
 			error_str = "No error";
+			break;
+		default:
+			error_str = "Unknown error";
 			break;
 	}
 
