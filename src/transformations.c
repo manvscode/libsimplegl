@@ -34,6 +34,7 @@ static const mat4_t changed_handedness = MAT4_LITERAL(
 
 mat4_t translate( const vec3_t* t )
 {
+	assert( t );
 	return MAT4_LITERAL(
 		 1.0,  0.0,  0.0,  0.0,
 		 0.0,  1.0,  0.0,  0.0,
@@ -44,6 +45,7 @@ mat4_t translate( const vec3_t* t )
 
 mat4_t scale( const vec3_t* s )
 {
+	assert( s );
 	return MAT4_LITERAL(
 		s->x,  0.0,  0.0,  0.0,
 		 0.0, s->y,  0.0,  0.0,
@@ -103,6 +105,7 @@ mat4_t rotate_z( GLfloat a )
 
 mat4_t rotate_xyz( const char* order, ... )
 {
+	assert( order );
 	va_list list;
 	va_start( list, order );
 	mat4_t result = MAT4_IDENTITY;
@@ -170,6 +173,9 @@ mat4_t rotate_xyz( GLfloat xa, GLfloat ya, GLfloat za )
 
 mat4_t orientation( vec3_t* f, vec3_t* l, vec3_t* u )
 {
+	assert( f );
+	assert( l );
+	assert( u );
 	vec3_normalize( f );
 	vec3_normalize( l );
 	vec3_normalize( u );

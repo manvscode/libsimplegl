@@ -36,6 +36,7 @@ GLuint tex2d_create( void )
 	GLuint texture = 0;
 	glGenTextures( 1, &texture );
 	assert( texture > 0 );
+	assert(check_gl() == GL_NO_ERROR);
 	return texture;
 }
 
@@ -50,6 +51,7 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 	const char* extension = strrchr( filename, '.' );
 	image_file_format_t format = IMAGEIO_PNG;
 	image_t image;
+	assert(check_gl() == GL_NO_ERROR);
 
 	if( extension )
 	{
@@ -98,6 +100,7 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 			 */
 			imageio_flip_vertically( image.width, image.height, image.bits_per_pixel >> 3, image.pixels );
 		}
+		assert(check_gl() == GL_NO_ERROR);
 
 		tex2d_setup_texture( texture, image.width, image.height, image.bits_per_pixel, image.pixels, min_filter, mag_filter, flags );
 		assert( glIsTexture(texture) );
@@ -133,7 +136,7 @@ void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte 
 	glBindTexture( GL_TEXTURE_2D, texture );
 
 	#if 0
-	GLint mipmap_count = 5;
+	GLint mipmap_count = 1;
 	if( mipmap_count <= 0 )
 	{
 		mipmap_count = 1;
@@ -191,13 +194,9 @@ void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte 
 	}
 
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter );
-	assert(check_gl() == GL_NO_ERROR);
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter );
-	assert(check_gl() == GL_NO_ERROR);
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (flags & TEX2D_CLAMP_S) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
-	assert(check_gl() == GL_NO_ERROR);
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (flags & TEX2D_CLAMP_T) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
-	assert(check_gl() == GL_NO_ERROR);
 
 	if( generate_mipmaps )
 	{

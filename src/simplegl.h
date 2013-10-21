@@ -65,9 +65,6 @@ extern "C" {
 	#define glDeleteVertexArrays(n, arrays) glDeleteVertexArraysOES(n, arrays)
 	#define glGenVertexArrays(n, arrays)    glGenVertexArraysOES(n, arrays)  
 	#define glIsVertexArray(array)          glIsVertexArrayOES(array)
-	#ifndef glClearColor
-	#define glClearColor                  glClearColorf
-	#endif
 	#endif
 	#else
 	#include <OpenGL/gl3.h>

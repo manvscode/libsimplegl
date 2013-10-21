@@ -33,9 +33,9 @@ GLboolean buffer_create( GLuint* id, const GLvoid* geometry, size_t element_size
 	if( *id )
 	{
 		glBindBuffer( target, *id );
-		//GL_ASSERT_NO_ERROR( );
+		assert(check_gl() == GL_NO_ERROR);
 		glBufferData( target, element_size * count, geometry, usage );
-		//GL_ASSERT_NO_ERROR( );
+		assert(check_gl() == GL_NO_ERROR);
 		return GL_TRUE;
 	}
 
@@ -49,7 +49,7 @@ GLboolean buffer_destroy( const GLuint* id )
 	if( glIsBuffer(*id) )
 	{
 		glDeleteBuffers( 1, id );
-		//GL_ASSERT_NO_ERROR( );
+		assert(check_gl() == GL_NO_ERROR);
 		return GL_TRUE;
 	}
 

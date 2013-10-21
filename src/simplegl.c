@@ -40,7 +40,9 @@ void dump_gl_info( void )
 	fprintf( stdout, "[GL] Extensions: " );
 
 	int extensionsCount = 0;
+	assert(check_gl() == GL_NO_ERROR);
 	glGetIntegerv( GL_NUM_EXTENSIONS, &extensionsCount );
+	assert(check_gl() == GL_NO_ERROR);
 
 	for( int i = 0; i < extensionsCount; i++ )
 	{

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0882A3D71814F0E6005CA20A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0882A3D61814F0E6005CA20A /* OpenGL.framework */; };
 		08C28478180DD15300E96BF5 /* 3d-axes.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C2846E180DD15300E96BF5 /* 3d-axes.c */; };
 		08C28479180DD15300E96BF5 /* buffers.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C2846F180DD15300E96BF5 /* buffers.c */; };
 		08C2847A180DD15300E96BF5 /* libsimplegl-config.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C28470180DD15300E96BF5 /* libsimplegl-config.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -51,6 +52,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0882A3D61814F0E6005CA20A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		08C28467180DD12C00E96BF5 /* libimageio.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libimageio.xcodeproj; path = ../../../libimageio/projects/xcode/libimageio.xcodeproj; sourceTree = "<group>"; };
 		08C2846E180DD15300E96BF5 /* 3d-axes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "3d-axes.c"; path = "../../src/3d-axes.c"; sourceTree = "<group>"; };
 		08C2846F180DD15300E96BF5 /* buffers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buffers.c; path = ../../src/buffers.c; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0882A3D71814F0E6005CA20A /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +91,7 @@
 		08F9B7A3180DD0E000DC30C4 = {
 			isa = PBXGroup;
 			children = (
+				0882A3D61814F0E6005CA20A /* OpenGL.framework */,
 				08C28467180DD12C00E96BF5 /* libimageio.xcodeproj */,
 				08F9B7B4180DD11800DC30C4 /* lib3dmath.xcodeproj */,
 				08F9B7B3180DD10200DC30C4 /* src */,
@@ -270,6 +274,8 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					"SIMPLEGL_DEBUG=1",
+					"NDEBUG=1",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -280,7 +286,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
+				SDKROOT = macosx;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -312,7 +318,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				SDKROOT = iphoneos;
+				SDKROOT = macosx;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -324,6 +330,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_IOS=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
@@ -334,6 +341,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_IOS=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 			};
 			name = Release;
 		};
