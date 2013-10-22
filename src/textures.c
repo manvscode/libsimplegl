@@ -78,6 +78,14 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 			printf( "Loading TGA: %s\n", filename );
 			#endif
 		}
+		else if( strcasecmp( "pvr", extension ) == 0 || strcasecmp( "pvrtc", extension ) == 0 )
+		{
+			format = IMAGEIO_PVR;
+			flags |= TEX2D_COMPRESS;
+			#ifdef SIMPLEGL_DEBUG
+			printf( "Loading PVRTC: %s\n", filename );
+			#endif
+		}
 	}
 
 	if( imageio_image_load( &image, filename, format ) )
@@ -100,6 +108,7 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 			 */
 			imageio_flip_vertically( image.width, image.height, image.bits_per_pixel >> 3, image.pixels );
 		}
+
 		assert(check_gl() == GL_NO_ERROR);
 
 		tex2d_setup_texture( texture, image.width, image.height, image.bits_per_pixel, image.pixels, min_filter, mag_filter, flags );
@@ -148,12 +157,14 @@ void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte 
 	if( flags & TEX2D_COMPRESS )
 	{
 		#if TARGET_OS_IPHONE
-		GLenum pixel_format = (bit_depth == 32 ? GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG);
+		// TODO: Figure out how to choose the right format.
+		GLenum pixel_format = (bit_depth == 4 ? GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG);
+		GLsizei image_size = width * height / 2;
 		#else
 		GLenum pixel_format = (bit_depth == 32 ? GL_COMPRESSED_RGBA : GL_COMPRESSED_RGB);
 		#endif
 
-		glCompressedTexImage2D( GL_TEXTURE_2D, 0, pixel_format, width, height, 0 /*must be zero*/, width * height * (bit_depth >> 3), pixels );
+		glCompressedTexImage2D( GL_TEXTURE_2D, 0, pixel_format, width, height, 0 /*must be zero*/, image_size, pixels );
 		assert(check_gl() == GL_NO_ERROR);
 	}
 	else
