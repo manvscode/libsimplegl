@@ -87,10 +87,10 @@ extern "C" {
 /*
  * Texturing
  */
-#define TEX2D_CLAMP_S         (0x01)
-#define TEX2D_CLAMP_T         (0x02)
-#define TEX2D_REPEAT_S        (~TEX2D_CLAMP_S)
-#define TEX2D_REPEAT_T        (~TEX2D_CLAMP_T)
+#define TEX2D_CLAMP_S         (0x01) /* not repeating along s */
+#define TEX2D_CLAMP_T         (0x02) /* not repeating along t */
+#define TEX2D_REPEAT_S        (0x00) /* deprecated */
+#define TEX2D_REPEAT_T        (0x00) /* deprecated */
 #define TEX2D_COMPRESS        (0x04)
 #define TEX2D_BORDER          (0x08)
 #define TEX2D_COMPRESS_RGB    (0x10)
