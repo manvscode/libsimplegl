@@ -81,7 +81,6 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 		else if( strcasecmp( "pvr", extension ) == 0 || strcasecmp( "pvrtc", extension ) == 0 )
 		{
 			format = IMAGEIO_PVR;
-			flags |= TEX2D_COMPRESS;
 			#ifdef SIMPLEGL_DEBUG
 			printf( "Loading PVRTC: %s\n", filename );
 			#endif
@@ -90,18 +89,20 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 
 	if( imageio_image_load( &image, filename, format ) )
 	{
-		#if TARGET_OS_IPHONE
-		if( !is_power_of_2(image.width) || !is_power_of_2(image.height) )
+		if( format == IMAGEIO_PVR )
 		{
-			/* iOS devices require texture dimensions to be
-			 * a power of 2.
-			 */
-			imageio_image_destroy( &image );
-			goto failure;
-		}
-		#endif
+			if( !is_power_of_2(image.width) || !is_power_of_2(image.height) )
+			{
+				   /* iOS devices require texture dimensions to be
+					* a power of 2.
+					*/
+				   imageio_image_destroy( &image );
+				   goto failure;
+			}
 
-		if( format == IMAGEIO_PNG )
+			flags |= (image.channels == 4 ? TEX2D_COMPRESS_RGBA : TEX2D_COMPRESS_RGB);
+		}
+		else if( format == IMAGEIO_PNG )
 		{
 			/* These pesky PNG files need to be flipped vertically to be
 			 * correctly oriented for OpenGL.
@@ -154,14 +155,27 @@ void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte 
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipmap_count - 1 );
 	#endif
 
-	if( flags & TEX2D_COMPRESS )
+	if( (flags & TEX2D_COMPRESS_RGB) || (flags & TEX2D_COMPRESS_RGBA) )
 	{
 		#if TARGET_OS_IPHONE
+		GLenum pixel_format;
 		// TODO: Figure out how to choose the right format.
-		GLenum pixel_format = (bit_depth == 4 ? GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG);
+		switch( bit_depth )
+		{
+			case 2:
+				pixel_format = (flags & TEX2D_COMPRESS_RGBA) ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
+				break;
+			case 4: /* fall through */
+			default:
+				pixel_format = (flags & TEX2D_COMPRESS_RGBA) ? GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+				break;
+
+		}
 		GLsizei image_size = width * height / 2;
 		#else
 		GLenum pixel_format = (bit_depth == 32 ? GL_COMPRESSED_RGBA : GL_COMPRESSED_RGB);
+		GLsizei image_size = width * height / 2;
+		assert( false && "Not implemented" );
 		#endif
 
 		glCompressedTexImage2D( GL_TEXTURE_2D, 0, pixel_format, width, height, 0 /*must be zero*/, image_size, pixels );

@@ -87,12 +87,14 @@ extern "C" {
 /*
  * Texturing
  */
-#define TEX2D_CLAMP_S       (0x01)
-#define TEX2D_CLAMP_T       (0x02)
-#define TEX2D_REPEAT_S      (~TEX2D_CLAMP_S)
-#define TEX2D_REPEAT_T      (~TEX2D_CLAMP_T)
-#define TEX2D_COMPRESS      (0x04)
-#define TEX2D_BORDER        (0x08)
+#define TEX2D_CLAMP_S         (0x01)
+#define TEX2D_CLAMP_T         (0x02)
+#define TEX2D_REPEAT_S        (~TEX2D_CLAMP_S)
+#define TEX2D_REPEAT_T        (~TEX2D_CLAMP_T)
+#define TEX2D_COMPRESS        (0x04)
+#define TEX2D_BORDER          (0x08)
+#define TEX2D_COMPRESS_RGB    (0x10)
+#define TEX2D_COMPRESS_RGBA   (0x20)
 
 GLuint tex2d_create        ( void );
 void   tex2d_destroy       ( GLuint texture );
