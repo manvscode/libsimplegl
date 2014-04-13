@@ -153,9 +153,9 @@ void initialize( void )
 	GL_ASSERT_NO_ERROR( );
 	attribute_color  = glsl_bind_attribute( program, "a_color" );
 	GL_ASSERT_NO_ERROR( );
-	uniform_model_view = glsl_bind_uniform( program, "model_view" );
+	uniform_model_view = glsl_bind_uniform( program, "u_model_view" );
 	GL_ASSERT_NO_ERROR( );
-	uniform_texture = glsl_bind_uniform( program, "texture" );
+	uniform_texture = glsl_bind_uniform( program, "u_texture" );
 	GL_ASSERT_NO_ERROR( );
 
 	texture = tex2d_create( );
