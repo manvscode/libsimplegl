@@ -45,8 +45,15 @@ GLboolean glsl_program_from_shaders( GLuint* p_program, const shader_info_t* sha
 
 		const char* shader_source_code = glsl_shader_load( info->filename );
 
-		result = glsl_shader_create_from_source( &shader_names[ i ], info->type, shader_source_code, shader_log );
-		free( (char*) shader_source_code );
+		if( shader_source_code )
+		{
+			result = glsl_shader_create_from_source( &shader_names[ i ], info->type, shader_source_code, shader_log );
+			free( (char*) shader_source_code );
+		}
+		else
+		{
+			result = false;
+		}
 	}
 
 	result = result && glsl_program_create( p_program, shader_names, count, GL_TRUE /* delete shaders when program is deleted */, program_log );
@@ -141,7 +148,7 @@ GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const G
 	{
 		goto failure;
 	}
-	
+
 	if( !s )
 	{
 		#ifdef SIMPLEGL_DEBUG
@@ -335,7 +342,7 @@ GLchar* glsl_shader_load( const char* path )
 					buffer += bytes_read;
 					size   -= bytes_read;
 				}
-                
+
                 result[ file_size ] = '\0';
 			}
 		}
@@ -420,7 +427,7 @@ GLint glsl_bind_attribute( GLuint program, const GLchar* name )
 {
 	GLuint result = glGetAttribLocation( program, name );
 	assert(check_gl() == GL_NO_ERROR);
-	
+
 	#ifdef SIMPLEGL_DEBUG
 	if( result == -1 )
 	{
@@ -435,7 +442,7 @@ GLint glsl_bind_uniform( GLuint program, const GLchar* name )
 {
 	GLuint result = glGetUniformLocation( program, name );
 	assert(check_gl() == GL_NO_ERROR);
-	
+
 	#ifdef SIMPLEGL_DEBUG
 	if( result == -1 )
 	{

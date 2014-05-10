@@ -66,12 +66,12 @@ mat4_t perspective( GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far )
 	);
 }
 
-mat4_t look_at( const pt3_t* p, const pt3_t* t, const vec3_t* u )
+mat4_t look_at( const pt3_t* eye, const pt3_t* target, const vec3_t* up )
 {
-	vec3_t z = VEC3_LITERAL( t->x - p->x, t->y - p->y, t->z - p->z );
+	vec3_t z = VEC3_LITERAL( target->x - eye->x, target->y - eye->y, target->z - eye->z );
 	vec3_normalize( &z );
 
-	vec3_t x = vec3_cross_product( &z, u );
+	vec3_t x = vec3_cross_product( &z, up );
 	vec3_normalize( &x );
 
 	vec3_t y = vec3_cross_product( &z, &x );
@@ -81,7 +81,7 @@ mat4_t look_at( const pt3_t* p, const pt3_t* t, const vec3_t* u )
 		  x.x,   x.y,   x.z, 0.0, /* x-axis */
 		  y.x,   y.y,   y.z, 0.0, /* y-axis */
 		  z.x,   z.y,   z.z, 0.0, /* z-axis */
-		-p->x, -p->y, -p->z, 1.0  /* translation */
+		-eye->x, -eye->y, -eye->z, 1.0  /* translation */
 	);
 }
 

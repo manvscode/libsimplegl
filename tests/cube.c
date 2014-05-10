@@ -127,8 +127,8 @@ void initialize( void )
 	GLchar* shader_log  = NULL;
 	GLchar* program_log = NULL;
 	const shader_info_t shaders[] = {
-		{ GL_VERTEX_SHADER,   "./tests/cube.v.glsl" },
-		{ GL_FRAGMENT_SHADER, "./tests/cube.f.glsl" }
+		{ GL_VERTEX_SHADER,   "./tests/assets/cube.v.glsl" },
+		{ GL_FRAGMENT_SHADER, "./tests/assets/cube.f.glsl" }
 	};
 
 	if( !glsl_program_from_shaders( &program, shaders, shader_info_count(shaders), &shader_log, &program_log ) )
@@ -158,16 +158,13 @@ void initialize( void )
 	uniform_texture = glsl_bind_uniform( program, "u_texture" );
 	GL_ASSERT_NO_ERROR( );
 
-	texture = tex2d_create( );
+	texture = tex_create( );
 	GL_ASSERT_NO_ERROR( );
 	if( texture )
 	{
 		glActiveTexture( GL_TEXTURE0 );
 		GL_ASSERT_NO_ERROR( );
-		tex2d_load_for_3d( texture, "./tests/checkered.png", TEX2D_CLAMP_S | TEX2D_CLAMP_T );
-		GL_ASSERT_NO_ERROR( );
-  		//glBindTexture( GL_TEXTURE_2D, texture_id );
-  		//glUniform1i( uniform_texture, /*GL_TEXTURE*/ 0 );
+		tex_load_2d_with_mipmaps( texture, "./tests/assets/checkered.png", TEX_CLAMP_S | TEX_CLAMP_T );
 		GL_ASSERT_NO_ERROR( );
 	}
 	else
@@ -254,7 +251,7 @@ void initialize( void )
 
 void deinitialize( void )
 {
-	tex2d_destroy( texture );
+	tex_destroy( texture );
 	glDeleteVertexArrays( 1, &vao );
 	glDeleteBuffers( 1, &vbo_vertices );
 	glDeleteBuffers( 1, &vbo_tex_coords );

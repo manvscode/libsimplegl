@@ -25,13 +25,7 @@
 #include "simplegl.h"
 
 
-void _tex2d_create( GLuint* p_texture )
-{
-	assert( p_texture );
-	glGenTextures( 1, p_texture );
-}
-
-GLuint tex2d_create( void )
+GLuint tex_create( void )
 {
 	GLuint texture = 0;
 	glGenTextures( 1, &texture );
@@ -40,12 +34,194 @@ GLuint tex2d_create( void )
 	return texture;
 }
 
-void tex2d_destroy( GLuint texture )
+void tex_destroy( GLuint texture )
 {
 	glDeleteTextures( 1, &texture );
 }
 
-bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags )
+void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei depth, GLbyte bit_depth, const GLvoid* pixels, GLint min_filter, GLint mag_filter, GLubyte flags, GLuint texture_dimensions )
+{
+	GLuint texture_type;
+
+	switch( texture_dimensions )
+	{
+		case 3:
+			texture_type = GL_TEXTURE_3D;
+			break;
+		case 2:
+			texture_type = GL_TEXTURE_2D;
+			break;
+		case 1: /* fall-through */
+		default:
+			texture_type = GL_TEXTURE_1D;
+			break;
+	}
+
+	glBindTexture( texture_type, texture );
+
+	#if 0
+	GLint mipmap_count = 1;
+	if( mipmap_count <= 0 )
+	{
+		mipmap_count = 1;
+	}
+	glTexParameteri( texture_type, GL_TEXTURE_BASE_LEVEL, 0 );
+	glTexParameteri( texture_type, GL_TEXTURE_MAX_LEVEL, mipmap_count - 1 );
+	#endif
+
+	if( texture_dimensions == 1 )
+	{
+		GLenum pixel_format;
+		switch( bit_depth )
+		{
+			case 8:
+				pixel_format = GL_DEPTH_COMPONENT;
+				break;
+			case 32:
+				pixel_format = GL_RGBA;
+				break;
+			case 24: /* fall through */
+			default:
+				pixel_format = GL_RGB;
+				break;
+
+		}
+		const GLint border = flags & TEX_BORDER;
+		glTexImage1D( texture_type, 0, pixel_format, width, border, pixel_format, GL_UNSIGNED_BYTE, pixels );
+		assert(check_gl() == GL_NO_ERROR);
+	}
+	else if( texture_dimensions == 2 )
+	{
+		if( (flags & TEX_COMPRESS_RGB) || (flags & TEX_COMPRESS_RGBA) )
+		{
+			#if TARGET_OS_IPHONE
+			GLenum pixel_format;
+			// TODO: Figure out how to choose the right format.
+			switch( bit_depth )
+			{
+				case 2:
+					pixel_format = (flags & TEX_COMPRESS_RGBA) ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
+					break;
+				case 4: /* fall through */
+				default:
+					pixel_format = (flags & TEX_COMPRESS_RGBA) ? GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+					break;
+
+			}
+			GLsizei image_size = width * height / 2;
+			#else
+			GLenum pixel_format = (bit_depth == 32 ? GL_COMPRESSED_RGBA : GL_COMPRESSED_RGB);
+			GLsizei image_size = width * height / 2;
+			assert( false && "Not implemented" );
+			#endif
+
+			glCompressedTexImage2D( texture_type, 0, pixel_format, width, height, 0 /*must be zero*/, image_size, pixels );
+			assert(check_gl() == GL_NO_ERROR);
+		}
+		else
+		{
+			GLenum pixel_format;// = bit_depth == 32 ? GL_RGBA : GL_RGB;
+			switch( bit_depth )
+			{
+				case 8:
+					pixel_format = GL_DEPTH_COMPONENT;
+					break;
+				case 32:
+					pixel_format = GL_RGBA;
+					break;
+				case 24: /* fall through */
+				default:
+					pixel_format = GL_RGB;
+					break;
+
+			}
+			const GLint border = flags & TEX_BORDER;
+			glTexImage2D( texture_type, 0, pixel_format, width, height, border, pixel_format, GL_UNSIGNED_BYTE, pixels );
+			assert(check_gl() == GL_NO_ERROR);
+		}
+	}
+	else if( texture_dimensions == 3 ) /* 3D textures */
+	{
+		GLenum pixel_format;
+		GLenum internal_format;
+		switch( bit_depth )
+		{
+			case 8:
+				internal_format = GL_RED;
+				pixel_format    = GL_RED;
+				break;
+			case 16:
+				internal_format = GL_RED;
+				pixel_format    = GL_RED;
+				break;
+			case 32:
+				internal_format = GL_RGBA;
+				pixel_format    = GL_RGBA;
+				break;
+			case 24: /* fall through */
+			default:
+				internal_format = GL_RGB;
+				pixel_format    = GL_RGB;
+				break;
+
+		}
+		const GLint border = 0; /* Must be zero for 3D textures */
+		glTexImage3D( texture_type, 0, internal_format, width, height, depth, border, pixel_format, GL_UNSIGNED_BYTE, pixels );
+		assert(check_gl() == GL_NO_ERROR);
+	}
+
+	bool generate_mipmaps = false;
+
+	switch( min_filter )
+	{
+		case GL_NEAREST_MIPMAP_LINEAR:
+		case GL_NEAREST_MIPMAP_NEAREST:
+		case GL_LINEAR_MIPMAP_LINEAR:
+		case GL_LINEAR_MIPMAP_NEAREST:
+			generate_mipmaps = true;
+			break;
+		default:
+			break;
+	}
+
+	/* Only GL_LINEAR and GL_NEAREST are valid magnification filters */
+	switch( mag_filter )
+	{
+		case GL_NEAREST_MIPMAP_LINEAR:
+		case GL_NEAREST_MIPMAP_NEAREST:
+			mag_filter = GL_NEAREST;
+			break;
+		case GL_LINEAR_MIPMAP_LINEAR:
+		case GL_LINEAR_MIPMAP_NEAREST:
+			mag_filter = GL_LINEAR;
+			break;
+		default:
+			break;
+	}
+
+	glTexParameteri( texture_type, GL_TEXTURE_MIN_FILTER, min_filter );
+	glTexParameteri( texture_type, GL_TEXTURE_MAG_FILTER, mag_filter );
+	glTexParameteri( texture_type, GL_TEXTURE_WRAP_S, (flags & TEX_CLAMP_S) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
+
+	if( texture_dimensions >= 2 )
+	{
+		glTexParameteri( texture_type, GL_TEXTURE_WRAP_T, (flags & TEX_CLAMP_T) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
+	}
+
+	if( texture_dimensions >= 3 )
+	{
+		glTexParameteri( texture_type, GL_TEXTURE_WRAP_R, (flags & TEX_CLAMP_R) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
+	}
+
+	if( generate_mipmaps )
+	{
+		glGenerateMipmap( texture_type );
+	}
+
+	assert(check_gl() == GL_NO_ERROR);
+}
+
+bool tex_load_2d( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags )
 {
 	bool result = false;
 	const char* extension = strrchr( filename, '.' );
@@ -85,6 +261,10 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 			printf( "Loading PVRTC: %s\n", filename );
 			#endif
 		}
+		else
+		{
+			goto failure;
+		}
 	}
 
 	if( imageio_image_load( &image, filename, format ) )
@@ -100,7 +280,7 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 				   goto failure;
 			}
 
-			flags |= (image.channels == 4 ? TEX2D_COMPRESS_RGBA : TEX2D_COMPRESS_RGB);
+			flags |= (image.channels == 4 ? TEX_COMPRESS_RGBA : TEX_COMPRESS_RGB);
 		}
 		else if( format == IMAGEIO_PNG )
 		{
@@ -112,7 +292,7 @@ bool tex2d_load( GLuint texture, const char* filename, GLint min_filter, GLint m
 
 		assert(check_gl() == GL_NO_ERROR);
 
-		tex2d_setup_texture( texture, image.width, image.height, image.bits_per_pixel, image.pixels, min_filter, mag_filter, flags );
+		tex_setup_texture( texture, image.width, image.height, 0, image.bits_per_pixel, image.pixels, min_filter, mag_filter, flags, 2 );
 		assert( glIsTexture(texture) );
 
 		// Dispose of image
@@ -130,102 +310,70 @@ failure:
 	return result;
 }
 
-bool tex2d_load_for_2d( GLuint texture, const char* filename )
+bool tex_load_2d_with_linear( GLuint texture, const char* filename, GLubyte flags )
 {
-	return tex2d_load( texture, filename, GL_LINEAR, GL_LINEAR, TEX2D_CLAMP_S | TEX2D_CLAMP_T );
+	return tex_load_2d( texture, filename, GL_LINEAR, GL_LINEAR, flags );
 }
 
-bool tex2d_load_for_3d( GLuint texture, const char* filename, GLubyte flags )
+bool tex_load_2d_with_mipmaps( GLuint texture, const char* filename, GLubyte flags )
 {
-	return tex2d_load( texture, filename, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, flags );
+	return tex_load_2d( texture, filename, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, flags );
 }
 
-
-void tex2d_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLbyte bit_depth, const GLvoid* pixels, GLint min_filter, GLint mag_filter, GLubyte flags )
+bool tex_load_3d( GLuint texture, const char* filename, GLsizei voxel_bit_depth, GLsizei width, GLsizei height, GLsizei length, GLint min_filter, GLint mag_filter, GLubyte flags )
 {
-	glBindTexture( GL_TEXTURE_2D, texture );
-
-	#if 0
-	GLint mipmap_count = 1;
-	if( mipmap_count <= 0 )
-	{
-		mipmap_count = 1;
-	}
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0 );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipmap_count - 1 );
-	#endif
-
-	if( (flags & TEX2D_COMPRESS_RGB) || (flags & TEX2D_COMPRESS_RGBA) )
-	{
-		#if TARGET_OS_IPHONE
-		GLenum pixel_format;
-		// TODO: Figure out how to choose the right format.
-		switch( bit_depth )
-		{
-			case 2:
-				pixel_format = (flags & TEX2D_COMPRESS_RGBA) ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
-				break;
-			case 4: /* fall through */
-			default:
-				pixel_format = (flags & TEX2D_COMPRESS_RGBA) ? GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
-				break;
-
-		}
-		GLsizei image_size = width * height / 2;
-		#else
-		GLenum pixel_format = (bit_depth == 32 ? GL_COMPRESSED_RGBA : GL_COMPRESSED_RGB);
-		GLsizei image_size = width * height / 2;
-		assert( false && "Not implemented" );
-		#endif
-
-		glCompressedTexImage2D( GL_TEXTURE_2D, 0, pixel_format, width, height, 0 /*must be zero*/, image_size, pixels );
-		assert(check_gl() == GL_NO_ERROR);
-	}
-	else
-	{
-		GLenum pixel_format = (bit_depth == 32 ? GL_RGBA : GL_RGB);
-		GLint border = (flags & TEX2D_BORDER) ? 1 : 0;
-		glTexImage2D( GL_TEXTURE_2D, 0, pixel_format, width, height, border, pixel_format, GL_UNSIGNED_BYTE, pixels );
-		assert(check_gl() == GL_NO_ERROR);
-	}
-
-	bool generate_mipmaps = false;
-
-	switch( min_filter )
-	{
-		case GL_NEAREST_MIPMAP_LINEAR:
-		case GL_NEAREST_MIPMAP_NEAREST:
-		case GL_LINEAR_MIPMAP_LINEAR:
-		case GL_LINEAR_MIPMAP_NEAREST:
-			generate_mipmaps = true;
-			break;
-		default:
-			break;
-	}
-
-	/* Only GL_LINEAR and GL_NEAREST are valid magnification filters */
-	switch( mag_filter )
-	{
-		case GL_NEAREST_MIPMAP_LINEAR:
-		case GL_NEAREST_MIPMAP_NEAREST:
-			mag_filter = GL_NEAREST;
-			break;
-		case GL_LINEAR_MIPMAP_LINEAR:
-		case GL_LINEAR_MIPMAP_NEAREST:
-			mag_filter = GL_LINEAR;
-			break;
-		default:
-			break;
-	}
-
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (flags & TEX2D_CLAMP_S) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (flags & TEX2D_CLAMP_T) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
-
-	if( generate_mipmaps )
-	{
-		glGenerateMipmap( GL_TEXTURE_2D );
-	}
+	bool result = false;
+	const char* extension = strrchr( filename, '.' );
 	assert(check_gl() == GL_NO_ERROR);
+
+	if( extension )
+	{
+		extension += 1;
+
+		if( strcasecmp( "raw", extension ) == 0 )
+		{
+			#ifdef SIMPLEGL_DEBUG
+			printf( "Loading RAW: %s\n", filename );
+			#endif
+		}
+		else
+		{
+			goto failure;
+		}
+	}
+
+	size_t voxel_size;
+	switch( voxel_bit_depth )
+	{
+		case 16:
+			voxel_size = sizeof(uint16_t);
+			break;
+		case 8: /* fall-through */
+			voxel_size = sizeof(uint8_t);
+		default:
+			break;
+	}
+
+	/* load raw data */
+	{
+		FILE* volume_data_file = fopen( filename, "r" );
+		if( volume_data_file )
+		{
+			const size_t volume_data_count = width * height * length;
+			void* volume_data = malloc( voxel_size * volume_data_count );
+			size_t objs_read = fread( volume_data, voxel_size * volume_data_count, 1, volume_data_file );
+			assert( objs_read == 1 );
+			fclose( volume_data_file );
+
+			tex_setup_texture( texture, width, height, length, voxel_bit_depth, volume_data, min_filter, mag_filter, flags, 3 );
+			assert(check_gl() == GL_NO_ERROR);
+			assert( glIsTexture(texture) );
+			free( volume_data );
+			result = true;
+		}
+	}
+
+failure:
+	return result;
 }
+

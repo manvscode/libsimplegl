@@ -87,21 +87,23 @@ extern "C" {
 /*
  * Texturing
  */
-#define TEX2D_CLAMP_S         (0x01) /* not repeating along s */
-#define TEX2D_CLAMP_T         (0x02) /* not repeating along t */
-#define TEX2D_REPEAT_S        (0x00) /* deprecated */
-#define TEX2D_REPEAT_T        (0x00) /* deprecated */
-#define TEX2D_COMPRESS        (0x04)
-#define TEX2D_BORDER          (0x08)
-#define TEX2D_COMPRESS_RGB    (0x10)
-#define TEX2D_COMPRESS_RGBA   (0x20)
+#define TEX_CLAMP_S         (0x01) /* not repeating along s */
+#define TEX_CLAMP_T         (0x02) /* not repeating along t */
+#define TEX_CLAMP_R         (0x04) /* not repeating along r */
+#define TEX_COMPRESS        (0x08)
+#define TEX_BORDER          (0x10)
+#define TEX_COMPRESS_RGB    (0x20)
+#define TEX_COMPRESS_RGBA   (0x40)
 
-GLuint tex2d_create        ( void );
-void   tex2d_destroy       ( GLuint texture );
-bool   tex2d_load          ( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags );
-bool   tex2d_load_for_2d   ( GLuint texture, const char* filename );
-bool   tex2d_load_for_3d   ( GLuint texture, const char* filename, GLubyte flags );
-void   tex2d_setup_texture ( GLuint texture, GLsizei width, GLsizei height, GLbyte bit_depth, const GLvoid* pixels, GLint min_filter, GLint mag_filter, GLubyte flags );
+GLuint tex_create               ( void );
+void   tex_destroy              ( GLuint texture );
+void   tex_setup_texture        ( GLuint texture, GLsizei width, GLsizei height, GLsizei depth, GLbyte bit_depth, const GLvoid* pixels,
+                                  GLint min_filter, GLint mag_filter, GLubyte flags, GLuint texture_dimensions );
+bool   tex_load_2d              ( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags );
+bool   tex_load_2d_with_linear  ( GLuint texture, const char* filename, GLubyte flags );
+bool   tex_load_2d_with_mipmaps ( GLuint texture, const char* filename, GLubyte flags );
+bool   tex_load_3d              ( GLuint texture, const char* filename, GLsizei voxel_bit_depth,
+                                  GLsizei width, GLsizei height, GLsizei length, GLint min_filter, GLint mag_filter, GLubyte flags );
 
 /*
  * Projections
@@ -109,7 +111,7 @@ void   tex2d_setup_texture ( GLuint texture, GLsizei width, GLsizei height, GLby
 mat4_t orthographic ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far );
 mat4_t frustum      ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far );
 mat4_t perspective  ( GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far );
-mat4_t look_at      ( const pt3_t* p, const pt3_t* t, const vec3_t* u );
+mat4_t look_at      ( const pt3_t* eye, const pt3_t* target, const vec3_t* up );
 
 /*
  * Transformations
