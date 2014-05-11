@@ -52,17 +52,17 @@ mat4_t frustum( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloa
 }
 
 
-mat4_t perspective( GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far )
+mat4_t perspective( GLfloat fov /* in radians */, GLfloat aspect, GLfloat near, GLfloat far )
 {
-	GLfloat A = 1.0 / tan(fov * 0.5 * RADIANS_PER_DEGREE);
+	GLfloat A = 1.0 / tan(fov * 0.5);
 	GLfloat B = -far / (far - near);
 	GLfloat C = -(far * near)/ (far - near);
 
 	return MAT4_LITERAL(
-		  A, 0.0, 0.0, 0.0,
-		0.0,   A, 0.0, 0.0,
-		0.0, 0.0,   B,-1.0,
-		0.0, 0.0,   C, 0.0
+	    A/aspect, 0.0, 0.0, 0.0,
+	         0.0,   A, 0.0, 0.0,
+	         0.0, 0.0,   B,-1.0,
+	         0.0, 0.0,   C, 0.0
 	);
 }
 

@@ -281,9 +281,9 @@ void render( )
 	#else
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
-	GLfloat aspect = ((GLfloat)height) / width;
+	GLfloat aspect = ((GLfloat)width) / height;
 	vec3_t translation = VEC3_LITERAL( 0.0, 0.0, -10 );
-	mat4_t projection = perspective( 80.0, aspect, 0.1, 100.0 );
+	mat4_t projection = perspective( 80.0 * RADIANS_PER_DEGREE, aspect, 0.1, 100.0 );
 	vec3_t axis = VEC3_LITERAL( -0.8f, -0.25f, 0.75f );
 	quat_t q1 = quat_from_axis3_angle( &axis, angle );
 	mat4_t rotation = quat_to_mat4( &q1 );
