@@ -99,6 +99,7 @@ GLuint tex_create               ( void );
 void   tex_destroy              ( GLuint texture );
 void   tex_setup_texture        ( GLuint texture, GLsizei width, GLsizei height, GLsizei depth, GLbyte bit_depth, const GLvoid* pixels,
                                   GLint min_filter, GLint mag_filter, GLubyte flags, GLuint texture_dimensions );
+bool   tex_load_1d              ( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags );
 bool   tex_load_2d              ( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags );
 bool   tex_load_2d_with_linear  ( GLuint texture, const char* filename, GLubyte flags );
 bool   tex_load_2d_with_mipmaps ( GLuint texture, const char* filename, GLubyte flags );

@@ -221,6 +221,95 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 	assert(check_gl() == GL_NO_ERROR);
 }
 
+bool tex_load_1d( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags )
+{
+	bool result = false;
+	const char* extension = strrchr( filename, '.' );
+	image_file_format_t format = IMAGEIO_PNG;
+	image_t image;
+	assert(check_gl() == GL_NO_ERROR);
+
+	if( extension )
+	{
+		extension += 1;
+
+		if( strcasecmp( "png", extension ) == 0 )
+		{
+			format = IMAGEIO_PNG;
+			#ifdef SIMPLEGL_DEBUG
+			printf( "Loading PNG: %s\n", filename );
+			#endif
+		}
+		else if( strcasecmp( "bmp", extension ) == 0 )
+		{
+			format = IMAGEIO_BMP;
+			#ifdef SIMPLEGL_DEBUG
+			printf( "Loading BMP: %s\n", filename );
+			#endif
+		}
+		else if( strcasecmp( "tga", extension ) == 0 )
+		{
+			format = IMAGEIO_TGA;
+			#ifdef SIMPLEGL_DEBUG
+			printf( "Loading TGA: %s\n", filename );
+			#endif
+		}
+		else if( strcasecmp( "pvr", extension ) == 0 || strcasecmp( "pvrtc", extension ) == 0 )
+		{
+			format = IMAGEIO_PVR;
+			#ifdef SIMPLEGL_DEBUG
+			printf( "Loading PVRTC: %s\n", filename );
+			#endif
+		}
+		else
+		{
+			goto failure;
+		}
+	}
+
+	if( imageio_image_load( &image, filename, format ) )
+	{
+		if( format == IMAGEIO_PVR )
+		{
+			if( !is_power_of_2(image.width) || !is_power_of_2(image.height) )
+			{
+				   /* iOS devices require texture dimensions to be
+					* a power of 2.
+					*/
+				   imageio_image_destroy( &image );
+				   goto failure;
+			}
+
+			flags |= (image.channels == 4 ? TEX_COMPRESS_RGBA : TEX_COMPRESS_RGB);
+		}
+		else if( format == IMAGEIO_PNG )
+		{
+			/* These pesky PNG files need to be flipped vertically to be
+			 * correctly oriented for OpenGL.
+			 */
+			imageio_flip_vertically( image.width, image.height, image.bits_per_pixel >> 3, image.pixels );
+		}
+
+		assert(check_gl() == GL_NO_ERROR);
+
+		tex_setup_texture( texture, image.width, image.height, 0, image.bits_per_pixel, image.pixels, min_filter, mag_filter, flags, 1 );
+		assert( glIsTexture(texture) );
+
+		// Dispose of image
+		imageio_image_destroy( &image );
+		result = true;
+	}
+	#ifdef SIMPLEGL_DEBUG
+	else
+	{
+		fprintf( stderr, "Failed to load: %s\n", filename );
+	}
+	#endif
+
+failure:
+	return result;
+}
+
 bool tex_load_2d( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags )
 {
 	bool result = false;
