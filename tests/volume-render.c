@@ -20,6 +20,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "../src/simplegl.h"
 #include <lib3dmath/vec3.h>
 #include <lib3dmath/quat.h>
@@ -42,6 +43,7 @@ GLint uniform_voxel_data = 0;
 GLint uniform_back_voxels = 0;
 GLint uniform_color_transfer = 0;
 GLint uniform_rendering_pass = 0;
+GLint uniform_seed = 0;
 
 GLuint vao = 0;
 GLuint vbo_vertices = 0;
@@ -180,7 +182,7 @@ int main( int argc, char* argv[] )
 	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 2 );
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
-	flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+	//flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 	window = SDL_CreateWindow( "Volume Renderer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags );
 
 	if( window == NULL )
@@ -271,6 +273,7 @@ void initialize( void )
 	uniform_back_voxels = glsl_bind_uniform( program, "u_back_voxels" ); assert(check_gl() == GL_NO_ERROR);
 	uniform_color_transfer = glsl_bind_uniform( program, "u_color_transfer" ); assert(check_gl() == GL_NO_ERROR);
 	uniform_rendering_pass = glsl_bind_uniform( program, "u_render_pass" ); assert(check_gl() == GL_NO_ERROR);
+	uniform_seed = glsl_bind_uniform( program, "u_seed" ); assert(check_gl() == GL_NO_ERROR);
 
 	voxel_texture = tex_create( );
 
@@ -279,13 +282,9 @@ void initialize( void )
 		glActiveTexture( GL_TEXTURE0 );
 		assert(check_gl() == GL_NO_ERROR);
 		int flags = TEX_CLAMP_S | TEX_CLAMP_T | TEX_CLAMP_R;
-		#if 1
+		#if 0
 		const char* filename = "./tests/assets/head-256x256x256.raw";
 		if( tex_load_3d( voxel_texture, filename, 8, 256, 256, 256, GL_LINEAR, GL_LINEAR, flags ) )
-		#else
-		const char* filename = "./tests/assets/mouse-150x150x276.raw";
-		if( tex_load_3d( voxel_texture, filename, 16, 150, 150, 276, GL_LINEAR, GL_LINEAR, flags ) )
-		#endif
 		{
 			printf( "Loaded %s\n", filename );
 		}
@@ -294,6 +293,40 @@ void initialize( void )
 			dump_sdl_error( );
 			exit( EXIT_FAILURE );
 		}
+		#elif 1
+		const char* filename = "./tests/assets/foot-256x256x256.raw";
+		if( tex_load_3d( voxel_texture, filename, 8, 256, 256, 256, GL_LINEAR, GL_LINEAR, flags ) )
+		{
+			printf( "Loaded %s\n", filename );
+		}
+		else
+		{
+			dump_sdl_error( );
+			exit( EXIT_FAILURE );
+		}
+		#elif 0
+		const char* filename = "./tests/assets/skull-256x256x256.raw";
+		if( tex_load_3d( voxel_texture, filename, 8, 256, 256, 256, GL_LINEAR, GL_LINEAR, flags ) )
+		{
+			printf( "Loaded %s\n", filename );
+		}
+		else
+		{
+			dump_sdl_error( );
+			exit( EXIT_FAILURE );
+		}
+		#else
+		const char* filename = "./tests/assets/lobster-301x324x56.raw";
+		if( tex_load_3d( voxel_texture, filename, 8, 301, 324, 56, GL_LINEAR, GL_LINEAR, flags ) )
+		{
+			printf( "Loaded %s\n", filename );
+		}
+		else
+		{
+			dump_sdl_error( );
+			exit( EXIT_FAILURE );
+		}
+		#endif
 
 		assert(check_gl() == GL_NO_ERROR);
 	}
@@ -308,7 +341,7 @@ void initialize( void )
 	{
 		//glActiveTexture( GL_TEXTURE2 );
 		assert(check_gl() == GL_NO_ERROR);
-		if( !tex_load_1d( color_transfer_texture, "./tests/assets/temperature.png", GL_LINEAR, GL_LINEAR, TEX_CLAMP_S ) )
+		if( !tex_load_1d( color_transfer_texture, "./tests/assets/intensity.png", GL_LINEAR, GL_LINEAR, TEX_CLAMP_S ) )
 		{
 			dump_sdl_error( );
 			exit( EXIT_FAILURE );
@@ -435,7 +468,6 @@ void render( )
 	#else
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
-	//GLfloat aspect = ((GLfloat)height) / width;
 	GLfloat aspect = ((GLfloat)width) / height;
 	vec3_t translation = VEC3_LITERAL( 0.0, 0.0, -6 );
 	mat4_t projection = perspective( 22.0 * RADIANS_PER_DEGREE, aspect, 5, 100.0 );
@@ -443,6 +475,7 @@ void render( )
 	quat_t q1 = quat_from_axis3_angle( &axis, angle * RADIANS_PER_DEGREE );
 	mat4_t rotation = quat_to_mat4( &q1 );
 	angle += 0.3f;
+	//mat4_t matscale  = scale( &VEC3_LITERAL(1.0f, 1.0f, 1.0f) );
 	mat4_t transform = translate( &translation );
 	transform = mat4_mult_matrix( &transform, &rotation );
 	mat4_t model_view = mat4_mult_matrix( &projection, &transform );
@@ -483,6 +516,7 @@ void render( )
 
 	// Second rendering pass
 	glUniform1ui( uniform_rendering_pass, 1 );
+	glUniform1ui( uniform_seed, clock() );
 	glDrawElements( GL_TRIANGLES, indices_count, GL_UNSIGNED_SHORT, 0 );
 	assert(check_gl() == GL_NO_ERROR);
 

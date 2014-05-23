@@ -6,24 +6,39 @@ uniform sampler3D u_voxel_data;
 uniform sampler2D u_back_voxels;
 uniform sampler1D u_color_transfer;
 uniform uint u_render_pass;
+uniform uint u_seed;
+
 
 out vec4 color;
 
 const uint RENDER_PASS_BACK_VOXELS    = uint(0);
 const uint RENDER_PASS_SAMPLED_VOXELS = uint(1);
-const float STEP_SIZE = 0.008f;
+const float STEP_SIZE = 0.004f;
+//const float STEP_SIZE = 0.05f;
 
 vec3 color_transfer_function( float sample )
 {
-	//return vec3( sample );
+	#if 0
+	return vec3( sample + 0.1f );
+	#elif 0
+	return vec3( sample );
+	#else
 	return texture( u_color_transfer, sample, 0 ).rgb;
+	#endif
 }
 
 float alpha_transfer_function( float sample )
 {
-	if( sample > 0.1f ) return 1.0f;
+	#if 0
+	if( sample > 0.1f ) return sample;
 	else return 0.0f;
-	//return texture( u_color_transfer, sample, 0 ).b;
+	#elif 1
+	float s = texture( u_color_transfer, sample, 0 ).a;
+	if( s > 0.f ) return s;
+	else return 0.0f;
+	#else
+	return 1.0f;
+	#endif
 }
 
 void render_back_voxels( )
@@ -32,6 +47,14 @@ void render_back_voxels( )
 	 * to be used on the next rendering phase.
 	 */
 	color = vec4( f_tex_coord, 1 );
+}
+
+float rand(float co){
+    return fract(sin(co * 12.9898) * 43758.5453);
+}
+
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
 void render_sampled_voxels_xray( )
@@ -50,10 +73,18 @@ void render_sampled_voxels_xray( )
 	float sample           = 0.0f;
 	vec3 accumulatedColor  = vec3( 0.0f );
 	float accumulatedAlpha = 0.0f;
+	vec3 jitterOffset      = vec3( 0 );
+
+	if( false )
+	{
+		jitterOffset = vec3( STEP_SIZE * rand(gl_FragCoord.xy), STEP_SIZE * rand(gl_FragCoord.xy), STEP_SIZE * rand(gl_FragCoord.xy) );
+		//jitterOffset = noise3( u_seed ) * STEP_SIZE;
+		maxRayLength -= length(jitterOffset);
+	}
 
 	while( currentRayLength < maxRayLength && accumulatedAlpha < 1.0f )
 	{
-		sample = texture( u_voxel_data, currentRay + f_tex_coord ).r;
+		sample = texture( u_voxel_data, currentRay + (jitterOffset + f_tex_coord) ).r;
 
 		vec3 colorSample  = color_transfer_function( sample );
 		float alphaSample = alpha_transfer_function( sample ) * STEP_SIZE;
@@ -95,15 +126,15 @@ void render_sampled_voxels_high_intensity_projection( )
 	}
 
 	vec3 colorSample  = color_transfer_function( maxSample );
-	float alphaSample = alpha_transfer_function( maxSample );
+	//float alphaSample = alpha_transfer_function( maxSample );
 
 	color.rgb = colorSample;
-	color.a   = alphaSample;
+	color.a   = maxSample > 0.1f ? 1.0f : 0.0f;
 }
 
 void render_sampled_voxels( )
 {
-	if( true )
+	if( false )
 	{
 		render_sampled_voxels_xray( );
 	}
