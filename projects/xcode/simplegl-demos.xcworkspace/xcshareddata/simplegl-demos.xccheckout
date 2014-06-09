@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>75BDA714-8174-4BD5-ACB9-B728616B18BD</string>
+	<key>IDESourceControlProjectName</key>
+	<string>simplegl-demos</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>5B34E223-E360-4481-B009-A0C0B8D79BA9</key>
+		<string>https://bitbucket.org/manvscode/libimageio.git</string>
+		<key>77352062-BC0D-4D49-A4C4-DB88C98D435A</key>
+		<string>ssh://bitbucket.org/manvscode/libsimplegl.git</string>
+		<key>A6E4B675-EBF9-465D-B6F4-5A0A8B4FBED7</key>
+		<string>ssh://bitbucket.org/manvscode/lib3dmath.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>projects/xcode/simplegl-demos.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>5B34E223-E360-4481-B009-A0C0B8D79BA9</key>
+		<string>../../../../libimageio</string>
+		<key>77352062-BC0D-4D49-A4C4-DB88C98D435A</key>
+		<string>../../..</string>
+		<key>A6E4B675-EBF9-465D-B6F4-5A0A8B4FBED7</key>
+		<string>../../../../lib3dmath</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://bitbucket.org/manvscode/libsimplegl.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>77352062-BC0D-4D49-A4C4-DB88C98D435A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>A6E4B675-EBF9-465D-B6F4-5A0A8B4FBED7</string>
+			<key>IDESourceControlWCCName</key>
+			<string>lib3dmath</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>5B34E223-E360-4481-B009-A0C0B8D79BA9</string>
+			<key>IDESourceControlWCCName</key>
+			<string>libimageio</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>77352062-BC0D-4D49-A4C4-DB88C98D435A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>libsimplegl</string>
+		</dict>
+	</array>
+</dict>
+</plist>

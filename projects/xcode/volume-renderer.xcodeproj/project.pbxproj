@@ -1,0 +1,275 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D8240458194E14B5000FB985 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8240457194E14B5000FB985 /* SDL2.framework */; };
+		D824047B194E1EE8000FB985 /* volume-render.c in Sources */ = {isa = PBXBuildFile; fileRef = D824047A194E1EE8000FB985 /* volume-render.c */; };
+		D824047D194E1FC8000FB985 /* lib3dmath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D824047C194E1FC8000FB985 /* lib3dmath.a */; };
+		D82B50F0194E05AD00EF5CE4 /* libsimplegl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D82B50EF194E05AD00EF5CE4 /* libsimplegl.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D82D1507194DF61700752193 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		D8240457194E14B5000FB985 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
+		D824047A194E1EE8000FB985 /* volume-render.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "volume-render.c"; path = "../../tests/volume-render.c"; sourceTree = SOURCE_ROOT; };
+		D824047C194E1FC8000FB985 /* lib3dmath.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lib3dmath.a; path = "../../../../Library/Developer/Xcode/DerivedData/simplegl-demos-ehsecgtvbomdckcezrsickpxluio/Build/Products/Debug/lib3dmath.a"; sourceTree = "<group>"; };
+		D82404CF194E2874000FB985 /* volume-render.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = "volume-render.f.glsl"; path = "../../tests/assets/shaders/volume-render.f.glsl"; sourceTree = "<group>"; };
+		D82404D0194E2874000FB985 /* volume-render.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = "volume-render.v.glsl"; path = "../../tests/assets/shaders/volume-render.v.glsl"; sourceTree = "<group>"; };
+		D82B50EF194E05AD00EF5CE4 /* libsimplegl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsimplegl.dylib; path = "../../../../Library/Developer/Xcode/DerivedData/simplegl-demos-ehsecgtvbomdckcezrsickpxluio/Build/Products/Debug/libsimplegl.dylib"; sourceTree = "<group>"; };
+		D82D1509194DF61700752193 /* cube */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cube; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D82D1506194DF61700752193 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D824047D194E1FC8000FB985 /* lib3dmath.a in Frameworks */,
+				D8240458194E14B5000FB985 /* SDL2.framework in Frameworks */,
+				D82B50F0194E05AD00EF5CE4 /* libsimplegl.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D82D1500194DF61700752193 = {
+			isa = PBXGroup;
+			children = (
+				D82404CF194E2874000FB985 /* volume-render.f.glsl */,
+				D82404D0194E2874000FB985 /* volume-render.v.glsl */,
+				D824047A194E1EE8000FB985 /* volume-render.c */,
+				D824047C194E1FC8000FB985 /* lib3dmath.a */,
+				D8240457194E14B5000FB985 /* SDL2.framework */,
+				D82B50EF194E05AD00EF5CE4 /* libsimplegl.dylib */,
+				D82D150A194DF61700752193 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D82D150A194DF61700752193 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D82D1509194DF61700752193 /* cube */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D82D1508194DF61700752193 /* volume-renderer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D82D1510194DF61700752193 /* Build configuration list for PBXNativeTarget "volume-renderer" */;
+			buildPhases = (
+				D82D1505194DF61700752193 /* Sources */,
+				D82D1506194DF61700752193 /* Frameworks */,
+				D82D1507194DF61700752193 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "volume-renderer";
+			productName = cube;
+			productReference = D82D1509194DF61700752193 /* cube */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D82D1501194DF61700752193 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0600;
+				ORGANIZATIONNAME = "Joe Marrero";
+				TargetAttributes = {
+					D82D1508194DF61700752193 = {
+						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = 6CQ44CC25K;
+					};
+				};
+			};
+			buildConfigurationList = D82D1504194DF61700752193 /* Build configuration list for PBXProject "volume-renderer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D82D1500194DF61700752193;
+			productRefGroup = D82D150A194DF61700752193 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D82D1508194DF61700752193 /* volume-renderer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D82D1505194DF61700752193 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D824047B194E1EE8000FB985 /* volume-render.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		D82D150E194DF61700752193 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				METAL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		D82D150F194DF61700752193 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				METAL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		D82D1511194DF61700752193 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer: Joseph Marrero (EJ27V32M7J)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/simplegl-demos-ehsecgtvbomdckcezrsickpxluio/Build/Products/Debug",
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+			};
+			name = Debug;
+		};
+		D82D1512194DF61700752193 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer: Joseph Marrero (EJ27V32M7J)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/simplegl-demos-ehsecgtvbomdckcezrsickpxluio/Build/Products/Debug",
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D82D1504194DF61700752193 /* Build configuration list for PBXProject "volume-renderer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D82D150E194DF61700752193 /* Debug */,
+				D82D150F194DF61700752193 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D82D1510194DF61700752193 /* Build configuration list for PBXNativeTarget "volume-renderer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D82D1511194DF61700752193 /* Debug */,
+				D82D1512194DF61700752193 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D82D1501194DF61700752193 /* Project object */;
+}

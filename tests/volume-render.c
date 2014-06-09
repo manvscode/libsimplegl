@@ -26,10 +26,40 @@
 #include <lib3dmath/quat.h>
 #include <SDL2/SDL.h>
 
+#define RENDER_MODE_XRAY                      0u
+#define RENDER_MODE_HIGH_INTENSITY_PROJECTION 1u
+#define RENDER_PASS_BACK_VOXELS               0u
+#define RENDER_PASS_SAMPLED_VOXELS            1u
+#define MAX_VOLUMES                           5
+
+static const char* volume_files[ MAX_VOLUMES ] = {
+	"./tests/assets/volumes/head-256x256x256.raw",
+	"./tests/assets/volumes/foot-256x256x256.raw",
+	"./tests/assets/volumes/skull-256x256x256.raw",
+	"./tests/assets/volumes/stent-512x512x174.raw",
+	//"./tests/assets/volumes/lobster-301x324x56.raw",
+	//"./tests/assets/volumes/stagbeetle-832x832x494.raw",
+	//"./tests/assets/volumes/carp-256x256x512-2.raw",
+	"./tests/assets/volumes/virgo-256x256x256-3.raw",
+};
+
+static const vec4_t volume_dimensions[ MAX_VOLUMES ] = {
+	VEC4( 256, 256, 256, 8 ),
+	VEC4( 256, 256, 256, 8 ),
+	VEC4( 256, 256, 256, 8 ),
+	VEC4( 512, 512, 174, 8 ),
+	//VEC4( 301, 324, 56, 8 ),
+	//VEC4( 832, 832, 494, 16 ),
+	//VEC4( 256, 256, 512, 16 ),
+	VEC4( 256, 256, 256, 24 ),
+};
+
+
 static void initialize     ( void );
 static void deinitialize   ( void );
 static void render         ( void );
 static void dump_sdl_error ( void );
+static void load_volumes   ( void );
 
 SDL_Window* window = NULL;
 SDL_GLContext ctx = NULL;
@@ -44,16 +74,20 @@ GLint uniform_back_voxels = 0;
 GLint uniform_color_transfer = 0;
 GLint uniform_rendering_pass = 0;
 GLint uniform_seed = 0;
+GLint uniform_render_mode = 0;
 
 GLuint vao = 0;
 GLuint vbo_vertices = 0;
 GLuint vbo_tex_coords = 0;
 GLuint ibo_indices = 0;
-GLuint voxel_texture = 0;
+GLuint voxel_texture[ MAX_VOLUMES ] = { 0 };
 GLuint framebuffer = 0;
 GLuint colorRenderBuffer;
 GLuint back_voxel_texture;
 GLuint color_transfer_texture;
+
+GLuint selected_volume = 0;
+GLuint render_mode = 0;
 
 
 
@@ -182,7 +216,6 @@ int main( int argc, char* argv[] )
 	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 2 );
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
-	//flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 	window = SDL_CreateWindow( "Volume Renderer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags );
 
 	if( window == NULL )
@@ -192,6 +225,7 @@ int main( int argc, char* argv[] )
 	}
 
 	ctx = SDL_GL_CreateContext( window );
+	SDL_GL_SetSwapInterval( 1 ); /* vsync */
 
 	if( !ctx )
 	{
@@ -201,13 +235,66 @@ int main( int argc, char* argv[] )
 
 	initialize( );
 
-	SDL_Event e;
-
-	while( e.type != SDL_KEYDOWN && e.type != SDL_QUIT )
+	/* event loop */
 	{
-		SDL_PollEvent( &e );      // Check for events.
-		render( );
-		//SDL_Delay(10);              // Pause briefly before moving on to the next cycle.
+		SDL_Event e;
+		bool done = false;
+		bool fullscreen = false;
+
+		while( !done )
+		{
+			SDL_PollEvent( &e );
+
+			switch( e.type )
+			{
+				case SDL_QUIT:
+				{
+					done = true;
+					break;
+				}
+				case SDL_KEYDOWN:
+				{
+					switch( e.key.keysym.sym )
+					{
+						case SDLK_ESCAPE:
+						case SDLK_q:
+							done = true;
+							break;
+						case SDLK_x:
+							render_mode = RENDER_MODE_XRAY;
+							break;
+						case SDLK_h:
+							render_mode = RENDER_MODE_HIGH_INTENSITY_PROJECTION;
+							break;
+						case SDLK_1:
+							selected_volume = 0;
+							break;
+						case SDLK_2:
+							selected_volume = 1;
+							break;
+						case SDLK_3:
+							selected_volume = 2;
+							break;
+						case SDLK_4:
+							selected_volume = 3;
+							break;
+						case SDLK_5:
+							selected_volume = 4;
+							break;
+
+						case SDLK_f:
+							fullscreen ^= true;
+							SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
+							SDL_ShowCursor( fullscreen ? SDL_DISABLE : SDL_ENABLE );
+							break;
+					}
+					break;
+				}
+			}
+
+			render( );
+			//SDL_Delay(10);              // Pause briefly before moving on to the next cycle.
+		}
 	}
 
 	deinitialize( );
@@ -222,7 +309,7 @@ quit:
 void initialize( void )
 {
 	dump_gl_info( );
-	//glClearColor( 0.2f, 0.2f, 0.2f, 1.0f );
+	//glClearColor( 0.5f, 0.5f, 0.5f, 1.0f );
 	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
@@ -245,8 +332,8 @@ void initialize( void )
 	GLchar* shader_log  = NULL;
 	GLchar* program_log = NULL;
 	const shader_info_t shaders[] = {
-		{ GL_VERTEX_SHADER,   "./tests/assets/volume-render.v.glsl" },
-		{ GL_FRAGMENT_SHADER, "./tests/assets/volume-render.f.glsl" }
+		{ GL_VERTEX_SHADER,   "./tests/assets/shaders/volume-render.v.glsl" },
+		{ GL_FRAGMENT_SHADER, "./tests/assets/shaders/volume-render.f.glsl" }
 	};
 
 	if( !glsl_program_from_shaders( &program, shaders, shader_info_count(shaders), &shader_log, &program_log ) )
@@ -274,66 +361,11 @@ void initialize( void )
 	uniform_color_transfer = glsl_bind_uniform( program, "u_color_transfer" ); assert(check_gl() == GL_NO_ERROR);
 	uniform_rendering_pass = glsl_bind_uniform( program, "u_render_pass" ); assert(check_gl() == GL_NO_ERROR);
 	uniform_seed = glsl_bind_uniform( program, "u_seed" ); assert(check_gl() == GL_NO_ERROR);
+	uniform_render_mode = glsl_bind_uniform( program, "u_render_mode" ); assert(check_gl() == GL_NO_ERROR);
 
-	voxel_texture = tex_create( );
 
-	if( voxel_texture )
-	{
-		glActiveTexture( GL_TEXTURE0 );
-		assert(check_gl() == GL_NO_ERROR);
-		int flags = TEX_CLAMP_S | TEX_CLAMP_T | TEX_CLAMP_R;
-		#if 0
-		const char* filename = "./tests/assets/head-256x256x256.raw";
-		if( tex_load_3d( voxel_texture, filename, 8, 256, 256, 256, GL_LINEAR, GL_LINEAR, flags ) )
-		{
-			printf( "Loaded %s\n", filename );
-		}
-		else
-		{
-			dump_sdl_error( );
-			exit( EXIT_FAILURE );
-		}
-		#elif 1
-		const char* filename = "./tests/assets/foot-256x256x256.raw";
-		if( tex_load_3d( voxel_texture, filename, 8, 256, 256, 256, GL_LINEAR, GL_LINEAR, flags ) )
-		{
-			printf( "Loaded %s\n", filename );
-		}
-		else
-		{
-			dump_sdl_error( );
-			exit( EXIT_FAILURE );
-		}
-		#elif 0
-		const char* filename = "./tests/assets/skull-256x256x256.raw";
-		if( tex_load_3d( voxel_texture, filename, 8, 256, 256, 256, GL_LINEAR, GL_LINEAR, flags ) )
-		{
-			printf( "Loaded %s\n", filename );
-		}
-		else
-		{
-			dump_sdl_error( );
-			exit( EXIT_FAILURE );
-		}
-		#else
-		const char* filename = "./tests/assets/lobster-301x324x56.raw";
-		if( tex_load_3d( voxel_texture, filename, 8, 301, 324, 56, GL_LINEAR, GL_LINEAR, flags ) )
-		{
-			printf( "Loaded %s\n", filename );
-		}
-		else
-		{
-			dump_sdl_error( );
-			exit( EXIT_FAILURE );
-		}
-		#endif
+	load_volumes( );
 
-		assert(check_gl() == GL_NO_ERROR);
-	}
-	else
-	{
-		dump_sdl_error( );
-	}
 
 	color_transfer_texture = tex_create( );
 
@@ -341,7 +373,7 @@ void initialize( void )
 	{
 		//glActiveTexture( GL_TEXTURE2 );
 		assert(check_gl() == GL_NO_ERROR);
-		if( !tex_load_1d( color_transfer_texture, "./tests/assets/intensity.png", GL_LINEAR, GL_LINEAR, TEX_CLAMP_S ) )
+		if( !tex_load_1d( color_transfer_texture, "./tests/assets/textures/intensity.png", GL_LINEAR, GL_LINEAR, TEX_CLAMP_S ) )
 		{
 			dump_sdl_error( );
 			exit( EXIT_FAILURE );
@@ -436,7 +468,10 @@ void initialize( void )
 
 void deinitialize( void )
 {
-	tex_destroy( voxel_texture );
+	for( GLuint i = 0; i < MAX_VOLUMES; i++ )
+	{
+		tex_destroy( voxel_texture[ i ] );
+	}
 	glDeleteFramebuffers( 1, &framebuffer );
 	glDeleteRenderbuffers( 1, &colorRenderBuffer );
 	glDeleteTextures( 1, &back_voxel_texture );
@@ -448,8 +483,12 @@ void deinitialize( void )
 	glDeleteProgram( program );
 }
 
+GLuint delta = 0;
+
 void render( )
 {
+	GLuint now = SDL_GetTicks( );
+	delta = frame_delta( now /* milliseconds */ );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 	static float angle = -270.0;
@@ -458,7 +497,7 @@ void render( )
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)width) / height;
-	vec3_t translation = VEC3_LITERAL( 0.0, 0.0, -10 );
+	vec3_t translation = VEC3( 0.0, 0.0, -10 );
 	mat4_t projection = orthographic( -10.0, 10.0, -6.0*aspect, 6.0*aspect, -100.0, 100.0 );
 	mat4_t rotation = rotate_xyz( "yx", angle, -5.0 );
 	angle += 0.1f;
@@ -469,16 +508,22 @@ void render( )
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)width) / height;
-	vec3_t translation = VEC3_LITERAL( 0.0, 0.0, -6 );
-	mat4_t projection = perspective( 22.0 * RADIANS_PER_DEGREE, aspect, 5, 100.0 );
-	vec3_t axis = VEC3_LITERAL( 0.0f, 1.0f, 0.0f );
-	quat_t q1 = quat_from_axis3_angle( &axis, angle * RADIANS_PER_DEGREE );
-	mat4_t rotation = quat_to_mat4( &q1 );
-	angle += 0.3f;
-	//mat4_t matscale  = scale( &VEC3_LITERAL(1.0f, 1.0f, 1.0f) );
-	mat4_t transform = translate( &translation );
-	transform = mat4_mult_matrix( &transform, &rotation );
-	mat4_t model_view = mat4_mult_matrix( &projection, &transform );
+	mat4_t projection = perspective( 30.0 * RADIANS_PER_DEGREE, aspect, 0.1, 100.0 );
+	quat_t q1 = quat_from_axis3_angle( &VEC3( 0.0f, 1.0f, 0.0f ), angle * RADIANS_PER_DEGREE );
+	angle += 1.0f;
+	mat4_t rotation_tfx  = quat_to_mat4( &q1 );
+	const vec4_t* dimensions = &volume_dimensions[ selected_volume ];
+	const scaler_t max_dimension = vec3_max_component( vec4_to_vec3( dimensions ) );
+	const vec3_t scaled_dimension = VEC3(dimensions->x / max_dimension, dimensions->y / max_dimension, dimensions->z / max_dimension);
+
+	//printf( "%.3f  %s\n", max_dimension, vec3_to_string( &scaled_dimension ) );
+	mat4_t scale_tfx     = scale( &scaled_dimension );
+	mat4_t translate_tfx = translate( &VEC3( 0.0, 0.0, -6 ) );
+	mat4_t transform_tfx = MAT4_IDENTITY;
+	transform_tfx = mat4_mult_matrix( &transform_tfx, &scale_tfx );
+	transform_tfx = mat4_mult_matrix( &transform_tfx, &translate_tfx );
+	transform_tfx = mat4_mult_matrix( &transform_tfx, &rotation_tfx );
+	mat4_t model_view = mat4_mult_matrix( &projection, &transform_tfx );
 	#endif
 
 
@@ -497,7 +542,7 @@ void render( )
 	glUniform1i( uniform_color_transfer, 2 ); // texture unit 2 holds the color transfer function
 	assert(check_gl() == GL_NO_ERROR);
 	glActiveTexture( GL_TEXTURE0 );
-	glBindTexture( GL_TEXTURE_3D, voxel_texture );
+	glBindTexture( GL_TEXTURE_3D, voxel_texture[ selected_volume ] );
 	glActiveTexture( GL_TEXTURE1 );
 	glBindTexture( GL_TEXTURE_2D, back_voxel_texture );
 	glActiveTexture( GL_TEXTURE2 );
@@ -509,14 +554,15 @@ void render( )
 	// First rendering pass
 	glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
 	glCullFace( GL_FRONT );
-	glUniform1ui( uniform_rendering_pass, 0 );
+	glUniform1ui( uniform_rendering_pass, RENDER_PASS_BACK_VOXELS );
 	glDrawElements( GL_TRIANGLES, indices_count, GL_UNSIGNED_SHORT, 0 );
 	glCullFace( GL_BACK );
 	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 
 	// Second rendering pass
-	glUniform1ui( uniform_rendering_pass, 1 );
+	glUniform1ui( uniform_rendering_pass, RENDER_PASS_SAMPLED_VOXELS );
 	glUniform1ui( uniform_seed, clock() );
+	glUniform1ui( uniform_render_mode, render_mode );
 	glDrawElements( GL_TRIANGLES, indices_count, GL_UNSIGNED_SHORT, 0 );
 	assert(check_gl() == GL_NO_ERROR);
 
@@ -525,8 +571,8 @@ void render( )
 	glDisableVertexAttribArray( attribute_tex_coord );
 	//glDisableVertexAttribArray( attribute_color );
 
-
 	SDL_GL_SwapWindow( window );
+	print_frame_rate ( delta /* milliseconds */ );
 }
 
 void dump_sdl_error( void )
@@ -536,5 +582,37 @@ void dump_sdl_error( void )
 	if( sdl_error && *sdl_error != '\0' )
 	{
 		fprintf( stderr, "[SDL] %s\n", sdl_error );
+	}
+}
+
+void load_volumes( void )
+{
+	for( GLuint i = 0; i < MAX_VOLUMES; i++ )
+	{
+		voxel_texture[ i ] = tex_create( );
+
+		if( voxel_texture[ i ] )
+		{
+			glActiveTexture( GL_TEXTURE0 );
+			assert(check_gl() == GL_NO_ERROR);
+			int flags = TEX_CLAMP_S | TEX_CLAMP_T | TEX_CLAMP_R;
+
+			if( tex_load_3d( voxel_texture[ i ], volume_files[ i ], volume_dimensions[ i ].w, volume_dimensions[ i ].x, volume_dimensions[ i ].y, volume_dimensions[ i ].z, GL_LINEAR, GL_LINEAR, flags ) )
+			{
+				printf( "Loaded %s (%.0fx%.0fx%.0f,voxel_depth=%.0f)\n", volume_files[ i ], volume_dimensions[ i ].x, volume_dimensions[ i ].y, volume_dimensions[ i ].z, volume_dimensions[ i ].w );
+			}
+			else
+			{
+				printf( "Unable to load %s\n", volume_files[ i ] );
+				dump_sdl_error( );
+				exit( EXIT_FAILURE );
+			}
+
+			assert(check_gl() == GL_NO_ERROR);
+		}
+		else
+		{
+			dump_sdl_error( );
+		}
 	}
 }

@@ -18,6 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include <stdio.h>
 #include <math.h>
 #include <assert.h>
 #include <lib3dmath/mathematics.h>
@@ -26,7 +27,7 @@
 
 mat4_t orthographic( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far )
 {
-	return MAT4_LITERAL(
+	return MAT4(
 		2.0 / (right - left)          , 0.0                           ,  0.0                      , 0.0,
 		0.0                           , 2.0 / (top - bottom)          ,  0.0                      , 0.0,
 		0.0                           , 0.0                           , -2.0 / (far - near)       , 0.0,
@@ -43,7 +44,7 @@ mat4_t frustum( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloa
 	GLfloat E = -(far + near) / (far - near);
 	GLfloat F = -(2.0 * far * near) / (far - near);
 
-	return MAT4_LITERAL(
+	return MAT4(
 		  A, 0.0,   B, 0.0,
 		0.0,   C,   D, 0.0,
 		0.0, 0.0,   E,   F,
@@ -58,7 +59,7 @@ mat4_t perspective( GLfloat fov /* in radians */, GLfloat aspect, GLfloat near, 
 	GLfloat B = -far / (far - near);
 	GLfloat C = -(far * near)/ (far - near);
 
-	return MAT4_LITERAL(
+	return MAT4(
 	    A/aspect, 0.0, 0.0, 0.0,
 	         0.0,   A, 0.0, 0.0,
 	         0.0, 0.0,   B,-1.0,
@@ -66,22 +67,43 @@ mat4_t perspective( GLfloat fov /* in radians */, GLfloat aspect, GLfloat near, 
 	);
 }
 
-mat4_t look_at( const pt3_t* eye, const pt3_t* target, const vec3_t* up )
+#if 0
+vec4_t viewport_unproject( const vec2_t* position, const mat4_t* projection )
 {
-	vec3_t z = VEC3_LITERAL( target->x - eye->x, target->y - eye->y, target->z - eye->z );
-	vec3_normalize( &z );
+	GLint viewport[ 4 ];
+	glGetIntegerv( GL_VIEWPORT, viewport );
 
-	vec3_t x = vec3_cross_product( &z, up );
-	vec3_normalize( &x );
+	/* Convert to normalized device coordinates */
+	vec4_t normalized_device_coordinate = VEC4( ((position->x * 2.0f) / viewport[2]) - 1.0f, ((position->y * 2.0f) / viewport[3]) - 1.0f, 0.0f, 1.0f );
 
-	vec3_t y = vec3_cross_product( &z, &x );
-	vec3_normalize( &y );
+	mat4_t proj = *projection;
+	mat4_invert( &proj );
 
-	return MAT4_LITERAL(
-		  x.x,   x.y,   x.z, 0.0, /* x-axis */
-		  y.x,   y.y,   y.z, 0.0, /* y-axis */
-		  z.x,   z.y,   z.z, 0.0, /* z-axis */
-		-eye->x, -eye->y, -eye->z, 1.0  /* translation */
-	);
+	return mat4_mult_vector( &proj, &normalized_device_coordinate );
+}
+#endif
+
+vec4_t viewport_unproject( const vec2_t* position, const mat4_t* projection, const mat4_t* model )
+{
+	GLint viewport[ 4 ];
+	glGetIntegerv( GL_VIEWPORT, viewport );
+
+	/* Convert to normalized device coordinates */
+	vec4_t normalized_device_coordinate = VEC4( ((position->x * 2.0f) / viewport[2]) - 1.0f, ((position->y * 2.0f) / viewport[3]) - 1.0f, 0.0f, 1.0f );
+
+	mat4_t inv_projmodel = mat4_mult_matrix( projection, model );
+	mat4_invert( &inv_projmodel );
+
+	return mat4_mult_vector( &inv_projmodel, &normalized_device_coordinate );
 }
 
+vec2_t viewport_coord_project( const vec4_t* point, const mat4_t* projection, const mat4_t* model )
+{
+	GLint viewport[ 4 ];
+	glGetIntegerv( GL_VIEWPORT, viewport );
+
+	mat4_t projmodel = mat4_mult_matrix( projection, model );
+	vec4_t pt = mat4_mult_vector( &projmodel, point );
+
+	return VEC2( ((1.0f + pt.x) * viewport[2]) / 2.0f, ((1.0f + pt.y) * viewport[3]) / 2.0f );
+}

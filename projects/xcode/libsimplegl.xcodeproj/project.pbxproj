@@ -18,6 +18,25 @@
 		08C2847F180DD15300E96BF5 /* simplegl.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C28475180DD15300E96BF5 /* simplegl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08C28480180DD15300E96BF5 /* textures.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28476180DD15300E96BF5 /* textures.c */; };
 		08C28481180DD15300E96BF5 /* transformations.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28477180DD15300E96BF5 /* transformations.c */; };
+		D82B50BB194DFA3C00EF5CE4 /* lib3dmath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 08F9B7B9180DD11800DC30C4 /* lib3dmath.a */; };
+		D82B50BC194DFA3C00EF5CE4 /* libimageio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 08C2846D180DD12C00E96BF5 /* libimageio.a */; };
+		D82B50D9194E045400EF5CE4 /* 3d-axes.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C2846E180DD15300E96BF5 /* 3d-axes.c */; };
+		D82B50DA194E045400EF5CE4 /* camera.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84631946AC8400201CD5 /* camera.c */; };
+		D82B50DB194E045400EF5CE4 /* textures.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28476180DD15300E96BF5 /* textures.c */; };
+		D82B50DC194E045400EF5CE4 /* objects.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28471180DD15300E96BF5 /* objects.c */; };
+		D82B50DD194E045400EF5CE4 /* projections.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28472180DD15300E96BF5 /* projections.c */; };
+		D82B50DE194E045400EF5CE4 /* transformations.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28477180DD15300E96BF5 /* transformations.c */; };
+		D82B50DF194E045400EF5CE4 /* buffers.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C2846F180DD15300E96BF5 /* buffers.c */; };
+		D82B50E0194E045400EF5CE4 /* cube-map.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84651946AC9900201CD5 /* cube-map.c */; };
+		D82B50E1194E045400EF5CE4 /* simplegl.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28474180DD15300E96BF5 /* simplegl.c */; };
+		D82B50E2194E045400EF5CE4 /* shaders.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28473180DD15300E96BF5 /* shaders.c */; };
+		D82B50E4194E045400EF5CE4 /* lib3dmath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 08F9B7B9180DD11800DC30C4 /* lib3dmath.a */; };
+		D82B50E6194E045400EF5CE4 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0882A3D61814F0E6005CA20A /* OpenGL.framework */; };
+		D82B50E8194E045400EF5CE4 /* simplegl.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C28475180DD15300E96BF5 /* simplegl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D82B50E9194E045400EF5CE4 /* libsimplegl-config.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C28470180DD15300E96BF5 /* libsimplegl-config.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D82B50EE194E057400EF5CE4 /* libimageio.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D82B50D2194E045100EF5CE4 /* libimageio.dylib */; };
+		D83B84641946AC8400201CD5 /* camera.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84631946AC8400201CD5 /* camera.c */; };
+		D83B84661946AC9900201CD5 /* cube-map.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84651946AC9900201CD5 /* cube-map.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +68,27 @@
 			remoteGlobalIDString = 0855E68B180D7BDA00E1CF69;
 			remoteInfo = lib3dmath;
 		};
+		D82B50D1194E045100EF5CE4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08C28467180DD12C00E96BF5 /* libimageio.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D82B50CD194E002B00EF5CE4;
+			remoteInfo = "libimageio-shared";
+		};
+		D82B50D5194E045400EF5CE4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08C28467180DD12C00E96BF5 /* libimageio.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 087C825C180D8072003D5A59;
+			remoteInfo = libimageio;
+		};
+		D82B50D7194E045400EF5CE4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08F9B7B4180DD11800DC30C4 /* lib3dmath.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0855E68A180D7BDA00E1CF69;
+			remoteInfo = lib3dmath;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +106,43 @@
 		08C28477180DD15300E96BF5 /* transformations.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = transformations.c; path = ../../src/transformations.c; sourceTree = "<group>"; };
 		08F9B7AC180DD0E000DC30C4 /* libsimplegl.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsimplegl.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		08F9B7B4180DD11800DC30C4 /* lib3dmath.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = lib3dmath.xcodeproj; path = ../../../lib3dmath/projects/xcode/lib3dmath.xcodeproj; sourceTree = "<group>"; };
+		D82404AA194E2807000FB985 /* desertplains_xneg.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = desertplains_xneg.bmp; sourceTree = "<group>"; };
+		D82404AB194E2807000FB985 /* desertplains_xneg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = desertplains_xneg.png; sourceTree = "<group>"; };
+		D82404AC194E2807000FB985 /* desertplains_xneg.raw */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = desertplains_xneg.raw; sourceTree = "<group>"; };
+		D82404AD194E2807000FB985 /* desertplains_xpos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = desertplains_xpos.png; sourceTree = "<group>"; };
+		D82404AE194E2807000FB985 /* desertplains_ypos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = desertplains_ypos.png; sourceTree = "<group>"; };
+		D82404AF194E2807000FB985 /* desertplains_zneg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = desertplains_zneg.png; sourceTree = "<group>"; };
+		D82404B0194E2807000FB985 /* desertplains_zpos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = desertplains_zpos.png; sourceTree = "<group>"; };
+		D82404B1194E2807000FB985 /* xneg.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = xneg.tga; sourceTree = "<group>"; };
+		D82404B2194E2807000FB985 /* xpos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xpos.png; sourceTree = "<group>"; };
+		D82404B3194E2807000FB985 /* xpos.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = xpos.tga; sourceTree = "<group>"; };
+		D82404B4194E2807000FB985 /* yneg.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = yneg.tga; sourceTree = "<group>"; };
+		D82404B5194E2807000FB985 /* ypos.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = ypos.tga; sourceTree = "<group>"; };
+		D82404B6194E2807000FB985 /* zneg.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = zneg.tga; sourceTree = "<group>"; };
+		D82404B7194E2807000FB985 /* zpos.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = zpos.tga; sourceTree = "<group>"; };
+		D82404B9194E2807000FB985 /* cube.f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.f.glsl; sourceTree = "<group>"; };
+		D82404BA194E2807000FB985 /* cube.v.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.v.glsl; sourceTree = "<group>"; };
+		D82404BB194E2807000FB985 /* fire.f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fire.f.glsl; sourceTree = "<group>"; };
+		D82404BC194E2807000FB985 /* fire.v.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fire.v.glsl; sourceTree = "<group>"; };
+		D82404BD194E2807000FB985 /* skybox.f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = skybox.f.glsl; sourceTree = "<group>"; };
+		D82404BE194E2807000FB985 /* skybox.v.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = skybox.v.glsl; sourceTree = "<group>"; };
+		D82404BF194E2807000FB985 /* volume-render.f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "volume-render.f.glsl"; sourceTree = "<group>"; };
+		D82404C0194E2807000FB985 /* volume-render.v.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "volume-render.v.glsl"; sourceTree = "<group>"; };
+		D82404C2194E2807000FB985 /* checkered.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkered.png; sourceTree = "<group>"; };
+		D82404C3194E2807000FB985 /* intensity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = intensity.png; sourceTree = "<group>"; };
+		D82404C4194E2807000FB985 /* temperature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = temperature.png; sourceTree = "<group>"; };
+		D82404C6194E2807000FB985 /* carp-256x256x512-2.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "carp-256x256x512-2.raw"; sourceTree = "<group>"; };
+		D82404C7194E2807000FB985 /* foot-256x256x256.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "foot-256x256x256.raw"; sourceTree = "<group>"; };
+		D82404C8194E2807000FB985 /* head-256x256x256.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "head-256x256x256.raw"; sourceTree = "<group>"; };
+		D82404C9194E2807000FB985 /* lobster-301x324x56.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "lobster-301x324x56.raw"; sourceTree = "<group>"; };
+		D82404CA194E2807000FB985 /* mouse-150x150x276.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mouse-150x150x276.raw"; sourceTree = "<group>"; };
+		D82404CB194E2807000FB985 /* skull-256x256x256.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "skull-256x256x256.raw"; sourceTree = "<group>"; };
+		D82404CC194E2807000FB985 /* stagbeetle-832x832x494.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "stagbeetle-832x832x494.raw"; sourceTree = "<group>"; };
+		D82404CD194E2807000FB985 /* stent-512x512x174.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "stent-512x512x174.raw"; sourceTree = "<group>"; };
+		D82404CE194E2807000FB985 /* virgo-256x256x256-3.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "virgo-256x256x256-3.raw"; sourceTree = "<group>"; };
+		D82B50ED194E045400EF5CE4 /* libsimplegl.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsimplegl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		D83B84631946AC8400201CD5 /* camera.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = camera.c; path = ../../src/camera.c; sourceTree = "<group>"; };
+		D83B84651946AC9900201CD5 /* cube-map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "cube-map.c"; path = "../../src/cube-map.c"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,7 +150,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D82B50BB194DFA3C00EF5CE4 /* lib3dmath.a in Frameworks */,
+				D82B50BC194DFA3C00EF5CE4 /* libimageio.a in Frameworks */,
 				0882A3D71814F0E6005CA20A /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D82B50E3194E045400EF5CE4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D82B50EE194E057400EF5CE4 /* libimageio.dylib in Frameworks */,
+				D82B50E4194E045400EF5CE4 /* lib3dmath.a in Frameworks */,
+				D82B50E6194E045400EF5CE4 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				08C2846D180DD12C00E96BF5 /* libimageio.a */,
+				D82B50D2194E045100EF5CE4 /* libimageio.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -91,6 +181,7 @@
 		08F9B7A3180DD0E000DC30C4 = {
 			isa = PBXGroup;
 			children = (
+				D82404A8194E2807000FB985 /* assets */,
 				0882A3D61814F0E6005CA20A /* OpenGL.framework */,
 				08C28467180DD12C00E96BF5 /* libimageio.xcodeproj */,
 				08F9B7B4180DD11800DC30C4 /* lib3dmath.xcodeproj */,
@@ -103,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				08F9B7AC180DD0E000DC30C4 /* libsimplegl.a */,
+				D82B50ED194E045400EF5CE4 /* libsimplegl.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -112,6 +204,8 @@
 			children = (
 				08C2846E180DD15300E96BF5 /* 3d-axes.c */,
 				08C2846F180DD15300E96BF5 /* buffers.c */,
+				D83B84631946AC8400201CD5 /* camera.c */,
+				D83B84651946AC9900201CD5 /* cube-map.c */,
 				08C28470180DD15300E96BF5 /* libsimplegl-config.h */,
 				08C28471180DD15300E96BF5 /* objects.c */,
 				08C28472180DD15300E96BF5 /* projections.c */,
@@ -132,6 +226,80 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D82404A8194E2807000FB985 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				D82404A9194E2807000FB985 /* env */,
+				D82404B8194E2807000FB985 /* shaders */,
+				D82404C1194E2807000FB985 /* textures */,
+				D82404C5194E2807000FB985 /* volumes */,
+			);
+			name = assets;
+			path = ../../tests/assets;
+			sourceTree = "<group>";
+		};
+		D82404A9194E2807000FB985 /* env */ = {
+			isa = PBXGroup;
+			children = (
+				D82404AA194E2807000FB985 /* desertplains_xneg.bmp */,
+				D82404AB194E2807000FB985 /* desertplains_xneg.png */,
+				D82404AC194E2807000FB985 /* desertplains_xneg.raw */,
+				D82404AD194E2807000FB985 /* desertplains_xpos.png */,
+				D82404AE194E2807000FB985 /* desertplains_ypos.png */,
+				D82404AF194E2807000FB985 /* desertplains_zneg.png */,
+				D82404B0194E2807000FB985 /* desertplains_zpos.png */,
+				D82404B1194E2807000FB985 /* xneg.tga */,
+				D82404B2194E2807000FB985 /* xpos.png */,
+				D82404B3194E2807000FB985 /* xpos.tga */,
+				D82404B4194E2807000FB985 /* yneg.tga */,
+				D82404B5194E2807000FB985 /* ypos.tga */,
+				D82404B6194E2807000FB985 /* zneg.tga */,
+				D82404B7194E2807000FB985 /* zpos.tga */,
+			);
+			path = env;
+			sourceTree = "<group>";
+		};
+		D82404B8194E2807000FB985 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				D82404B9194E2807000FB985 /* cube.f.glsl */,
+				D82404BA194E2807000FB985 /* cube.v.glsl */,
+				D82404BB194E2807000FB985 /* fire.f.glsl */,
+				D82404BC194E2807000FB985 /* fire.v.glsl */,
+				D82404BD194E2807000FB985 /* skybox.f.glsl */,
+				D82404BE194E2807000FB985 /* skybox.v.glsl */,
+				D82404BF194E2807000FB985 /* volume-render.f.glsl */,
+				D82404C0194E2807000FB985 /* volume-render.v.glsl */,
+			);
+			path = shaders;
+			sourceTree = "<group>";
+		};
+		D82404C1194E2807000FB985 /* textures */ = {
+			isa = PBXGroup;
+			children = (
+				D82404C2194E2807000FB985 /* checkered.png */,
+				D82404C3194E2807000FB985 /* intensity.png */,
+				D82404C4194E2807000FB985 /* temperature.png */,
+			);
+			path = textures;
+			sourceTree = "<group>";
+		};
+		D82404C5194E2807000FB985 /* volumes */ = {
+			isa = PBXGroup;
+			children = (
+				D82404C6194E2807000FB985 /* carp-256x256x512-2.raw */,
+				D82404C7194E2807000FB985 /* foot-256x256x256.raw */,
+				D82404C8194E2807000FB985 /* head-256x256x256.raw */,
+				D82404C9194E2807000FB985 /* lobster-301x324x56.raw */,
+				D82404CA194E2807000FB985 /* mouse-150x150x276.raw */,
+				D82404CB194E2807000FB985 /* skull-256x256x256.raw */,
+				D82404CC194E2807000FB985 /* stagbeetle-832x832x494.raw */,
+				D82404CD194E2807000FB985 /* stent-512x512x174.raw */,
+				D82404CE194E2807000FB985 /* virgo-256x256x256-3.raw */,
+			);
+			path = volumes;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -144,12 +312,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D82B50E7194E045400EF5CE4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D82B50E8194E045400EF5CE4 /* simplegl.h in Headers */,
+				D82B50E9194E045400EF5CE4 /* libsimplegl-config.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		08F9B7AB180DD0E000DC30C4 /* libsimplegl */ = {
+		08F9B7AB180DD0E000DC30C4 /* libsimplegl-static */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 08F9B7B0180DD0E000DC30C4 /* Build configuration list for PBXNativeTarget "libsimplegl" */;
+			buildConfigurationList = 08F9B7B0180DD0E000DC30C4 /* Build configuration list for PBXNativeTarget "libsimplegl-static" */;
 			buildPhases = (
 				08F9B7A8180DD0E000DC30C4 /* Sources */,
 				08F9B7A9180DD0E000DC30C4 /* Frameworks */,
@@ -161,9 +338,28 @@
 				08C28483180DD1A300E96BF5 /* PBXTargetDependency */,
 				08C28485180DD1A300E96BF5 /* PBXTargetDependency */,
 			);
-			name = libsimplegl;
+			name = "libsimplegl-static";
 			productName = libsimplegl;
 			productReference = 08F9B7AC180DD0E000DC30C4 /* libsimplegl.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D82B50D3194E045400EF5CE4 /* libsimplegl-shared */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D82B50EA194E045400EF5CE4 /* Build configuration list for PBXNativeTarget "libsimplegl-shared" */;
+			buildPhases = (
+				D82B50D8194E045400EF5CE4 /* Sources */,
+				D82B50E3194E045400EF5CE4 /* Frameworks */,
+				D82B50E7194E045400EF5CE4 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D82B50D4194E045400EF5CE4 /* PBXTargetDependency */,
+				D82B50D6194E045400EF5CE4 /* PBXTargetDependency */,
+			);
+			name = "libsimplegl-shared";
+			productName = libsimplegl;
+			productReference = D82B50ED194E045400EF5CE4 /* libsimplegl.dylib */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -172,7 +368,7 @@
 		08F9B7A4180DD0E000DC30C4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Joe Marrero";
 			};
 			buildConfigurationList = 08F9B7A7180DD0E000DC30C4 /* Build configuration list for PBXProject "libsimplegl" */;
@@ -197,7 +393,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				08F9B7AB180DD0E000DC30C4 /* libsimplegl */,
+				08F9B7AB180DD0E000DC30C4 /* libsimplegl-static */,
+				D82B50D3194E045400EF5CE4 /* libsimplegl-shared */,
 			);
 		};
 /* End PBXProject section */
@@ -217,6 +414,13 @@
 			remoteRef = 08F9B7B8180DD11800DC30C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		D82B50D2194E045100EF5CE4 /* libimageio.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libimageio.dylib;
+			remoteRef = D82B50D1194E045100EF5CE4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -225,13 +429,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				08C28478180DD15300E96BF5 /* 3d-axes.c in Sources */,
+				D83B84641946AC8400201CD5 /* camera.c in Sources */,
 				08C28480180DD15300E96BF5 /* textures.c in Sources */,
 				08C2847B180DD15300E96BF5 /* objects.c in Sources */,
 				08C2847C180DD15300E96BF5 /* projections.c in Sources */,
 				08C28481180DD15300E96BF5 /* transformations.c in Sources */,
 				08C28479180DD15300E96BF5 /* buffers.c in Sources */,
+				D83B84661946AC9900201CD5 /* cube-map.c in Sources */,
 				08C2847E180DD15300E96BF5 /* simplegl.c in Sources */,
 				08C2847D180DD15300E96BF5 /* shaders.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D82B50D8194E045400EF5CE4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D82B50D9194E045400EF5CE4 /* 3d-axes.c in Sources */,
+				D82B50DA194E045400EF5CE4 /* camera.c in Sources */,
+				D82B50DB194E045400EF5CE4 /* textures.c in Sources */,
+				D82B50DC194E045400EF5CE4 /* objects.c in Sources */,
+				D82B50DD194E045400EF5CE4 /* projections.c in Sources */,
+				D82B50DE194E045400EF5CE4 /* transformations.c in Sources */,
+				D82B50DF194E045400EF5CE4 /* buffers.c in Sources */,
+				D82B50E0194E045400EF5CE4 /* cube-map.c in Sources */,
+				D82B50E1194E045400EF5CE4 /* simplegl.c in Sources */,
+				D82B50E2194E045400EF5CE4 /* shaders.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +470,16 @@
 			isa = PBXTargetDependency;
 			name = lib3dmath;
 			targetProxy = 08C28484180DD1A300E96BF5 /* PBXContainerItemProxy */;
+		};
+		D82B50D4194E045400EF5CE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libimageio;
+			targetProxy = D82B50D5194E045400EF5CE4 /* PBXContainerItemProxy */;
+		};
+		D82B50D6194E045400EF5CE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = lib3dmath;
+			targetProxy = D82B50D7194E045400EF5CE4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -326,22 +559,70 @@
 		08F9B7B1180DD0E000DC30C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_IOS=1";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "include/$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				PRODUCT_NAME = libsimplegl;
+				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
 		08F9B7B2180DD0E000DC30C4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_IOS=1";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "include/$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				PRODUCT_NAME = libsimplegl;
+				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		D82B50EB194E045400EF5CE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer: Joseph Marrero (EJ27V32M7J)";
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_DEBUG=1";
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = libsimplegl;
+				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		D82B50EC194E045400EF5CE4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer: Joseph Marrero (EJ27V32M7J)";
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_DEBUG=1";
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = libsimplegl;
+				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -357,11 +638,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		08F9B7B0180DD0E000DC30C4 /* Build configuration list for PBXNativeTarget "libsimplegl" */ = {
+		08F9B7B0180DD0E000DC30C4 /* Build configuration list for PBXNativeTarget "libsimplegl-static" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08F9B7B1180DD0E000DC30C4 /* Debug */,
 				08F9B7B2180DD0E000DC30C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D82B50EA194E045400EF5CE4 /* Build configuration list for PBXNativeTarget "libsimplegl-shared" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D82B50EB194E045400EF5CE4 /* Debug */,
+				D82B50EC194E045400EF5CE4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

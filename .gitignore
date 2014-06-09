@@ -11,10 +11,8 @@
 *.dll
 *.exe
 
-
 # Log Files
 *.log
-
 
 # Test Programs 
 bin/test-*
@@ -25,7 +23,12 @@ Makefile.in
 aclocal.m4
 configure
 libtool
+compile
+depcomp
+missing
+ar-lib
 ltmain.sh
+install-sh
 autom4te.cache
 config.guess
 config.status
@@ -37,5 +40,5 @@ lib/.dirstamp
 src/.deps
 src/stamp-h1
 tests/.deps
-src/libcollections-config.h
-src/libcollections-config.h.in
+src/libsimplegl-config.h
+src/libsimplegl-config.h.in

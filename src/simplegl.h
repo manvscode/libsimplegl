@@ -34,6 +34,7 @@
 #include <lib3dmath/mat2.h>
 #include <lib3dmath/mat3.h>
 #include <lib3dmath/mat4.h>
+#include <lib3dmath/quat.h>
 #include <math.h>
 #if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
 #include <stdbool.h>
@@ -99,20 +100,22 @@ GLuint tex_create               ( void );
 void   tex_destroy              ( GLuint texture );
 void   tex_setup_texture        ( GLuint texture, GLsizei width, GLsizei height, GLsizei depth, GLbyte bit_depth, const GLvoid* pixels,
                                   GLint min_filter, GLint mag_filter, GLubyte flags, GLuint texture_dimensions );
-bool   tex_load_1d              ( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags );
-bool   tex_load_2d              ( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags );
-bool   tex_load_2d_with_linear  ( GLuint texture, const char* filename, GLubyte flags );
-bool   tex_load_2d_with_mipmaps ( GLuint texture, const char* filename, GLubyte flags );
-bool   tex_load_3d              ( GLuint texture, const char* filename, GLsizei voxel_bit_depth,
+bool   tex_load_1d              ( GLuint texture, const GLchar* filename, GLint min_filter, GLint mag_filter, GLubyte flags );
+bool   tex_load_2d              ( GLuint texture, const GLchar* filename, GLint min_filter, GLint mag_filter, GLubyte flags );
+bool   tex_load_2d_with_linear  ( GLuint texture, const GLchar* filename, GLubyte flags );
+bool   tex_load_2d_with_mipmaps ( GLuint texture, const GLchar* filename, GLubyte flags );
+bool   tex_load_3d              ( GLuint texture, const GLchar* filename, GLsizei voxel_bit_depth,
                                   GLsizei width, GLsizei height, GLsizei length, GLint min_filter, GLint mag_filter, GLubyte flags );
+bool   tex_cube_map_setup       ( GLuint texture, const GLchar* xpos, const GLchar* xneg, const GLchar* ypos, const GLchar* yneg, const GLchar* zpos, const GLchar* zneg );
 
 /*
  * Projections
  */
-mat4_t orthographic ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far );
-mat4_t frustum      ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far );
-mat4_t perspective  ( GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far );
-mat4_t look_at      ( const pt3_t* eye, const pt3_t* target, const vec3_t* up );
+mat4_t orthographic       ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far );
+mat4_t frustum            ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far );
+mat4_t perspective        ( GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far );
+vec4_t viewport_unproject ( const vec2_t* position, const mat4_t* projection, const mat4_t* model );
+vec2_t viewport_project   ( const vec4_t* point, const mat4_t* projection, const mat4_t* model );
 
 /*
  * Transformations
@@ -123,15 +126,16 @@ mat4_t uniform_scale ( GLfloat scale );
 mat4_t rotate_x      ( GLfloat angle );
 mat4_t rotate_y      ( GLfloat angle );
 mat4_t rotate_z      ( GLfloat angle );
-mat4_t rotate_xyz    ( const char* order, ... );
+mat4_t rotate_xyz    ( const GLchar* order, ... );
 mat4_t orientation   ( vec3_t* forward, vec3_t* left, vec3_t* up );
+mat4_t look_at       ( const pt3_t* eye, const pt3_t* target, const vec3_t* up );
 
 /*
  * Shaders
  */
 typedef struct shader_info {
 	GLenum type; /* GL_VERTEX_SHADER | GL_FRAGMENT_SHADER */
-	const char* filename;
+	const GLchar* filename;
 } shader_info_t;
 #define shader_info_count( array )  (sizeof(array) / sizeof(array[0]))
 
@@ -140,19 +144,40 @@ GLboolean     glsl_program_create            ( GLuint* p_program, const GLuint *
 GLboolean     glsl_shader_create_from_source ( GLuint* p_shader, GLenum type /* GL_VERTEX_SHADER | GL_FRAGMENT_SHADER */, const GLchar* source, GLchar** log );
 GLuint        glsl_create                    ( GLenum type );
 GLboolean     glsl_destroy                   ( GLuint object /* program or shader */ );
-GLchar*       glsl_shader_load               ( const char* path );
+GLchar*       glsl_shader_load               ( const GLchar* path );
 GLboolean     glsl_shader_compile            ( GLuint shader, const GLchar* source );
 GLboolean     glsl_attach_shader             ( GLuint program, GLuint shader );
 GLboolean     glsl_link_program              ( GLuint program );
 GLint         glsl_bind_attribute            ( GLuint program, const GLchar* name );
 GLint         glsl_bind_uniform              ( GLuint program, const GLchar* name );
 GLchar*       glsl_log                       ( GLuint object /* program or shader */ );
+const GLchar* glsl_object_type_string( GLenum type );
 
 /*
  * Buffers
  */
 GLboolean buffer_create  ( GLuint* id, const GLvoid* geometry, size_t element_size, size_t count, GLenum target /*GL_ARRAY_BUFFER*/, GLenum usage /*GL_STATIC_DRAW*/ );
 GLboolean buffer_destroy ( const GLuint* id );
+
+/*
+ * Cameras
+ */
+struct camera;
+typedef struct camera camera_t;
+
+camera_t*     camera_create            ( int screen_width, int screen_height, GLfloat near, GLfloat far, const pt3_t* position );
+void          camera_destroy           ( camera_t* camera );
+const mat4_t* camera_projection_matrix ( const camera_t* camera );
+const mat4_t* camera_model_matrix      ( const camera_t* camera );
+const mat4_t* camera_orientation_matrix( const camera_t* camera );
+mat3_t        camera_normal_matrix     ( const camera_t* camera );
+void          camera_set_position      ( camera_t* camera, const pt3_t* position );
+void          camera_offset_orientation( camera_t* camera, GLfloat xangle, GLfloat yangle );
+void          camera_update            ( camera_t* camera, GLfloat delta );
+mat4_t        camera_matrix            ( const camera_t* camera );
+
+//struct camera;
+//typedef struct camera camera_t;
 
 /*
  * Objects
@@ -170,8 +195,8 @@ typedef struct polyhedra {
 
 void      polyhedra_create  ( polyhedra_t* polyhedra );
 void      polyhedra_destroy ( polyhedra_t* polyhedra );
-GLboolean tetrahedron       ( polyhedra_t* polyhedra, GLfloat scale );
-GLboolean cube              ( polyhedra_t* polyhedra, GLfloat scale );
+GLboolean tetrahedron       ( polyhedra_t* polyhedra, GLfloat scale, bool withColors );
+GLboolean cube              ( polyhedra_t* polyhedra, GLfloat scale, bool withColors );
 
 /*
  * 3D Axes Helper
@@ -187,8 +212,11 @@ void      axes_3d_render  ( axes_3d_t axes, const GLfloat* model_view );
 /*
  * Miscellaneous
  */ 
-void      dump_gl_info ( void );
-GLenum    check_gl     ( void );
+void    dump_gl_info     ( void );
+GLenum  check_gl         ( void );
+GLuint  frame_delta      ( GLuint now /* milliseconds */ );
+GLfloat frame_rate       ( GLuint delta /* milliseconds */ );
+void    print_frame_rate ( GLuint delta /* milliseconds */ );
 
 #ifdef SIMPLEGL_DEBUG
 #define GL_ASSERT_NO_ERROR()    assert(check_gl() == GL_NO_ERROR);

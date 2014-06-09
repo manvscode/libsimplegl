@@ -25,6 +25,27 @@
 #include "simplegl.h"
 
 
+
+
+void tex_prepare_image( image_file_format_t format, image_t* image )
+{
+    if( format == IMAGEIO_PVR )
+    {
+
+    }
+    else if( format == IMAGEIO_PNG )
+    {
+        /* These pesky PNG files need to be flipped vertically to be
+         * correctly oriented for OpenGL.
+         */
+        imageio_flip_horizontally( image->width, image->height, image->bits_per_pixel >> 3, image->pixels );
+        //imageio_flip_vertically( image->width, image->height, image->bits_per_pixel >> 3, image->pixels );
+    }
+}
+
+
+
+
 GLuint tex_create( void )
 {
 	GLuint texture = 0;
@@ -109,14 +130,15 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 
 			}
 			GLsizei image_size = width * height / 2;
+			glCompressedTexImage2D( texture_type, 0, pixel_format, width, height, 0 /*must be zero*/, image_size, pixels );
+			assert(check_gl() == GL_NO_ERROR);
 			#else
 			GLenum pixel_format = (bit_depth == 32 ? GL_COMPRESSED_RGBA : GL_COMPRESSED_RGB);
 			GLsizei image_size = width * height / 2;
-			assert( false && "Not implemented" );
-			#endif
-
 			glCompressedTexImage2D( texture_type, 0, pixel_format, width, height, 0 /*must be zero*/, image_size, pixels );
 			assert(check_gl() == GL_NO_ERROR);
+			assert( false && "Not implemented" );
+			#endif
 		}
 		else
 		{
@@ -144,29 +166,35 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 	{
 		GLenum pixel_format;
 		GLenum internal_format;
+		GLenum type;
+
 		switch( bit_depth )
 		{
-			case 8:
-				internal_format = GL_RED;
-				pixel_format    = GL_RED;
+			case 32:
+				internal_format = GL_RGBA;
+				pixel_format    = GL_RGBA;
+				type            = GL_UNSIGNED_BYTE;
+				break;
+			case 24:
+				internal_format = GL_RGB;
+				pixel_format    = GL_RGB;
+				type            = GL_UNSIGNED_BYTE;
 				break;
 			case 16:
 				internal_format = GL_RED;
 				pixel_format    = GL_RED;
+				type            = GL_UNSIGNED_SHORT;
 				break;
-			case 32:
-				internal_format = GL_RGBA;
-				pixel_format    = GL_RGBA;
-				break;
-			case 24: /* fall through */
+			case 8: /* fall through */
 			default:
-				internal_format = GL_RGB;
-				pixel_format    = GL_RGB;
+				internal_format = GL_RED;
+				pixel_format    = GL_RED;
+				type            = GL_UNSIGNED_BYTE;
 				break;
 
 		}
 		const GLint border = 0; /* Must be zero for 3D textures */
-		glTexImage3D( texture_type, 0, internal_format, width, height, depth, border, pixel_format, GL_UNSIGNED_BYTE, pixels );
+		glTexImage3D( texture_type, 0, internal_format, width, height, depth, border, pixel_format, type, pixels );
 		assert(check_gl() == GL_NO_ERROR);
 	}
 
@@ -221,65 +249,28 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 	assert(check_gl() == GL_NO_ERROR);
 }
 
-bool tex_load_1d( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags )
+
+bool tex_load_1d( GLuint texture, const GLchar* filename, GLint min_filter, GLint mag_filter, GLubyte flags )
 {
 	bool result = false;
-	const char* extension = strrchr( filename, '.' );
-	image_file_format_t format = IMAGEIO_PNG;
-	image_t image;
-	assert(check_gl() == GL_NO_ERROR);
 
-	if( extension )
+	if( !filename || *filename == '\0' )
 	{
-		extension += 1;
-
-		if( strcasecmp( "png", extension ) == 0 )
-		{
-			format = IMAGEIO_PNG;
-			#ifdef SIMPLEGL_DEBUG
-			printf( "Loading PNG: %s\n", filename );
-			#endif
-		}
-		else if( strcasecmp( "bmp", extension ) == 0 )
-		{
-			format = IMAGEIO_BMP;
-			#ifdef SIMPLEGL_DEBUG
-			printf( "Loading BMP: %s\n", filename );
-			#endif
-		}
-		else if( strcasecmp( "tga", extension ) == 0 )
-		{
-			format = IMAGEIO_TGA;
-			#ifdef SIMPLEGL_DEBUG
-			printf( "Loading TGA: %s\n", filename );
-			#endif
-		}
-		else if( strcasecmp( "pvr", extension ) == 0 || strcasecmp( "pvrtc", extension ) == 0 )
-		{
-			format = IMAGEIO_PVR;
-			#ifdef SIMPLEGL_DEBUG
-			printf( "Loading PVRTC: %s\n", filename );
-			#endif
-		}
-		else
-		{
-			goto failure;
-		}
+		goto failure;
 	}
 
-	if( imageio_image_load( &image, filename, format ) )
+	image_file_format_t format;
+	image_t image;
+	assert(check_gl() == GL_NO_ERROR);
+    
+    #ifdef SIMPLEGL_DEBUG
+    printf( "Loading %s\n", filename );
+    #endif
+
+	if( imageio_load( &image, filename, &format ) )
 	{
 		if( format == IMAGEIO_PVR )
 		{
-			if( !is_power_of_2(image.width) || !is_power_of_2(image.height) )
-			{
-				   /* iOS devices require texture dimensions to be
-					* a power of 2.
-					*/
-				   imageio_image_destroy( &image );
-				   goto failure;
-			}
-
 			flags |= (image.channels == 4 ? TEX_COMPRESS_RGBA : TEX_COMPRESS_RGB);
 		}
 		else if( format == IMAGEIO_PNG )
@@ -310,65 +301,27 @@ failure:
 	return result;
 }
 
-bool tex_load_2d( GLuint texture, const char* filename, GLint min_filter, GLint mag_filter, GLubyte flags )
+bool tex_load_2d( GLuint texture, const GLchar* filename, GLint min_filter, GLint mag_filter, GLubyte flags )
 {
 	bool result = false;
-	const char* extension = strrchr( filename, '.' );
-	image_file_format_t format = IMAGEIO_PNG;
-	image_t image;
-	assert(check_gl() == GL_NO_ERROR);
 
-	if( extension )
+	if( !filename || *filename == '\0' )
 	{
-		extension += 1;
-
-		if( strcasecmp( "png", extension ) == 0 )
-		{
-			format = IMAGEIO_PNG;
-			#ifdef SIMPLEGL_DEBUG
-			printf( "Loading PNG: %s\n", filename );
-			#endif
-		}
-		else if( strcasecmp( "bmp", extension ) == 0 )
-		{
-			format = IMAGEIO_BMP;
-			#ifdef SIMPLEGL_DEBUG
-			printf( "Loading BMP: %s\n", filename );
-			#endif
-		}
-		else if( strcasecmp( "tga", extension ) == 0 )
-		{
-			format = IMAGEIO_TGA;
-			#ifdef SIMPLEGL_DEBUG
-			printf( "Loading TGA: %s\n", filename );
-			#endif
-		}
-		else if( strcasecmp( "pvr", extension ) == 0 || strcasecmp( "pvrtc", extension ) == 0 )
-		{
-			format = IMAGEIO_PVR;
-			#ifdef SIMPLEGL_DEBUG
-			printf( "Loading PVRTC: %s\n", filename );
-			#endif
-		}
-		else
-		{
-			goto failure;
-		}
+		goto failure;
 	}
 
-	if( imageio_image_load( &image, filename, format ) )
+	image_file_format_t format;
+	image_t image;
+	assert(check_gl() == GL_NO_ERROR);
+    
+    #ifdef SIMPLEGL_DEBUG
+    printf( "Loading %s\n", filename );
+    #endif
+
+	if( imageio_load( &image, filename, &format ) )
 	{
 		if( format == IMAGEIO_PVR )
 		{
-			if( !is_power_of_2(image.width) || !is_power_of_2(image.height) )
-			{
-				   /* iOS devices require texture dimensions to be
-					* a power of 2.
-					*/
-				   imageio_image_destroy( &image );
-				   goto failure;
-			}
-
 			flags |= (image.channels == 4 ? TEX_COMPRESS_RGBA : TEX_COMPRESS_RGB);
 		}
 		else if( format == IMAGEIO_PNG )
@@ -399,20 +352,26 @@ failure:
 	return result;
 }
 
-bool tex_load_2d_with_linear( GLuint texture, const char* filename, GLubyte flags )
+bool tex_load_2d_with_linear( GLuint texture, const GLchar* filename, GLubyte flags )
 {
 	return tex_load_2d( texture, filename, GL_LINEAR, GL_LINEAR, flags );
 }
 
-bool tex_load_2d_with_mipmaps( GLuint texture, const char* filename, GLubyte flags )
+bool tex_load_2d_with_mipmaps( GLuint texture, const GLchar* filename, GLubyte flags )
 {
 	return tex_load_2d( texture, filename, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, flags );
 }
 
-bool tex_load_3d( GLuint texture, const char* filename, GLsizei voxel_bit_depth, GLsizei width, GLsizei height, GLsizei length, GLint min_filter, GLint mag_filter, GLubyte flags )
+bool tex_load_3d( GLuint texture, const GLchar* filename, GLsizei voxel_bit_depth, GLsizei width, GLsizei height, GLsizei length, GLint min_filter, GLint mag_filter, GLubyte flags )
 {
 	bool result = false;
-	const char* extension = strrchr( filename, '.' );
+
+	if( !filename || *filename == '\0' )
+	{
+		goto failure;
+	}
+
+	const GLchar* extension = strrchr( filename, '.' );
 	assert(check_gl() == GL_NO_ERROR);
 
 	if( extension )
@@ -422,7 +381,7 @@ bool tex_load_3d( GLuint texture, const char* filename, GLsizei voxel_bit_depth,
 		if( strcasecmp( "raw", extension ) == 0 )
 		{
 			#ifdef SIMPLEGL_DEBUG
-			printf( "Loading RAW: %s\n", filename );
+			printf( "Loading RAW: %s (%dx%dx%d,voxel_depth=%d)\n", filename, width, height, length, voxel_bit_depth );
 			#endif
 		}
 		else
@@ -431,34 +390,52 @@ bool tex_load_3d( GLuint texture, const char* filename, GLsizei voxel_bit_depth,
 		}
 	}
 
-	size_t voxel_size;
-	switch( voxel_bit_depth )
-	{
-		case 16:
-			voxel_size = sizeof(uint16_t);
-			break;
-		case 8: /* fall-through */
-			voxel_size = sizeof(uint8_t);
-		default:
-			break;
-	}
-
 	/* load raw data */
 	{
 		FILE* volume_data_file = fopen( filename, "r" );
 		if( volume_data_file )
 		{
+			size_t voxel_size;
+			switch( voxel_bit_depth )
+			{
+				case 32:
+					voxel_size = sizeof(uint32_t);
+					break;
+				case 24:
+					voxel_size = sizeof(uint8_t) * 3;
+					break;
+				case 16:
+					voxel_size = sizeof(uint16_t);
+					break;
+				case 8: /* fall-through */
+					voxel_size = sizeof(uint8_t);
+					break;
+				default:
+					goto failure;
+					break;
+			}
+
 			const size_t volume_data_count = width * height * length;
 			void* volume_data = malloc( voxel_size * volume_data_count );
 			size_t objs_read = fread( volume_data, voxel_size * volume_data_count, 1, volume_data_file );
-			assert( objs_read == 1 );
-			fclose( volume_data_file );
 
-			tex_setup_texture( texture, width, height, length, voxel_bit_depth, volume_data, min_filter, mag_filter, flags, 3 );
-			assert(check_gl() == GL_NO_ERROR);
-			assert( glIsTexture(texture) );
-			free( volume_data );
-			result = true;
+			if( objs_read == 1 )
+			{
+				fclose( volume_data_file );
+
+				tex_setup_texture( texture, width, height, length, voxel_bit_depth, volume_data, min_filter, mag_filter, flags, 3 );
+				assert(check_gl() == GL_NO_ERROR);
+				assert( glIsTexture(texture) );
+				free( volume_data );
+				result = true;
+			}
+			else
+			{
+				#ifdef SIMPLEGL_DEBUG
+				printf( "Read %zu objects. Failed reading data from %s.\n", objs_read, filename );
+				assert( objs_read == 1 );
+				#endif
+			}
 		}
 	}
 

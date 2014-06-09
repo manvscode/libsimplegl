@@ -69,7 +69,6 @@ int main( int argc, char* argv[] )
 	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 8 );
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
-	//flags |= SDL_WINDOW_FULLSCREEN;
 	window = SDL_CreateWindow( "Cube", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags );
 
 	if( window == NULL )
@@ -79,6 +78,7 @@ int main( int argc, char* argv[] )
 	}
 
 	ctx = SDL_GL_CreateContext( window );
+	SDL_GL_SetSwapInterval( 1 ); /* vsync */
 
 	if( !ctx )
 	{
@@ -88,13 +88,44 @@ int main( int argc, char* argv[] )
 
 	initialize( );
 
-	SDL_Event e;
-
-	while( e.type != SDL_KEYDOWN && e.type != SDL_QUIT )
+	/* event loop */
 	{
-		SDL_PollEvent( &e );      // Check for events.
-		render( );
-		//SDL_Delay(10);              // Pause briefly before moving on to the next cycle.
+		SDL_Event e;
+		bool done = false;
+		bool fullscreen = false;
+
+		while( !done )
+		{
+			SDL_PollEvent( &e );
+
+			switch( e.type )
+			{
+				case SDL_QUIT:
+				{
+					done = true;
+					break;
+				}
+				case SDL_KEYDOWN:
+				{
+					switch( e.key.keysym.sym )
+					{
+						case SDLK_ESCAPE:
+						case SDLK_q:
+							done = true;
+							break;
+						case SDLK_f:
+							fullscreen ^= true;
+							SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
+							SDL_ShowCursor( fullscreen ? SDL_DISABLE : SDL_ENABLE );
+							break;
+					}
+					break;
+				}
+			}
+
+			render( );
+			//SDL_Delay(10);              // Pause briefly before moving on to the next cycle.
+		}
 	}
 
 	deinitialize( );
@@ -127,8 +158,8 @@ void initialize( void )
 	GLchar* shader_log  = NULL;
 	GLchar* program_log = NULL;
 	const shader_info_t shaders[] = {
-		{ GL_VERTEX_SHADER,   "./tests/assets/cube.v.glsl" },
-		{ GL_FRAGMENT_SHADER, "./tests/assets/cube.f.glsl" }
+		{ GL_VERTEX_SHADER,   "./tests/assets/shaders/cube.v.glsl" },
+		{ GL_FRAGMENT_SHADER, "./tests/assets/shaders/cube.f.glsl" }
 	};
 
 	if( !glsl_program_from_shaders( &program, shaders, shader_info_count(shaders), &shader_log, &program_log ) )
@@ -144,7 +175,7 @@ void initialize( void )
 			free( program_log );
 		}
 
-		return;
+		exit( EXIT_FAILURE );
 	}
 
 	attribute_vertex = glsl_bind_attribute( program, "a_vertex" );
@@ -164,7 +195,7 @@ void initialize( void )
 	{
 		glActiveTexture( GL_TEXTURE0 );
 		GL_ASSERT_NO_ERROR( );
-		tex_load_2d_with_mipmaps( texture, "./tests/assets/checkered.png", TEX_CLAMP_S | TEX_CLAMP_T );
+		tex_load_2d_with_mipmaps( texture, "./tests/assets/textures/checkered.png", TEX_CLAMP_S | TEX_CLAMP_T );
 		GL_ASSERT_NO_ERROR( );
 	}
 	else
@@ -176,9 +207,9 @@ void initialize( void )
 
 
 	#if 0
-	tetrahedron( &polyhedra, 3.0f );
+	tetrahedron( &polyhedra, 3.0f, true );
 	#else
-	cube( &polyhedra, 3.0f );
+	cube( &polyhedra, 3.0f, true );
 	#endif
 
 	glGenVertexArrays( 1, &vao );
@@ -261,8 +292,12 @@ void deinitialize( void )
 	polyhedra_destroy( &polyhedra );
 }
 
+GLuint delta = 0;
+
 void render( )
 {
+	GLuint now = SDL_GetTicks( );
+	delta = frame_delta( now /* milliseconds */ );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
 	static float angle = 0.0;
@@ -271,7 +306,7 @@ void render( )
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)width) / height;
-	vec3_t translation = VEC3_LITERAL( 0.0, 0.0, -10 );
+	vec3_t translation = VEC3( 0.0, 0.0, -10 );
 	mat4_t projection = orthographic( -10.0, 10.0, -6.0*aspect, 6.0*aspect, -100.0, 100.0 );
 	mat4_t rotation = rotate_xyz( "yx", angle, -5.0 );
 	angle += 0.1f;
@@ -282,12 +317,11 @@ void render( )
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)width) / height;
-	vec3_t translation = VEC3_LITERAL( 0.0, 0.0, -10 );
+	vec3_t translation = VEC3( 0.0, 0.0, -10 );
 	mat4_t projection = perspective( 80.0 * RADIANS_PER_DEGREE, aspect, 0.1, 100.0 );
-	vec3_t axis = VEC3_LITERAL( -0.8f, -0.25f, 0.75f );
-	quat_t q1 = quat_from_axis3_angle( &axis, angle );
+	quat_t q1 = quat_from_axis3_angle( &VEC3(0, 1, 1), angle * RADIANS_PER_DEGREE );
 	mat4_t rotation = quat_to_mat4( &q1 );
-	angle += 0.03;
+	angle += 1.0f;
 	mat4_t transform = translate( &translation );
 	transform = mat4_mult_matrix( &transform, &rotation );
 	mat4_t model_view = mat4_mult_matrix( &projection, &transform );
@@ -304,7 +338,7 @@ void render( )
 
 	glBindTexture( GL_TEXTURE_2D, texture );
 	glBindVertexArray( vao );
-	glDrawElements( GL_TRIANGLES, polyhedra.indices_count, GL_UNSIGNED_SHORT, 0 );
+	glDrawElements( GL_TRIANGLES, polyhedra.    indices_count, GL_UNSIGNED_SHORT, 0 );
 
 
 	glDisableVertexAttribArray( attribute_vertex );
@@ -313,6 +347,7 @@ void render( )
 
 
 	SDL_GL_SwapWindow( window );
+	print_frame_rate ( delta /* milliseconds */ );
 }
 
 void dump_sdl_error( void )

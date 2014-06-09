@@ -50,7 +50,6 @@ int main( int argc, char* argv[] )
 	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 4 );
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
-	//flags |= SDL_WINDOW_FULLSCREEN;
 	window = SDL_CreateWindow( "3D Axes", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags );
 
 	if( window == NULL )
@@ -69,12 +68,42 @@ int main( int argc, char* argv[] )
 
 	initialize( );
 
-	SDL_Event e;
-
-	while( e.type != SDL_KEYDOWN && e.type != SDL_QUIT )
+	/* event loop */
 	{
-		SDL_PollEvent( &e );      // Check for events.
-		render( );
+		SDL_Event e;
+		bool done = false;
+		bool fullscreen = false;
+
+		while( !done )
+		{
+			SDL_PollEvent( &e );
+
+			switch( e.type )
+			{
+				case SDL_QUIT:
+				{
+					done = true;
+					break;
+				}
+				case SDL_KEYDOWN:
+				{
+					switch( e.key.keysym.sym )
+					{
+						case SDLK_ESCAPE:
+							done = true;
+							break;
+						case SDLK_f:
+							fullscreen ^= true;
+							SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
+							break;
+					}
+					break;
+				}
+			}
+
+			render( );
+			//SDL_Delay(10);              // Pause briefly before moving on to the next cycle.
+		}
 	}
 
 	deinitialize( );
@@ -132,7 +161,7 @@ void render( )
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)height) / width;
-	vec3_t translation = VEC3_LITERAL( 0.0, 0.0, -2.0f );
+	vec3_t translation = VEC3( 0.0, 0.0, -2.0f );
 	mat4_t projection = perspective( 45.0, aspect, 0.00005, 100.0 );
 	mat4_t rotation = rotate_xyz( "xy", -15.0f * RADIANS_PER_DEGREE, angle );
 	angle += 0.005;

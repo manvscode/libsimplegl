@@ -43,12 +43,12 @@ GLboolean glsl_program_from_shaders( GLuint* p_program, const shader_info_t* sha
 	{
 		info = &shaders[ i ];
 
-		const char* shader_source_code = glsl_shader_load( info->filename );
+		const GLchar* shader_source_code = glsl_shader_load( info->filename );
 
 		if( shader_source_code )
 		{
 			result = glsl_shader_create_from_source( &shader_names[ i ], info->type, shader_source_code, shader_log );
-			free( (char*) shader_source_code );
+			free( (GLchar*) shader_source_code );
 		}
 		else
 		{
@@ -152,33 +152,7 @@ GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const G
 	if( !s )
 	{
 		#ifdef SIMPLEGL_DEBUG
-		const char* type_str;
-		switch( type )
-		{
-			#ifdef GL_TESS_CONTROL_SHADER
-			case GL_TESS_CONTROL_SHADER:
-				type_str = "tesselation control";
-				break;
-			#endif
-			#ifdef GL_TESS_EVALUATION_SHADER
-			case GL_TESS_EVALUATION_SHADER:
-				type_str = "tesselation evaluation";
-				break;
-			#endif
-			#ifdef GL_GEOMETRY_SHADER
-			case GL_GEOMETRY_SHADER:
-				type_str = "geometry";
-				break;
-			#endif
-			case GL_FRAGMENT_SHADER:
-				type_str = "fragment";
-				break;
-			case GL_VERTEX_SHADER:
-			default:
-				type_str = "vertex";
-				break;
-		}
-		fprintf( stderr, "[GLSL] Failed to create %s shader.\n", type_str );
+		fprintf( stderr, "[GLSL] Failed to create %s.\n", glsl_object_type_string(type) );
 		#endif
 		goto failure;
 	}
@@ -245,33 +219,27 @@ failure:
 GLuint glsl_create( GLenum type )
 {
 	GLuint object = 0;
-	const char* type_str;
 
 	switch( type )
 	{
 		case GL_VERTEX_SHADER:
-			type_str = "vertex shader";
 			object = glCreateShader( type );
 			break;
 		case GL_FRAGMENT_SHADER:
-			type_str = "fragment shader";
 			object = glCreateShader( type );
 			break;
 		#ifdef GL_GEOMETRY_SHADER
 		case GL_GEOMETRY_SHADER:
-			type_str = "geometry shader";
 			object = glCreateShader( type );
 			break;
 		#endif
 		#ifdef GL_TESS_EVALUATION_SHADER /* Missing on Mac OS X */
 		case GL_TESS_CONTROL_SHADER:
-			type_str = "tesselation control shader";
 			object = glCreateShader( type );
 			break;
 		#endif
 		#ifdef GL_TESS_EVALUATION_SHADER /* Missing on Mac OS X */
 		case GL_TESS_EVALUATION_SHADER:
-			type_str = "tesselation evaluation shader";
 			object = glCreateShader( type );
 			break;
 		#endif
@@ -279,7 +247,6 @@ GLuint glsl_create( GLenum type )
 		case GL_PROGRAM:
 		#endif
 		default:
-			type_str = "program";
 			object = glCreateProgram( );
 			assert( glIsProgram( object ) );
 			break;
@@ -288,7 +255,7 @@ GLuint glsl_create( GLenum type )
 	#ifdef SIMPLEGL_DEBUG
 	if( !object )
 	{
-		fprintf( stderr, "[GLSL] Failed to create %s.\n", type_str );
+		fprintf( stderr, "[GLSL] Failed to create %s.\n", glsl_object_type_string(type) );
 	}
 	#endif
 
@@ -316,7 +283,7 @@ GLboolean glsl_destroy( GLuint object /* program or shader */ )
 /*
  * Load a shader program into a string buffer.
  */
-GLchar* glsl_shader_load( const char* path )
+GLchar* glsl_shader_load( const GLchar* path )
 {
 	FILE* file = fopen( path, "r" );
 	GLchar* result = NULL;
@@ -333,7 +300,7 @@ GLchar* glsl_shader_load( const char* path )
 
 			if( result )
 			{
-				char* buffer = result;
+				GLchar* buffer = result;
 				long size    = file_size;
 
 				while( !feof( file ) && size > 0 )
@@ -472,10 +439,11 @@ GLchar* glsl_log( GLuint object )
 	{
 		p_log = malloc( sizeof(GLchar) * log_length );
 
-		memset( p_log, 0, sizeof(GLchar) * log_length );
 
 		if( p_log )
 		{
+			//memset( p_log, 0, sizeof(GLchar) * log_length );
+
 			if( glIsShader( object ) )
 			{
 				glGetShaderInfoLog( object, log_length, NULL, p_log );
@@ -484,9 +452,9 @@ GLchar* glsl_log( GLuint object )
 			{
 				glGetProgramInfoLog( object, log_length, NULL, p_log );
 			}
-		}
 
-		p_log[ log_length - 1 ] ='\0';
+			p_log[ log_length - 1 ] ='\0';
+		}
 	}
 
 	return p_log;
@@ -523,3 +491,43 @@ void glsl_program_error( GLuint program )
 	}
 }
 #endif
+
+const GLchar* glsl_object_type_string( GLenum type )
+{
+	const GLchar* type_str;
+
+	switch( type )
+	{
+		case GL_VERTEX_SHADER:
+			type_str = "vertex shader";
+			break;
+		case GL_FRAGMENT_SHADER:
+			type_str = "fragment shader";
+			break;
+		#ifdef GL_GEOMETRY_SHADER
+		case GL_GEOMETRY_SHADER:
+			type_str = "geometry shader";
+			break;
+		#endif
+		#ifdef GL_TESS_EVALUATION_SHADER /* Missing on Mac OS X */
+		case GL_TESS_CONTROL_SHADER:
+			type_str = "tesselation control shader";
+			break;
+		#endif
+		#ifdef GL_TESS_EVALUATION_SHADER /* Missing on Mac OS X */
+		case GL_TESS_EVALUATION_SHADER:
+			type_str = "tesselation evaluation shader";
+			break;
+		#endif
+		#ifdef GL_PROGRAM /* Missing on Mac OS X */
+		case GL_PROGRAM:
+			type_str = "program";
+			break;
+		#endif
+		default:
+			type_str = "unknown";
+			break;
+	}
+
+	return type_str;
+}

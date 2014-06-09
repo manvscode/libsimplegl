@@ -240,7 +240,7 @@ void polyhedra_destroy( polyhedra_t* polyhedra )
 	}
 }
 
-GLboolean tetrahedron( polyhedra_t* polyhedra, GLfloat scale )
+GLboolean tetrahedron( polyhedra_t* polyhedra, GLfloat scale, bool withColors )
 {
 	if( polyhedra )
 	{
@@ -263,10 +263,13 @@ GLboolean tetrahedron( polyhedra_t* polyhedra, GLfloat scale )
 		if( !polyhedra->tex_coords ) goto failure;
 		memcpy( polyhedra->tex_coords, tetrahedron_tex_coords, polyhedra->tex_coords_count * sizeof(GLfloat) );
 
-		polyhedra->colors_count = sizeof(tetrahedron_colors) / sizeof(tetrahedron_colors[0]);
-		polyhedra->colors = (GLfloat*) malloc( sizeof(GLfloat) * polyhedra->colors_count );
-		if( !polyhedra->colors ) goto failure;
-		memcpy( polyhedra->colors, tetrahedron_colors, polyhedra->colors_count * sizeof(GLfloat) );
+		if( withColors )
+		{
+			polyhedra->colors_count = sizeof(tetrahedron_colors) / sizeof(tetrahedron_colors[0]);
+			polyhedra->colors = (GLfloat*) malloc( sizeof(GLfloat) * polyhedra->colors_count );
+			if( !polyhedra->colors ) goto failure;
+			memcpy( polyhedra->colors, tetrahedron_colors, polyhedra->colors_count * sizeof(GLfloat) );
+		}
 
 	}
 
@@ -280,7 +283,7 @@ failure:
 	return GL_FALSE;
 }
 
-GLboolean cube( polyhedra_t* polyhedra, GLfloat scale )
+GLboolean cube( polyhedra_t* polyhedra, GLfloat scale, bool withColors )
 {
 	if( polyhedra )
 	{
@@ -306,11 +309,14 @@ GLboolean cube( polyhedra_t* polyhedra, GLfloat scale )
 		if( !polyhedra->tex_coords ) goto failure;
 		memcpy( polyhedra->tex_coords, cube_tex_coords, polyhedra->tex_coords_count * sizeof(GLfloat) );
 
-		polyhedra->colors_count = sizeof(cube_colors) / sizeof(cube_colors[0]);
-		polyhedra->colors = (GLfloat*) malloc( sizeof(GLfloat) * polyhedra->colors_count );
-		assert( polyhedra->colors );
-		if( !polyhedra->colors ) goto failure;
-		memcpy( polyhedra->colors, cube_colors, polyhedra->colors_count * sizeof(GLfloat) );
+		if( withColors )
+		{
+			polyhedra->colors_count = sizeof(cube_colors) / sizeof(cube_colors[0]);
+			polyhedra->colors = (GLfloat*) malloc( sizeof(GLfloat) * polyhedra->colors_count );
+			assert( polyhedra->colors );
+			if( !polyhedra->colors ) goto failure;
+			memcpy( polyhedra->colors, cube_colors, polyhedra->colors_count * sizeof(GLfloat) );
+		}
 	}
 
 	return GL_TRUE;

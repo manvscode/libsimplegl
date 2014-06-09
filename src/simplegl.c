@@ -26,10 +26,10 @@
 
 void dump_gl_info( void )
 {
-	const char* vendor       = (const char*) glGetString(GL_VENDOR);
-	const char* renderer     = (const char*) glGetString(GL_RENDERER);
-	const char* version      = (const char*) glGetString(GL_VERSION);
-	const char* glsl_version = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+	const GLchar* vendor       = (const GLchar*) glGetString(GL_VENDOR);
+	const GLchar* renderer     = (const GLchar*) glGetString(GL_RENDERER);
+	const GLchar* version      = (const GLchar*) glGetString(GL_VERSION);
+	const GLchar* glsl_version = (const GLchar*) glGetString(GL_SHADING_LANGUAGE_VERSION);
 
 	fprintf( stdout, "[GL] Vendor: %s\n", vendor ? vendor : "unknown" );
 	fprintf( stdout, "[GL] Renderer: %s\n", renderer ? renderer : "unknown" );
@@ -53,8 +53,8 @@ void dump_gl_info( void )
 
 GLenum check_gl( void )
 {
-    GLenum error = glGetError();
-	const char* error_str;
+	GLenum error = glGetError();
+	const GLchar* error_str;
 
 	switch( error )
 	{
@@ -96,43 +96,32 @@ GLenum check_gl( void )
 	return error;
 }
 
-#if 0
-vec4_t viewport_coord_unproject( const vec2_t* position, const mat4_t* projection )
+GLuint frame_delta( GLuint now /* milliseconds */ )
 {
-	GLint viewport[ 4 ];
-	glGetIntegerv( GL_VIEWPORT, viewport );
-
-	/* Convert to normalized device coordinates */
-	vec4_t normalized_device_coordinate = VEC4_LITERAL( ((position->x * 2.0f) / viewport[2]) - 1.0f, ((position->y * 2.0f) / viewport[3]) - 1.0f, 0.0f, 1.0f );
-
-	mat4_t proj = *projection;
-	mat4_invert( &proj );
-
-	return mat4_mult_vector( &proj, &normalized_device_coordinate );
-}
-#endif
-
-vec4_t viewport_coord_unproject( const vec2_t* position, const mat4_t* projection, const mat4_t* model )
-{
-	GLint viewport[ 4 ];
-	glGetIntegerv( GL_VIEWPORT, viewport );
-
-	/* Convert to normalized device coordinates */
-	vec4_t normalized_device_coordinate = VEC4_LITERAL( ((position->x * 2.0f) / viewport[2]) - 1.0f, ((position->y * 2.0f) / viewport[3]) - 1.0f, 0.0f, 1.0f );
-
-	mat4_t inv_projmodel = mat4_mult_matrix( projection, model );
-	mat4_invert( &inv_projmodel );
-
-	return mat4_mult_vector( &inv_projmodel, &normalized_device_coordinate );
+	static GLuint last_render = 0;
+	GLuint delta = now - last_render;
+	last_render = now;
+	return delta;
 }
 
-vec2_t viewport_coord_project( const vec4_t* point, const mat4_t* projection, const mat4_t* model )
+GLfloat frame_rate( GLuint delta /* milliseconds */ )
 {
-	GLint viewport[ 4 ];
-	glGetIntegerv( GL_VIEWPORT, viewport );
-
-	mat4_t projmodel = mat4_mult_matrix( projection, model );
-	vec4_t pt = mat4_mult_vector( &projmodel, point );
-
-	return VEC2_LITERAL( ((1.0f + pt.x) * viewport[2]) / 2.0f, ((1.0f + pt.y) * viewport[3]) / 2.0f );
+	static GLfloat last_time1 = 0;
+	static GLfloat last_time2 = 0;
+	delta = (0.6f * delta + 0.3f * last_time1 + 0.1f * last_time2);
+	last_time2 = last_time1;
+	last_time1 = delta;
+	return (1000.0f) / delta;
 }
+
+void print_frame_rate( GLuint delta /* milliseconds */ )
+{
+	static GLuint frame_rate_call_count = 0;
+
+	if( frame_rate_call_count++ > 60 )
+	{
+		frame_rate_call_count = 0;
+		printf( "fps %.2f\n", frame_rate( delta ) );
+	}
+}
+

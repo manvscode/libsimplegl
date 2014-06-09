@@ -7,12 +7,15 @@ uniform sampler2D u_back_voxels;
 uniform sampler1D u_color_transfer;
 uniform uint u_render_pass;
 uniform uint u_seed;
+uniform uint u_render_mode;
 
 
 out vec4 color;
 
-const uint RENDER_PASS_BACK_VOXELS    = uint(0);
-const uint RENDER_PASS_SAMPLED_VOXELS = uint(1);
+const uint RENDER_MODE_XRAY                      = 0u;
+const uint RENDER_MODE_HIGH_INTENSITY_PROJECTION = 1u;
+const uint RENDER_PASS_BACK_VOXELS               = 0u;
+const uint RENDER_PASS_SAMPLED_VOXELS            = 1u;
 const float STEP_SIZE = 0.004f;
 //const float STEP_SIZE = 0.05f;
 
@@ -134,7 +137,7 @@ void render_sampled_voxels_high_intensity_projection( )
 
 void render_sampled_voxels( )
 {
-	if( false )
+	if( u_render_mode == RENDER_MODE_XRAY )
 	{
 		render_sampled_voxels_xray( );
 	}

@@ -24,7 +24,7 @@
 #include "simplegl.h"
 
 #if 0
-static const mat4_t changed_handedness = MAT4_LITERAL(
+static const mat4_t changed_handedness = MAT4(
 	// convert from our coordinate system (looking down X)
 	// to OpenGL's coordinate system (looking down -Z)
 	0, 0, -1, 0,
@@ -37,7 +37,7 @@ static const mat4_t changed_handedness = MAT4_LITERAL(
 mat4_t translate( const vec3_t* t )
 {
 	assert( t );
-	return MAT4_LITERAL(
+	return MAT4(
 		 1.0,  0.0,  0.0,  0.0,
 		 0.0,  1.0,  0.0,  0.0,
 		 0.0,  0.0,  1.0,  0.0,
@@ -48,7 +48,7 @@ mat4_t translate( const vec3_t* t )
 mat4_t scale( const vec3_t* s )
 {
 	assert( s );
-	return MAT4_LITERAL(
+	return MAT4(
 		s->x,  0.0,  0.0,  0.0,
 		 0.0, s->y,  0.0,  0.0,
 	 	 0.0,  0.0, s->z,  0.0,
@@ -58,7 +58,7 @@ mat4_t scale( const vec3_t* s )
 
 mat4_t uniform_scale( GLfloat s )
 {
-	return MAT4_LITERAL(
+	return MAT4(
 		  s, 0.0, 0.0, 0.0,
 		0.0,   s, 0.0, 0.0,
 	 	0.0, 0.0,   s, 0.0,
@@ -71,7 +71,7 @@ mat4_t rotate_x( GLfloat a )
 	GLfloat s = sinf( a );
 	GLfloat c = cosf( a );
 
-	return MAT4_LITERAL(
+	return MAT4(
 		1.0, 0.0, 0.0, 0.0,
 		0.0,   c,  -s, 0.0,
 	 	0.0,   s,   c, 0.0,
@@ -84,7 +84,7 @@ mat4_t rotate_y( GLfloat a )
 	GLfloat s = sinf( a );
 	GLfloat c = cosf( a );
 
-	return MAT4_LITERAL(
+	return MAT4(
 		  c, 0.0,   s, 0.0,
 		0.0, 1.0, 0.0, 0.0,
 	 	 -s, 0.0,   c, 0.0,
@@ -97,7 +97,7 @@ mat4_t rotate_z( GLfloat a )
 	GLfloat s = sinf( a );
 	GLfloat c = cosf( a );
 
-	return MAT4_LITERAL(
+	return MAT4(
 		  c,  -s, 0.0, 0.0,
 		  s,   c, 0.0, 0.0,
 	 	0.0, 0.0, 1.0, 0.0,
@@ -105,7 +105,7 @@ mat4_t rotate_z( GLfloat a )
 	);
 }
 
-mat4_t rotate_xyz( const char* order, ... )
+mat4_t rotate_xyz( const GLchar* order, ... )
 {
 	assert( order );
 	va_list list;
@@ -182,11 +182,60 @@ mat4_t orientation( vec3_t* f, vec3_t* l, vec3_t* u )
 	vec3_normalize( l );
 	vec3_normalize( u );
 
-	mat4_t transform = MAT4_LITERAL(
+	mat4_t transform = MAT4(
 		l->x, l->y, l->z, 0.0,
 		u->x, u->y, u->z, 0.0,
-		f->x, f->y, f->z, 0.0,
+		f->x, f->y, f->z, 0.0, // TODO: Check if this should be negative forward vector
 		0.0,   0.0,  0.0, 1.0
 	);
 	return transform;
 }
+
+#if 0
+mat4_t look_at( const pt3_t* eye, const pt3_t* target, const vec3_t* up )
+{
+	vec3_t z = VEC3( eye->x - target->x, eye->y - target->y, eye->z - target->z );
+	vec3_normalize( &z );
+
+	vec3_t x = vec3_cross_product( &z, up );
+	vec3_normalize( &x );
+
+	vec3_t y = vec3_cross_product( &x, &z );
+	vec3_normalize( &y );
+
+	#if 0
+	return MAT4(
+		  x.x,     x.y,     x.z,  0.0, /* x-axis */
+		  y.x,     y.y,     y.z,  0.0, /* y-axis */
+		  z.x,     z.y,     z.z,  0.0, /* z-axis */
+	  -eye->x, -eye->y, -eye->z,  1.0  /* translation */
+	);
+	#else
+	return MAT4(
+		  x.x,     y.x,     z.x,  -eye->x,
+		  x.y,     y.y,     z.y,  -eye->y,
+		  x.z,     y.z,     z.z,  -eye->z,
+	     0.0f,    0.0f,    0.0f,  1.0  /* translation */
+	);
+	#endif
+}
+#else
+mat4_t look_at( const pt3_t* eye, const pt3_t* target, const vec3_t* up )
+{
+	vec3_t z = VEC3( target->x - eye->x, target->y - eye->y, target->z - eye->z );
+	vec3_normalize( &z );
+
+	vec3_t x = vec3_cross_product( &z, up );
+	vec3_normalize( &x );
+
+	vec3_t y = vec3_cross_product( &x, &z );
+	vec3_normalize( &y );
+
+	return MAT4(
+	       x.x,        x.y,     x.z,  0.0, /* x-axis */
+	       y.x,        y.y,     y.z,  0.0, /* y-axis */
+	      -z.x,       -z.y,    -z.z,  0.0, /* z-axis */
+	   -eye->x,    -eye->y, -eye->z,  1.0  /* translation */
+	);
+}
+#endif
