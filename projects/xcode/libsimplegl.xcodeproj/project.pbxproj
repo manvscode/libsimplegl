@@ -599,6 +599,7 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_DEBUG=1";
 				MACH_O_TYPE = mh_dylib;
 				PRODUCT_NAME = libsimplegl;
@@ -618,6 +619,8 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_DEBUG=1";
 				MACH_O_TYPE = mh_dylib;
 				PRODUCT_NAME = libsimplegl;

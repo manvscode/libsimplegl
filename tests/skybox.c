@@ -49,7 +49,7 @@ GLuint ibo_indices = 0;
 GLuint texture = 0;
 
 vec3_t camera_position = VEC3( 1.0f, 0.0, 1.0f );
-const float mouse_sensitivity = 0.0001f;
+const float mouse_sensitivity = 0.001f;
 
 static const GLfloat cube_map_vertices[] = {
 	-10.0f,-10.0f,-10.0f,
@@ -335,7 +335,7 @@ void initialize( void )
 	assert(check_gl() == GL_NO_ERROR);
 
 
-	camera = camera_create( width, height, 2.0f, 1000.0f, &VEC3(0.0f, 0.0f, 0.0f) );
+	camera = camera_create( width, height, 2.0f, 1000.0f, 45.0f, &VEC3(0.0f, 0.0f, 0.0f) );
 	assert( camera );
 }
 
@@ -363,7 +363,7 @@ void render( )
 
 
 	assert( camera != NULL );
-	mat4_t model_view = camera_matrix( camera );
+	mat4_t model_view = camera_view_matrix( camera );
 
 
 
@@ -408,20 +408,14 @@ void render_skybox( void )
 
 void set_view_by_mouse( )
 {
-	int screen_width = 1024;
-	int screen_height = 768;
-	//SDL_GetWindowSize( window, &screen_width, &screen_height );
+	int screen_width;
+	int screen_height;
+	SDL_GetWindowSize( window, &screen_width, &screen_height );
 
 
 	int middle_x = screen_width / 2; // the middle of the screen in the x direction
 	int middle_y = screen_height / 2; // the middle of the screen in the y direction
 
-
-	// static variable to store the rotation about the x-axis, since
-	// we want to limit how far up or down we can look.
-	// We don't need to cap the rotation about the y-axis as we
-	// want to be able to turn around 360 degrees
-	static float xrotation = 0.0;
 
 	// the coordinates of our mouse coordinates
 	int mouse_x;
@@ -434,7 +428,7 @@ void set_view_by_mouse( )
 	if (mouse_x == middle_x && mouse_y == middle_y ) return;
 
 	// otherwise move the mouse back to the middle of the screen
-	//SDL_WarpMouseInWindow( window, middle_x, middle_y );
+	SDL_WarpMouseInWindow( window, middle_x, middle_y );
 
 	// get the distance and direction the mouse moved in x (in
 	// pixels). We can't use the actual number of pixels in radians,
@@ -452,7 +446,7 @@ void set_view_by_mouse( )
 		(mouse_y - middle_y) * mouse_sensitivity
 	);
 
-    if( fabsf(mouse_direction.x) > to_radians(0.25f) || fabsf(mouse_direction.y) > to_radians(0.25f) )
+    if( scaler_abs(mouse_direction.x) > to_radians(0.05f) || scaler_abs(mouse_direction.y) > to_radians(0.05f) )
     {
         camera_offset_orientation( camera, mouse_direction.x, mouse_direction.y );
     }

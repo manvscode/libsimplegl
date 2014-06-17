@@ -32,7 +32,7 @@
 		D82404CF194E2874000FB985 /* volume-render.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = "volume-render.f.glsl"; path = "../../tests/assets/shaders/volume-render.f.glsl"; sourceTree = "<group>"; };
 		D82404D0194E2874000FB985 /* volume-render.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = "volume-render.v.glsl"; path = "../../tests/assets/shaders/volume-render.v.glsl"; sourceTree = "<group>"; };
 		D82B50EF194E05AD00EF5CE4 /* libsimplegl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsimplegl.dylib; path = "../../../../Library/Developer/Xcode/DerivedData/simplegl-demos-ehsecgtvbomdckcezrsickpxluio/Build/Products/Debug/libsimplegl.dylib"; sourceTree = "<group>"; };
-		D82D1509194DF61700752193 /* cube */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cube; sourceTree = BUILT_PRODUCTS_DIR; };
+		D82D1509194DF61700752193 /* volume-renderer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "volume-renderer"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,7 +65,7 @@
 		D82D150A194DF61700752193 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D82D1509194DF61700752193 /* cube */,
+				D82D1509194DF61700752193 /* volume-renderer */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 			);
 			name = "volume-renderer";
 			productName = cube;
-			productReference = D82D1509194DF61700752193 /* cube */;
+			productReference = D82D1509194DF61700752193 /* volume-renderer */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */

@@ -162,22 +162,30 @@ GLboolean buffer_destroy ( const GLuint* id );
 /*
  * Cameras
  */
-struct camera;
-typedef struct camera camera_t;
+typedef struct camera {
+	vec3_t position;
+    GLfloat xangle;
+    GLfloat yangle;
 
-camera_t*     camera_create            ( int screen_width, int screen_height, GLfloat near, GLfloat far, const pt3_t* position );
-void          camera_destroy           ( camera_t* camera );
-const mat4_t* camera_projection_matrix ( const camera_t* camera );
-const mat4_t* camera_model_matrix      ( const camera_t* camera );
-const mat4_t* camera_orientation_matrix( const camera_t* camera );
-mat3_t        camera_normal_matrix     ( const camera_t* camera );
-void          camera_set_position      ( camera_t* camera, const pt3_t* position );
-void          camera_offset_orientation( camera_t* camera, GLfloat xangle, GLfloat yangle );
-void          camera_update            ( camera_t* camera, GLfloat delta );
-mat4_t        camera_matrix            ( const camera_t* camera );
+	mat4_t projection_matrix;
+	mat4_t model_matrix;
+    mat4_t orientation_matrix;
+} camera_t;
 
-//struct camera;
-//typedef struct camera camera_t;
+camera_t*     camera_create             ( int screen_width, int screen_height, GLfloat near, GLfloat far, GLfloat fov, const pt3_t* position );
+void          camera_destroy            ( camera_t* camera );
+const mat4_t* camera_projection_matrix  ( const camera_t* camera );
+const mat4_t* camera_model_matrix       ( const camera_t* camera );
+const mat4_t* camera_orientation_matrix ( const camera_t* camera );
+mat3_t        camera_normal_matrix      ( const camera_t* camera );
+mat4_t        camera_view_matrix        ( const camera_t* camera );
+vec3_t        camera_forward_vector     ( const camera_t* camera );
+vec3_t        camera_up_vector          ( const camera_t* camera );
+vec3_t        camera_side_vector        ( const camera_t* camera );
+void          camera_set_perspective    ( camera_t* camera, int screen_width, int screen_height, GLfloat near, GLfloat far, GLfloat fov );
+void          camera_set_position       ( camera_t* camera, const pt3_t* position );
+void          camera_offset_orientation ( camera_t* camera, GLfloat xangle, GLfloat yangle );
+void          camera_update             ( camera_t* camera, GLfloat delta );
 
 /*
  * Objects
