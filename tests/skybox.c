@@ -46,9 +46,8 @@ GLuint vao = 0;
 GLuint vbo_vertices = 0;
 GLuint vbo_tex_coords = 0;
 GLuint ibo_indices = 0;
-GLuint texture = 0;
-
-vec3_t camera_position = VEC3( 1.0f, 0.0, 1.0f );
+GLuint cube_map_texture[ 3 ] = { 0 };
+GLuint selected_skybox = 0;
 const float mouse_sensitivity = 0.001f;
 
 static const GLfloat cube_map_vertices[] = {
@@ -127,15 +126,6 @@ int main( int argc, char* argv[] )
 		goto quit;
 	}
 
-	/*
-	if( SDL_SetRelativeMouseMode( true ) < 0 )
-	{
-		dump_sdl_error( );
-		goto quit;
-	}
-	*/
-
-
 	ctx = SDL_GL_CreateContext( window );
 	SDL_GL_SetSwapInterval( 1 ); /* vsync */
 
@@ -151,6 +141,9 @@ int main( int argc, char* argv[] )
 	SDL_Event e;
 	bool done = false;
 	bool fullscreen = false;
+
+	SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
+	SDL_ShowCursor( fullscreen ? SDL_DISABLE : SDL_ENABLE );
 
 	while( !done )
 	{
@@ -171,21 +164,26 @@ int main( int argc, char* argv[] )
 					case SDLK_q:
 						done = true;
 						break;
+					case SDLK_1:
+						selected_skybox = 0;
+						break;
+					case SDLK_2:
+						selected_skybox = 1;
+						break;
+					case SDLK_3:
+						selected_skybox = 2;
+						break;
 					case SDLK_a:
-						camera_position.x +=  1.0f;
-						camera_set_position( camera, &camera_position );
+						camera_move_sideways(camera, -2.0f );
 						break;
 					case SDLK_s:
-						camera_position.z -=  1.0f;
-						camera_set_position( camera, &camera_position );
+						camera_move_forwards(camera, -2.0f );
 						break;
 					case SDLK_d:
-						camera_position.x -=  1.0f;
-						camera_set_position( camera, &camera_position );
+						camera_move_sideways(camera, 2.0f );
 						break;
 					case SDLK_w:
-						camera_position.z +=  1.0f;
-						camera_set_position( camera, &camera_position );
+						camera_move_forwards(camera, 2.0f );
 						break;
 					case SDLK_f:
 						fullscreen ^= true;
@@ -275,32 +273,48 @@ void initialize( void )
 	uniform_cubemap = glsl_bind_uniform( program, "u_cubemap" );
 	assert(check_gl() == GL_NO_ERROR);
 
-	texture = tex_create( );
-	assert(check_gl() == GL_NO_ERROR);
-	if( texture )
-	{
-		glActiveTexture( GL_TEXTURE0 );
-		assert(check_gl() == GL_NO_ERROR);
-		#if 1
-		bool cubemap_setup = tex_cube_map_setup( texture, "./tests/assets/env/gardenrt.png", "./tests/assets/env/gardenlf.png",
-		                                                  "./tests/assets/env/gardenup.png", "./tests/assets/env/gardendn.png",
-		                                                  "./tests/assets/env/gardenft.png", "./tests/assets/env/gardenbk.png" );
-		#else
-		bool cubemap_setup = tex_cube_map_setup( texture, "./tests/assets/env/desertplains_xpos.png", "./tests/assets/env/desertplains_xneg.png",
-		                                                  "./tests/assets/env/desertplains_ypos.png", NULL,
-		                                                  "./tests/assets/env/desertplains_zpos.png", "./tests/assets/env/desertplains_zneg.png" );
-		#endif
 
-		if( !cubemap_setup )
-		{
-			fprintf( stderr, "[ERROR] Failed to setup sky box.\n" );
-			exit( EXIT_FAILURE );
-		}
-		assert(check_gl() == GL_NO_ERROR);
-	}
-	else
+	for( int i = 0; i < 3; i++ )
 	{
-		dump_sdl_error( );
+		cube_map_texture[ i ] = tex_create( );
+		assert(check_gl() == GL_NO_ERROR);
+		if( cube_map_texture[ i ] )
+		{
+			glActiveTexture( GL_TEXTURE0 );
+			assert(check_gl() == GL_NO_ERROR);
+			bool cubemap_setup = false;
+
+			if( i == 0 )
+			{
+				cubemap_setup = tex_cube_map_setup( cube_map_texture[ i ], "./tests/assets/env/gardenrt.png", "./tests/assets/env/gardenlf.png",
+																           "./tests/assets/env/gardenup.png", "./tests/assets/env/gardendn.png",
+																           "./tests/assets/env/gardenft.png", "./tests/assets/env/gardenbk.png" );
+			}
+			else if( i == 1 )
+			{
+				cubemap_setup = tex_cube_map_setup( cube_map_texture[ i ], "./tests/assets/env/sahara_rt.png", "./tests/assets/env/sahara_lf.png",
+																           "./tests/assets/env/sahara_up.png", "./tests/assets/env/sahara_dn.png",
+																           "./tests/assets/env/sahara_ft.png", "./tests/assets/env/sahara_bk.png" );
+			}
+			else
+			{
+				cubemap_setup = tex_cube_map_setup( cube_map_texture[ i ], "./tests/assets/env/sorbin_rt.png", "./tests/assets/env/sorbin_lf.png",
+																           "./tests/assets/env/sorbin_up.png", "./tests/assets/env/sorbin_dn.png",
+																           "./tests/assets/env/sorbin_ft.png", "./tests/assets/env/sorbin_bk.png" );
+			}
+
+			if( !cubemap_setup )
+			{
+				fprintf( stderr, "[ERROR] Failed to setup sky box.\n" );
+				exit( EXIT_FAILURE );
+			}
+
+			assert(check_gl() == GL_NO_ERROR);
+		}
+		else
+		{
+			dump_sdl_error( );
+		}
 	}
 
 
@@ -341,7 +355,10 @@ void initialize( void )
 
 void deinitialize( void )
 {
-	tex_destroy( texture );
+	for( int i = 0; i < 3; i++ )
+	{
+		tex_destroy( cube_map_texture[ i ] );
+	}
 	glDeleteVertexArrays( 1, &vao );
 	glDeleteBuffers( 1, &vbo_vertices );
 	glDeleteBuffers( 1, &vbo_tex_coords );
@@ -355,6 +372,7 @@ void render( )
 	GLuint now = SDL_GetTicks( );
 	delta = frame_delta( now /* milliseconds */ );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+	camera_update( camera, delta );
 
 
 
@@ -366,10 +384,6 @@ void render( )
 	mat4_t model_view = camera_view_matrix( camera );
 
 
-
-
-
-	camera_update( camera, delta );
 	SDL_GL_SwapWindow( window );
 
 	print_frame_rate( delta /* milliseconds */ );
@@ -390,12 +404,11 @@ void render_skybox( void )
 	glUseProgram( program );
 
 	glEnableVertexAttribArray( attribute_vertex );
-	//glUniform3fv( uniform_eye_position, 1, (float*) &camera_position );
 	glUniformMatrix4fv( uniform_projection, 1, GL_FALSE, (float*) camera_projection_matrix(camera) );
 	glUniformMatrix4fv( uniform_orientation, 1, GL_FALSE, (float*) camera_orientation_matrix(camera) );
 
 
-    glBindTexture( GL_TEXTURE_CUBE_MAP, texture );
+    glBindTexture( GL_TEXTURE_CUBE_MAP, cube_map_texture[ selected_skybox ] );
 	glBindVertexArray( vao );
 	glDepthMask( GL_FALSE );
 	glDrawArrays( GL_TRIANGLES, 0, sizeof(cube_map_vertices)/sizeof(cube_map_vertices[0]) );

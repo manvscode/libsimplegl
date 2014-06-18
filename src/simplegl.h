@@ -162,15 +162,8 @@ GLboolean buffer_destroy ( const GLuint* id );
 /*
  * Cameras
  */
-typedef struct camera {
-	vec3_t position;
-    GLfloat xangle;
-    GLfloat yangle;
-
-	mat4_t projection_matrix;
-	mat4_t model_matrix;
-    mat4_t orientation_matrix;
-} camera_t;
+struct camera;
+typedef struct camera camera_t;
 
 camera_t*     camera_create             ( int screen_width, int screen_height, GLfloat near, GLfloat far, GLfloat fov, const pt3_t* position );
 void          camera_destroy            ( camera_t* camera );
@@ -185,6 +178,8 @@ vec3_t        camera_side_vector        ( const camera_t* camera );
 void          camera_set_perspective    ( camera_t* camera, int screen_width, int screen_height, GLfloat near, GLfloat far, GLfloat fov );
 void          camera_set_position       ( camera_t* camera, const pt3_t* position );
 void          camera_offset_orientation ( camera_t* camera, GLfloat xangle, GLfloat yangle );
+void          camera_move_forwards      ( camera_t* camera, GLfloat a );
+void          camera_move_sideways      ( camera_t* camera, GLfloat a );
 void          camera_update             ( camera_t* camera, GLfloat delta );
 
 /*

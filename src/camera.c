@@ -29,6 +29,14 @@
 
 #define CAMERA_EPSILON                 (0.1f)
 
+struct camera {
+	vec3_t position;
+	GLfloat xangle;
+	GLfloat yangle;
+	mat4_t projection_matrix;
+	mat4_t model_matrix;
+	mat4_t orientation_matrix;
+};
 
 
 camera_t* camera_create( int screen_width, int screen_height, GLfloat near, GLfloat far, GLfloat fov, const pt3_t* position )
@@ -101,6 +109,7 @@ mat4_t camera_view_matrix( const camera_t* camera )
 
 vec3_t camera_forward_vector( const camera_t* camera )
 {
+	#if 1
 	/*
 	 * We take 4x4 orientation matrix and transpose it
 	 * to get the inverse.  Then we create a 3x3 matrix
@@ -118,10 +127,15 @@ vec3_t camera_forward_vector( const camera_t* camera )
 		orientation_submatrix[ 2], orientation_submatrix[ 6], orientation_submatrix[10]
 	);
 	return mat3_mult_vector( &orientation_inverse_matrix, &VEC3_ZUNIT );
+	#else
+	const vec4_t* z_unit = mat4_z_vector( &camera->orientation_matrix );
+	return VEC3( z_unit->x, z_unit->y, z_unit->z );
+	#endif
 }
 
 vec3_t camera_up_vector( const camera_t* camera )
 {
+	#if 1
 	/*
 	 * We take 4x4 orientation matrix and transpose it
 	 * to get the inverse.  Then we create a 3x3 matrix
@@ -139,10 +153,15 @@ vec3_t camera_up_vector( const camera_t* camera )
 		orientation_submatrix[ 2], orientation_submatrix[ 6], orientation_submatrix[10]
 	);
 	return mat3_mult_vector( &orientation_inverse_matrix, &VEC3_YUNIT );
+	#else
+	const vec4_t* y_unit = mat4_y_vector( &camera->orientation_matrix );
+	return VEC3( y_unit->x, y_unit->y, y_unit->z );
+	#endif
 }
 
 vec3_t camera_side_vector( const camera_t* camera )
 {
+	#if 1
 	/*
 	 * We take 4x4 orientation matrix and transpose it
 	 * to get the inverse.  Then we create a 3x3 matrix
@@ -160,6 +179,10 @@ vec3_t camera_side_vector( const camera_t* camera )
 		orientation_submatrix[ 2], orientation_submatrix[ 6], orientation_submatrix[10]
 	);
 	return mat3_mult_vector( &orientation_inverse_matrix, &VEC3_XUNIT );
+	#else
+	const vec4_t* x_unit = mat4_y_vector( &camera->orientation_matrix );
+	return VEC3( x_unit->x, x_unit->y, x_unit->z );
+	#endif
 }
 
 void camera_set_perspective( camera_t* camera, int screen_width, int screen_height, GLfloat near, GLfloat far, GLfloat fov )
@@ -183,17 +206,33 @@ void camera_offset_orientation( camera_t* camera, GLfloat xangle, GLfloat yangle
     camera->yangle = clampf( camera->yangle, -HALF_PI, HALF_PI );
 }
 
+void camera_move_forwards( camera_t* camera, GLfloat a )
+{
+	vec3_t f = camera_forward_vector( camera );
+	vec3_normalize( &f );
+	vec3_scale( &f, a );
+	camera->position = vec3_add( &camera->position, &f );
+}
+
+void camera_move_sideways( camera_t* camera, GLfloat a )
+{
+	vec3_t s = camera_side_vector( camera );
+	vec3_normalize( &s );
+	vec3_scale( &s, a );
+	camera->position = vec3_add( &camera->position, &s );
+}
+
 void camera_update( camera_t* camera, GLfloat delta )
 {
 	assert( camera );
 
-    mat4_t xrotation = mat4_from_axis3_angle( &VEC3_YUNIT, camera->xangle );
-    mat4_t yrotation = mat4_from_axis3_angle( &VEC3_XUNIT, camera->yangle );
+	mat4_t xrotation = mat4_from_axis3_angle( &VEC3_YUNIT, camera->xangle );
+	mat4_t yrotation = mat4_from_axis3_angle( &VEC3_XUNIT, camera->yangle );
 
-    camera->orientation_matrix = mat4_mult_matrix( &xrotation, &MAT4_IDENTITY );
-    camera->orientation_matrix = mat4_mult_matrix( &yrotation, &camera->orientation_matrix );
+	camera->orientation_matrix = mat4_mult_matrix( &xrotation, &MAT4_IDENTITY );
+	camera->orientation_matrix = mat4_mult_matrix( &yrotation, &camera->orientation_matrix );
 
-	mat4_t translation = translate( &camera->position );
-	camera->model_matrix = mat4_mult_matrix( &translation, &camera->orientation_matrix );
+	mat4_t translation_matrix = translate( &camera->position );
+	camera->model_matrix = mat4_mult_matrix( &camera->orientation_matrix, &translation_matrix );
 }
 
