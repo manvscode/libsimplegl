@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 by Joseph A. Marrero, http://www.manvscode.com/
+/* Copyright (C) 2013-2014 by Joseph A. Marrero, http://www.manvscode.com/
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,7 +18,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#ifdef SIMPLEGL_DEBUG
 #include <stdio.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -39,7 +41,7 @@ struct camera {
 };
 
 
-camera_t* camera_create( int screen_width, int screen_height, GLfloat near, GLfloat far, GLfloat fov, const pt3_t* position )
+camera_t* camera_create( GLint screen_width, GLint screen_height, GLfloat near, GLfloat far, GLfloat fov, const pt3_t* position )
 {
 	camera_t* c = malloc( sizeof(camera_t) );
 
@@ -90,26 +92,28 @@ const mat4_t* camera_orientation_matrix( const camera_t* camera )
 mat3_t camera_normal_matrix( const camera_t* camera )
 {
     assert( camera );
-	return MAT3(
+	mat3_t normal_matrix = MAT3(
 		camera->model_matrix.m[0], camera->model_matrix.m[1], camera->model_matrix.m[ 2],
 		camera->model_matrix.m[4], camera->model_matrix.m[5], camera->model_matrix.m[ 6],
 		camera->model_matrix.m[8], camera->model_matrix.m[9], camera->model_matrix.m[10]
 	);
+	mat3_transpose( &normal_matrix );
+	return normal_matrix;
 }
 
 mat4_t camera_view_matrix( const camera_t* camera )
 {
 	assert( camera );
 	#ifdef SIMPLEGL_DEBUG
-	//printf( "     Camera model: %s\n", mat4_to_string(&model) );
-	//printf( "Camera projection: %s\n", mat4_to_string(&camera->projection) );
+	printf( "     Camera model: %s\n", mat4_to_string(&model) );
+	printf( "Camera projection: %s\n", mat4_to_string(&camera->projection) );
 	#endif
 	return mat4_mult_matrix( &camera->projection_matrix, &camera->model_matrix );
 }
 
 vec3_t camera_forward_vector( const camera_t* camera )
 {
-	#if 1
+	#if 0
 	/*
 	 * We take 4x4 orientation matrix and transpose it
 	 * to get the inverse.  Then we create a 3x3 matrix
@@ -128,14 +132,13 @@ vec3_t camera_forward_vector( const camera_t* camera )
 	);
 	return mat3_mult_vector( &orientation_inverse_matrix, &VEC3_ZUNIT );
 	#else
-	const vec4_t* z_unit = mat4_z_vector( &camera->orientation_matrix );
-	return VEC3( z_unit->x, z_unit->y, z_unit->z );
+	return VEC3( camera->orientation_matrix.m[2], camera->orientation_matrix.m[6], camera->orientation_matrix.m[10] );
 	#endif
 }
 
 vec3_t camera_up_vector( const camera_t* camera )
 {
-	#if 1
+	#if 0
 	/*
 	 * We take 4x4 orientation matrix and transpose it
 	 * to get the inverse.  Then we create a 3x3 matrix
@@ -154,14 +157,13 @@ vec3_t camera_up_vector( const camera_t* camera )
 	);
 	return mat3_mult_vector( &orientation_inverse_matrix, &VEC3_YUNIT );
 	#else
-	const vec4_t* y_unit = mat4_y_vector( &camera->orientation_matrix );
-	return VEC3( y_unit->x, y_unit->y, y_unit->z );
+	return VEC3( camera->orientation_matrix.m[1], camera->orientation_matrix.m[5], camera->orientation_matrix.m[9] );
 	#endif
 }
 
 vec3_t camera_side_vector( const camera_t* camera )
 {
-	#if 1
+	#if 0
 	/*
 	 * We take 4x4 orientation matrix and transpose it
 	 * to get the inverse.  Then we create a 3x3 matrix
@@ -180,12 +182,11 @@ vec3_t camera_side_vector( const camera_t* camera )
 	);
 	return mat3_mult_vector( &orientation_inverse_matrix, &VEC3_XUNIT );
 	#else
-	const vec4_t* x_unit = mat4_y_vector( &camera->orientation_matrix );
-	return VEC3( x_unit->x, x_unit->y, x_unit->z );
+	return VEC3( camera->orientation_matrix.m[0], camera->orientation_matrix.m[4], camera->orientation_matrix.m[8] );
 	#endif
 }
 
-void camera_set_perspective( camera_t* camera, int screen_width, int screen_height, GLfloat near, GLfloat far, GLfloat fov )
+void camera_set_perspective( camera_t* camera, GLint screen_width, GLint screen_height, GLfloat near, GLfloat far, GLfloat fov )
 {
 	const GLfloat aspect = ((GLfloat)screen_width) / screen_height;
 	camera->projection_matrix = perspective( fov * RADIANS_PER_DEGREE, aspect, near, far );
