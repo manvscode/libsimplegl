@@ -89,8 +89,6 @@ static const GLfloat cube_map_vertices[] = {
  	 10.0f,-10.0f, 10.0f
 };
 
-int xmouse = 0;
-int ymouse = 0;
 GLuint delta = 0;
 
 camera_t* camera = NULL;
@@ -138,7 +136,6 @@ int main( int argc, char* argv[] )
 
 	initialize( );
 
-	SDL_Event e;
 	bool done = false;
 	bool fullscreen = false;
 
@@ -147,62 +144,51 @@ int main( int argc, char* argv[] )
 
 	while( !done )
 	{
-		SDL_PollEvent( &e );
+		SDL_PumpEvents();
+		const Uint8 *state = SDL_GetKeyboardState(NULL);
 
-		switch( e.type )
+		if( state[SDL_SCANCODE_ESCAPE] || state[SDL_SCANCODE_Q] )
 		{
-			case SDL_QUIT:
-			{
-				done = true;
-				break;
-			}
-			case SDL_KEYDOWN:
-			{
-				switch( e.key.keysym.sym )
-				{
-					case SDLK_ESCAPE:
-					case SDLK_q:
-						done = true;
-						break;
-					case SDLK_1:
-						selected_skybox = 0;
-						break;
-					case SDLK_2:
-						selected_skybox = 1;
-						break;
-					case SDLK_3:
-						selected_skybox = 2;
-						break;
-					case SDLK_a:
-						camera_move_sideways(camera, -2.0f );
-						break;
-					case SDLK_s:
-						camera_move_forwards(camera, -2.0f );
-						break;
-					case SDLK_d:
-						camera_move_sideways(camera, 2.0f );
-						break;
-					case SDLK_w:
-						camera_move_forwards(camera, 2.0f );
-						break;
-					case SDLK_f:
-						fullscreen ^= true;
-						SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
-						SDL_ShowCursor( fullscreen ? SDL_DISABLE : SDL_ENABLE );
-						break;
-				}
-				break;
-			}
-			case SDL_MOUSEMOTION:
-			{
-				xmouse = e.motion.x;
-				ymouse = e.motion.y;
-			}
+			done = true;
+		}
+		if( state[SDL_SCANCODE_F] )
+		{
+			fullscreen ^= true;
+			SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
+			SDL_ShowCursor( fullscreen ? SDL_DISABLE : SDL_ENABLE );
+		}
+		if( state[SDL_SCANCODE_W] )
+		{
+			camera_move_forwards( camera, 2.0f );
+		}
+		if( state[SDL_SCANCODE_S] )
+		{
+			camera_move_forwards( camera, -2.0f );
+		}
+		if( state[SDL_SCANCODE_A] )
+		{
+			camera_move_sideways( camera, 2.0f );
+		}
+		if( state[SDL_SCANCODE_D] )
+		{
+			camera_move_sideways( camera, -2.0f );
+		}
+
+		if( state[SDL_SCANCODE_1] )
+		{
+			selected_skybox = 0;
+		}
+		else if( state[SDL_SCANCODE_2] )
+		{
+			selected_skybox = 1;
+		}
+		else if( state[SDL_SCANCODE_3] )
+		{
+			selected_skybox = 2;
 		}
 
 		render( );
         set_view_by_mouse( );
-		//SDL_Delay(10);              // Pause briefly before moving on to the next cycle.
 	}
 
 	deinitialize( );
