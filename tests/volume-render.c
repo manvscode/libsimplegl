@@ -235,66 +235,58 @@ int main( int argc, char* argv[] )
 
 	initialize( );
 
+	bool done = false;
+	bool fullscreen = false;
+
+	SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
+	SDL_ShowCursor( SDL_DISABLE );
+
 	/* event loop */
+	while( !done )
 	{
-		SDL_Event e;
-		bool done = false;
-		bool fullscreen = false;
+		SDL_PumpEvents();
+		const Uint8 *state = SDL_GetKeyboardState(NULL);
 
-		while( !done )
+		if( state[SDL_SCANCODE_ESCAPE] || state[SDL_SCANCODE_Q] )
 		{
-			SDL_PollEvent( &e );
-
-			switch( e.type )
-			{
-				case SDL_QUIT:
-				{
-					done = true;
-					break;
-				}
-				case SDL_KEYDOWN:
-				{
-					switch( e.key.keysym.sym )
-					{
-						case SDLK_ESCAPE:
-						case SDLK_q:
-							done = true;
-							break;
-						case SDLK_x:
-							render_mode = RENDER_MODE_XRAY;
-							break;
-						case SDLK_h:
-							render_mode = RENDER_MODE_HIGH_INTENSITY_PROJECTION;
-							break;
-						case SDLK_1:
-							selected_volume = 0;
-							break;
-						case SDLK_2:
-							selected_volume = 1;
-							break;
-						case SDLK_3:
-							selected_volume = 2;
-							break;
-						case SDLK_4:
-							selected_volume = 3;
-							break;
-						case SDLK_5:
-							selected_volume = 4;
-							break;
-
-						case SDLK_f:
-							fullscreen ^= true;
-							SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
-							SDL_ShowCursor( fullscreen ? SDL_DISABLE : SDL_ENABLE );
-							break;
-					}
-					break;
-				}
-			}
-
-			render( );
-			//SDL_Delay(10);              // Pause briefly before moving on to the next cycle.
+			done = true;
 		}
+		if( state[SDL_SCANCODE_F] )
+		{
+			fullscreen ^= true;
+			SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
+			SDL_ShowCursor( fullscreen ? SDL_DISABLE : SDL_ENABLE );
+		}
+		if( state[SDL_SCANCODE_X] )
+		{
+			render_mode = RENDER_MODE_XRAY;
+		}
+		if( state[SDL_SCANCODE_H] )
+		{
+			render_mode = RENDER_MODE_HIGH_INTENSITY_PROJECTION;
+		}
+		if( state[SDL_SCANCODE_1] )
+		{
+			selected_volume = 0;
+		}
+		if( state[SDL_SCANCODE_2] )
+		{
+			selected_volume = 1;
+		}
+		if( state[SDL_SCANCODE_3] )
+		{
+			selected_volume = 2;
+		}
+		if( state[SDL_SCANCODE_4] )
+		{
+			selected_volume = 3;
+		}
+		if( state[SDL_SCANCODE_5] )
+		{
+			selected_volume = 4;
+		}
+
+		render( );
 	}
 
 	deinitialize( );
