@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 by Joseph A. Marrero, http://www.manvscode.com/
+/* Copyright (C) 2013-2014 by Joseph A. Marrero, http://www.manvscode.com/
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,8 +42,6 @@ void tex_prepare_image( image_file_format_t format, image_t* image )
         //imageio_flip_vertically( image->width, image->height, image->bits_per_pixel >> 3, image->pixels );
     }
 }
-
-
 
 
 GLuint tex_create( void )
@@ -262,7 +260,7 @@ bool tex_load_1d( GLuint texture, const GLchar* filename, GLint min_filter, GLin
 	image_file_format_t format;
 	image_t image;
 	assert(check_gl() == GL_NO_ERROR);
-    
+
     #ifdef SIMPLEGL_DEBUG
     printf( "Loading %s\n", filename );
     #endif
@@ -313,7 +311,7 @@ bool tex_load_2d( GLuint texture, const GLchar* filename, GLint min_filter, GLin
 	image_file_format_t format;
 	image_t image;
 	assert(check_gl() == GL_NO_ERROR);
-    
+
     #ifdef SIMPLEGL_DEBUG
     printf( "Loading %s\n", filename );
     #endif
