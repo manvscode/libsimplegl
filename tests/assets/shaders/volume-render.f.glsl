@@ -16,8 +16,8 @@ const uint RENDER_MODE_XRAY                      = 0u;
 const uint RENDER_MODE_HIGH_INTENSITY_PROJECTION = 1u;
 const uint RENDER_PASS_BACK_VOXELS               = 0u;
 const uint RENDER_PASS_SAMPLED_VOXELS            = 1u;
-const float STEP_SIZE = 0.004f;
-//const float STEP_SIZE = 0.05f;
+//const float STEP_SIZE = 0.004f;
+const float STEP_SIZE = 0.01f;
 
 vec3 color_transfer_function( float sample )
 {
@@ -37,7 +37,7 @@ float alpha_transfer_function( float sample )
 	else return 0.0f;
 	#elif 1
 	float s = texture( u_color_transfer, sample, 0 ).a;
-	if( s > 0.f ) return s;
+	if( s > 0.1f ) return s;
 	else return 0.0f;
 	#else
 	return 1.0f;
@@ -82,7 +82,7 @@ void render_sampled_voxels_xray( )
 	{
 		jitterOffset = vec3( STEP_SIZE * rand(gl_FragCoord.xy), STEP_SIZE * rand(gl_FragCoord.xy), STEP_SIZE * rand(gl_FragCoord.xy) );
 		//jitterOffset = noise3( u_seed ) * STEP_SIZE;
-		maxRayLength -= length(jitterOffset);
+		//maxRayLength -= length(jitterOffset);
 	}
 
 	while( currentRayLength < maxRayLength && accumulatedAlpha < 1.0f )

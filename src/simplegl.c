@@ -108,7 +108,11 @@ GLfloat frame_rate( GLuint delta /* milliseconds */ )
 {
 	static GLfloat last_time1 = 0;
 	static GLfloat last_time2 = 0;
+	#if 1
 	delta = (0.6f * delta + 0.3f * last_time1 + 0.1f * last_time2);
+	#else
+	delta = (0.65f * delta + 0.35f * last_time1 + 0.1f * last_time2);
+	#endif
 	last_time2 = last_time1;
 	last_time1 = delta;
 	return (1000.0f) / delta;

@@ -104,10 +104,10 @@ mat3_t camera_normal_matrix( const camera_t* camera )
 mat4_t camera_view_matrix( const camera_t* camera )
 {
 	assert( camera );
-	#ifdef SIMPLEGL_DEBUG
-	printf( "     Camera model: %s\n", mat4_to_string(&model) );
-	printf( "Camera projection: %s\n", mat4_to_string(&camera->projection) );
-	#endif
+	//#ifdef SIMPLEGL_DEBUG
+	//printf( "     Camera model: %s\n", mat4_to_string(&camera->model_matrix) );
+	//printf( "Camera projection: %s\n", mat4_to_string(&camera->projection_matrix) );
+	//#endif
 	return mat4_mult_matrix( &camera->projection_matrix, &camera->model_matrix );
 }
 

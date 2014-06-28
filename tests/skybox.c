@@ -92,6 +92,7 @@ static const GLfloat cube_map_vertices[] = {
 GLuint delta = 0;
 
 camera_t* camera = NULL;
+raster_font_t* font = NULL;
 
 
 
@@ -224,6 +225,13 @@ void initialize( void )
 	glEnable( GL_TEXTURE_CUBE_MAP_SEAMLESS );
 	assert(check_gl() == GL_NO_ERROR);
 
+	font = raster_font_create( );
+	if( !font )
+	{
+		printf( "Unable to create raster font.\n" );
+		exit( EXIT_FAILURE );
+	}
+
 	GLchar* shader_log  = NULL;
 	GLchar* program_log = NULL;
 	const shader_info_t shaders[] = {
@@ -351,6 +359,7 @@ void deinitialize( void )
 	glDeleteBuffers( 1, &ibo_indices );
 	glDeleteProgram( program );
 	camera_destroy( camera );
+	raster_font_destroy( font );
 }
 
 void render( )
@@ -359,20 +368,20 @@ void render( )
 	delta = frame_delta( now /* milliseconds */ );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 	camera_update( camera, delta );
-
-
+	assert(check_gl() == GL_NO_ERROR);
 
     render_skybox();
-
-
+	assert(check_gl() == GL_NO_ERROR);
 
 	assert( camera != NULL );
-	mat4_t model_view = camera_view_matrix( camera );
 
+	raster_font_drawf( font, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), 1.5f, "Skybox." );
+	raster_font_drawf( font, &VEC2(2, 2), &VEC3(1,1,0), 1.0f, "FPS: %.1f", frame_rate(delta) );
+	raster_font_drawf( font, &VEC2(890, 2), &VEC3(1,1,0), 1.0f, "Press 1, 2, or 3." );
+	assert(check_gl() == GL_NO_ERROR);
 
 	SDL_GL_SwapWindow( window );
-
-	print_frame_rate( delta /* milliseconds */ );
+	//print_frame_rate( delta /* milliseconds */ );
 }
 
 void dump_sdl_error( void )
@@ -388,19 +397,30 @@ void dump_sdl_error( void )
 void render_skybox( void )
 {
 	glUseProgram( program );
+	assert(check_gl() == GL_NO_ERROR);
+
+	glBindVertexArray( vao );
+	assert(check_gl() == GL_NO_ERROR);
 
 	glEnableVertexAttribArray( attribute_vertex );
+	assert(check_gl() == GL_NO_ERROR);
 	glUniformMatrix4fv( uniform_projection, 1, GL_FALSE, (float*) camera_projection_matrix(camera) );
+	assert(check_gl() == GL_NO_ERROR);
 	glUniformMatrix4fv( uniform_orientation, 1, GL_FALSE, (float*) camera_orientation_matrix(camera) );
+	assert(check_gl() == GL_NO_ERROR);
 
 
     glBindTexture( GL_TEXTURE_CUBE_MAP, cube_map_texture[ selected_skybox ] );
-	glBindVertexArray( vao );
+	assert(check_gl() == GL_NO_ERROR);
 	glDepthMask( GL_FALSE );
+	assert(check_gl() == GL_NO_ERROR);
 	glDrawArrays( GL_TRIANGLES, 0, sizeof(cube_map_vertices)/sizeof(cube_map_vertices[0]) );
+	assert(check_gl() == GL_NO_ERROR);
 	glDepthMask( GL_TRUE );
+	assert(check_gl() == GL_NO_ERROR);
 
 	glDisableVertexAttribArray( attribute_vertex );
+	assert(check_gl() == GL_NO_ERROR);
 }
 
 void set_view_by_mouse( )

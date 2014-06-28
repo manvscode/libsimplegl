@@ -88,6 +88,7 @@ GLuint color_transfer_texture;
 
 GLuint selected_volume = 0;
 GLuint render_mode = 0;
+raster_font_t* font = NULL;
 
 
 
@@ -316,6 +317,13 @@ void initialize( void )
 	glEnable( GL_POLYGON_SMOOTH );
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
+	font = raster_font_create( );
+	if( !font )
+	{
+		printf( "Unable to create raster font.\n" );
+		exit( EXIT_FAILURE );
+	}
+
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	glViewport( 0, 0, width, height );
@@ -473,6 +481,7 @@ void deinitialize( void )
 	glDeleteBuffers( 1, &vbo_tex_coords );
 	glDeleteBuffers( 1, &ibo_indices );
 	glDeleteProgram( program );
+	raster_font_destroy( font );
 }
 
 GLuint delta = 0;
@@ -522,6 +531,8 @@ void render( )
 	assert(check_gl() == GL_NO_ERROR);
 	glUseProgram( program );
 
+	glBindVertexArray( vao );
+
 	glEnableVertexAttribArray( attribute_vertex );
 	glEnableVertexAttribArray( attribute_tex_coord );
 	//glEnableVertexAttribArray( attribute_color );
@@ -541,7 +552,6 @@ void render( )
 	glBindTexture( GL_TEXTURE_1D, color_transfer_texture );
 
 
-	glBindVertexArray( vao );
 
 	// First rendering pass
 	glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
@@ -553,16 +563,27 @@ void render( )
 
 	// Second rendering pass
 	glUniform1ui( uniform_rendering_pass, RENDER_PASS_SAMPLED_VOXELS );
-	glUniform1ui( uniform_seed, clock() );
+	glUniform1ui( uniform_seed, now );
 	glUniform1ui( uniform_render_mode, render_mode );
 	glDrawElements( GL_TRIANGLES, indices_count, GL_UNSIGNED_SHORT, 0 );
 	assert(check_gl() == GL_NO_ERROR);
 
-
+	glActiveTexture( GL_TEXTURE0 );
+	glBindTexture( GL_TEXTURE_3D, 0 );
+	glActiveTexture( GL_TEXTURE1 );
+	glBindTexture( GL_TEXTURE_2D, 0 );
+	glActiveTexture( GL_TEXTURE2 );
+	glBindTexture( GL_TEXTURE_1D, 0 );
 	glDisableVertexAttribArray( attribute_vertex );
 	glDisableVertexAttribArray( attribute_tex_coord );
 	//glDisableVertexAttribArray( attribute_color );
 
+
+	assert(check_gl() == GL_NO_ERROR);
+	raster_font_drawf( font, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), 1.5f, "Volume Rendering %s", volume_files[selected_volume] );
+	raster_font_drawf( font, &VEC2(2, 2), &VEC3(1,1,0), 1.0f, "FPS: %.1f", frame_rate(delta) );
+	raster_font_drawf( font, &VEC2(620, 2), &VEC3(1,1,0), 1.0f, "Press 1, 2, 3, 4, or 5." );
+	assert(check_gl() == GL_NO_ERROR);
 	SDL_GL_SwapWindow( window );
 	print_frame_rate ( delta /* milliseconds */ );
 }

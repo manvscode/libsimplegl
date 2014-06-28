@@ -47,6 +47,7 @@ GLuint vbo_tex_coords = 0;
 GLuint ibo_indices = 0;
 GLuint texture = 0;
 polyhedra_t polyhedra;
+raster_font_t* font = NULL;
 
 int main( int argc, char* argv[] )
 {
@@ -154,6 +155,13 @@ void initialize( void )
 	glEnable( GL_LINE_SMOOTH );
 	glEnable( GL_POLYGON_SMOOTH );
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+	font = raster_font_create( );
+	if( !font )
+	{
+		printf( "Unable to create raster font.\n" );
+		exit( EXIT_FAILURE );
+	}
 
 	GLchar* shader_log  = NULL;
 	GLchar* program_log = NULL;
@@ -290,6 +298,7 @@ void deinitialize( void )
 	glDeleteBuffers( 1, &ibo_indices );
 	glDeleteProgram( program );
 	polyhedra_destroy( &polyhedra );
+	raster_font_destroy( font );
 }
 
 GLuint delta = 0;
@@ -329,25 +338,35 @@ void render( )
 
 
 	glUseProgram( program );
-
+	glBindVertexArray( vao );
+	assert(check_gl() == GL_NO_ERROR);
 	glEnableVertexAttribArray( attribute_vertex );
+	assert(check_gl() == GL_NO_ERROR);
 	glEnableVertexAttribArray( attribute_tex_coord );
+	assert(check_gl() == GL_NO_ERROR);
 	glEnableVertexAttribArray( attribute_color );
+	assert(check_gl() == GL_NO_ERROR);
 	glUniformMatrix4fv( uniform_model_view, 1, GL_FALSE, model_view.m );
+	assert(check_gl() == GL_NO_ERROR);
 
 
 	glBindTexture( GL_TEXTURE_2D, texture );
-	glBindVertexArray( vao );
-	glDrawElements( GL_TRIANGLES, polyhedra.    indices_count, GL_UNSIGNED_SHORT, 0 );
-
+	assert(check_gl() == GL_NO_ERROR);
+	glDrawElements( GL_TRIANGLES, polyhedra.indices_count, GL_UNSIGNED_SHORT, 0 );
+	assert(check_gl() == GL_NO_ERROR);
 
 	glDisableVertexAttribArray( attribute_vertex );
 	glDisableVertexAttribArray( attribute_tex_coord );
 	glDisableVertexAttribArray( attribute_color );
+	glBindVertexArray( 0 );
+	GL_ASSERT_NO_ERROR( );
 
+
+	raster_font_drawf( font, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), 1.5f, "Cube" );
+	raster_font_drawf( font, &VEC2(2, 2), &VEC3(1,1,0), 1.0f, "FPS: %.1f", frame_rate(delta) );
 
 	SDL_GL_SwapWindow( window );
-	print_frame_rate ( delta /* milliseconds */ );
+	//print_frame_rate ( delta /* milliseconds */ );
 }
 
 void dump_sdl_error( void )

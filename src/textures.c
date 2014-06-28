@@ -94,7 +94,7 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 		switch( bit_depth )
 		{
 			case 8:
-				pixel_format = GL_DEPTH_COMPONENT;
+				pixel_format = GL_RED;
 				break;
 			case 32:
 				pixel_format = GL_RGBA;
@@ -144,7 +144,7 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 			switch( bit_depth )
 			{
 				case 8:
-					pixel_format = GL_DEPTH_COMPONENT;
+					pixel_format = GL_RED;
 					break;
 				case 32:
 					pixel_format = GL_RGBA;
