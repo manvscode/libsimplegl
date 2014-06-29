@@ -363,7 +363,7 @@ void render( )
 
 
 	raster_font_drawf( font, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), 1.5f, "Cube" );
-	raster_font_drawf( font, &VEC2(2, 2), &VEC3(1,1,0), 1.0f, "FPS: %.1f", frame_rate(delta) );
+	raster_font_drawf( font, &VEC2(2, 2), &VEC3(1,1,1), 1.0f, "FPS: %.1f", frame_rate(delta) );
 
 	SDL_GL_SwapWindow( window );
 	//print_frame_rate ( delta /* milliseconds */ );

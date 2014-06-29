@@ -317,7 +317,7 @@ void initialize( void )
 	glEnable( GL_POLYGON_SMOOTH );
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-	font = raster_font_create( );
+	font = raster_font_create( RASTER_FONT_DEFAULT_8X8 );
 	if( !font )
 	{
 		printf( "Unable to create raster font.\n" );
@@ -581,8 +581,8 @@ void render( )
 
 	assert(check_gl() == GL_NO_ERROR);
 	raster_font_drawf( font, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), 1.5f, "Volume Rendering %s", volume_files[selected_volume] );
-	raster_font_drawf( font, &VEC2(2, 2), &VEC3(1,1,0), 1.0f, "FPS: %.1f", frame_rate(delta) );
-	raster_font_drawf( font, &VEC2(620, 2), &VEC3(1,1,0), 1.0f, "Press 1, 2, 3, 4, or 5." );
+	raster_font_drawf( font, &VEC2(2, 2), &VEC3(1,1,1), 1.0f, "FPS: %.1f", frame_rate(delta) );
+	raster_font_drawf( font, &VEC2(620, 2), &VEC3(0,1,1), 1.0f, "Press 1, 2, 3, 4, or 5." );
 	assert(check_gl() == GL_NO_ERROR);
 	SDL_GL_SwapWindow( window );
 	print_frame_rate ( delta /* milliseconds */ );

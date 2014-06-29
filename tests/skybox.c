@@ -225,7 +225,7 @@ void initialize( void )
 	glEnable( GL_TEXTURE_CUBE_MAP_SEAMLESS );
 	assert(check_gl() == GL_NO_ERROR);
 
-	font = raster_font_create( );
+	font = raster_font_create( RASTER_FONT_DEFAULT_8X8 );
 	if( !font )
 	{
 		printf( "Unable to create raster font.\n" );
@@ -376,8 +376,8 @@ void render( )
 	assert( camera != NULL );
 
 	raster_font_drawf( font, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), 1.5f, "Skybox." );
-	raster_font_drawf( font, &VEC2(2, 2), &VEC3(1,1,0), 1.0f, "FPS: %.1f", frame_rate(delta) );
-	raster_font_drawf( font, &VEC2(890, 2), &VEC3(1,1,0), 1.0f, "Press 1, 2, or 3." );
+	raster_font_drawf( font, &VEC2(2, 2), &VEC3(1,1,1), 1.0f, "FPS: %.1f", frame_rate(delta) );
+	raster_font_drawf( font, &VEC2(890, 2), &VEC3(0,1,1), 1.0f, "Press 1, 2, or 3." );
 	assert(check_gl() == GL_NO_ERROR);
 
 	SDL_GL_SwapWindow( window );
