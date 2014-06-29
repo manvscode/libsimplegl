@@ -92,7 +92,8 @@ static const GLfloat cube_map_vertices[] = {
 GLuint delta = 0;
 
 camera_t* camera = NULL;
-raster_font_t* font = NULL;
+raster_font_t* font1 = NULL;
+raster_font_t* font2 = NULL;
 
 
 
@@ -225,8 +226,15 @@ void initialize( void )
 	glEnable( GL_TEXTURE_CUBE_MAP_SEAMLESS );
 	assert(check_gl() == GL_NO_ERROR);
 
-	font = raster_font_create( RASTER_FONT_DEFAULT_8X8 );
-	if( !font )
+	font2 = raster_font_create( RASTER_FONT_VINCENT_8X8 );
+	if( !font2 )
+	{
+		printf( "Unable to create raster font.\n" );
+		exit( EXIT_FAILURE );
+	}
+
+	font1 = raster_font_create( RASTER_FONT_FONT1_8X8 );
+	if( !font1 )
 	{
 		printf( "Unable to create raster font.\n" );
 		exit( EXIT_FAILURE );
@@ -359,7 +367,8 @@ void deinitialize( void )
 	glDeleteBuffers( 1, &ibo_indices );
 	glDeleteProgram( program );
 	camera_destroy( camera );
-	raster_font_destroy( font );
+	raster_font_destroy( font1 );
+	raster_font_destroy( font2 );
 }
 
 void render( )
@@ -375,9 +384,9 @@ void render( )
 
 	assert( camera != NULL );
 
-	raster_font_drawf( font, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), 1.5f, "Skybox." );
-	raster_font_drawf( font, &VEC2(2, 2), &VEC3(1,1,1), 1.0f, "FPS: %.1f", frame_rate(delta) );
-	raster_font_drawf( font, &VEC2(890, 2), &VEC3(0,1,1), 1.0f, "Press 1, 2, or 3." );
+	raster_font_drawf( font2, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), 1.5f, "Skybox" );
+	raster_font_drawf( font1, &VEC2(2, 2), &VEC3(1,1,1), 1.0f, "FPS: %.1f", frame_rate(delta) );
+	raster_font_drawf( font1, &VEC2(890, 2), &VEC3(0,1,1), 1.0f, "Press 1, 2, or 3." );
 	assert(check_gl() == GL_NO_ERROR);
 
 	SDL_GL_SwapWindow( window );

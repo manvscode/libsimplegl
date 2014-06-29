@@ -18,9 +18,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#ifndef _DEFAULT_FONT_H_
-#define _DEFAULT_FONT_H_
+#ifndef _RASTER_FONT_VINCENT_H_
+#define _RASTER_FONT_VINCENT_H_
 
-extern const GLubyte default_font[ 1024 * 8 * 1 ];
+#ifdef DEFAULT_FONT_8BPP
+extern const GLubyte raster_font_vincent[ 1024 * 8 ];
+extern const GLubyte raster_font_font1[ 1024 * 8 ];
+extern const GLubyte raster_font_font2[ 1024 * 8 ];
+extern const GLubyte raster_font_font3[ 1024 * 16];
+#else
+extern const GLubyte raster_font_vincent[ 128 * 8 ];
+extern const GLubyte raster_font_font1[ 128 * 8 ];
+extern const GLubyte raster_font_font2[ 128 * 8 ];
+extern const GLubyte raster_font_font3[ 128 * 16 ];
+#endif
 
-#endif /* _DEFAULT_FONT_H_ */
+
+#endif /* _RASTER_FONT_VINCENT_H_ */

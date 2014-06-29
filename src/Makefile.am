@@ -1,5 +1,18 @@
 # Add new files in alphabetical order. Thanks.
-libsimplegl_src = 3d-axes.c buffers.c camera.c cube-map.c projections.c shaders.c textures.c transformations.c simplegl.c objects.c raster-font.c default-font.c
+libsimplegl_src = 3d-axes.c \
+                  buffers.c \
+                  camera.c \
+                  cube-map.c \
+                  projections.c \
+                  shaders.c \
+                  textures.c \
+                  transformations.c \
+                  simplegl.c \
+                  objects.c \
+                  raster-font.c \
+                  raster-font-vincent.c \
+                  raster-font-font1.c \
+                  raster-font-font2.c
 
 # Add new files in alphabetical order. Thanks.
 libsimplegl_headers = simplegl.h

@@ -156,7 +156,9 @@ void initialize( void )
 	glEnable( GL_POLYGON_SMOOTH );
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-	font = raster_font_create( );
+	//font = raster_font_create( RASTER_FONT_VINCENT_8X8 );
+	//font = raster_font_create( RASTER_FONT_FONT1_8X8 );
+	font = raster_font_create( RASTER_FONT_FONT3_16X16 );
 	if( !font )
 	{
 		printf( "Unable to create raster font.\n" );

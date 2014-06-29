@@ -88,7 +88,8 @@ GLuint color_transfer_texture;
 
 GLuint selected_volume = 0;
 GLuint render_mode = 0;
-raster_font_t* font = NULL;
+raster_font_t* font1 = NULL;
+raster_font_t* font2 = NULL;
 
 
 
@@ -317,8 +318,15 @@ void initialize( void )
 	glEnable( GL_POLYGON_SMOOTH );
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-	font = raster_font_create( RASTER_FONT_DEFAULT_8X8 );
-	if( !font )
+	font2 = raster_font_create( RASTER_FONT_VINCENT_8X8 );
+	if( !font2 )
+	{
+		printf( "Unable to create raster font.\n" );
+		exit( EXIT_FAILURE );
+	}
+
+	font1 = raster_font_create( RASTER_FONT_FONT1_8X8 );
+	if( !font1 )
 	{
 		printf( "Unable to create raster font.\n" );
 		exit( EXIT_FAILURE );
@@ -481,7 +489,8 @@ void deinitialize( void )
 	glDeleteBuffers( 1, &vbo_tex_coords );
 	glDeleteBuffers( 1, &ibo_indices );
 	glDeleteProgram( program );
-	raster_font_destroy( font );
+	raster_font_destroy( font1 );
+	raster_font_destroy( font2 );
 }
 
 GLuint delta = 0;
@@ -580,9 +589,9 @@ void render( )
 
 
 	assert(check_gl() == GL_NO_ERROR);
-	raster_font_drawf( font, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), 1.5f, "Volume Rendering %s", volume_files[selected_volume] );
-	raster_font_drawf( font, &VEC2(2, 2), &VEC3(1,1,1), 1.0f, "FPS: %.1f", frame_rate(delta) );
-	raster_font_drawf( font, &VEC2(620, 2), &VEC3(0,1,1), 1.0f, "Press 1, 2, 3, 4, or 5." );
+	raster_font_drawf( font2, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), 1.5f, "Volume Rendering %s", volume_files[selected_volume] );
+	raster_font_drawf( font1, &VEC2(2, 2), &VEC3(1,1,1), 1.0f, "FPS: %.1f", frame_rate(delta) );
+	raster_font_drawf( font1, &VEC2(620, 2), &VEC3(0,1,1), 1.0f, "Press 1, 2, 3, 4, or 5." );
 	assert(check_gl() == GL_NO_ERROR);
 	SDL_GL_SwapWindow( window );
 	print_frame_rate ( delta /* milliseconds */ );
