@@ -47,7 +47,8 @@ GLuint vbo_tex_coords = 0;
 GLuint ibo_indices = 0;
 GLuint texture = 0;
 polyhedra_t polyhedra;
-raster_font_t* font = NULL;
+raster_font_t* font1 = NULL;
+raster_font_t* font2 = NULL;
 
 int main( int argc, char* argv[] )
 {
@@ -156,10 +157,15 @@ void initialize( void )
 	glEnable( GL_POLYGON_SMOOTH );
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-	//font = raster_font_create( RASTER_FONT_VINCENT_8X8 );
-	//font = raster_font_create( RASTER_FONT_FONT1_8X8 );
-	font = raster_font_create( RASTER_FONT_FONT3_16X16 );
-	if( !font )
+	font1 = raster_font_create( RASTER_FONT_FONT1_8X8 );
+	if( !font1 )
+	{
+		printf( "Unable to create raster font.\n" );
+		exit( EXIT_FAILURE );
+	}
+
+	font2 = raster_font_create( RASTER_FONT_FONT3_16X16 );
+	if( !font2 )
 	{
 		printf( "Unable to create raster font.\n" );
 		exit( EXIT_FAILURE );
@@ -300,7 +306,8 @@ void deinitialize( void )
 	glDeleteBuffers( 1, &ibo_indices );
 	glDeleteProgram( program );
 	polyhedra_destroy( &polyhedra );
-	raster_font_destroy( font );
+	raster_font_destroy( font1 );
+	raster_font_destroy( font2 );
 }
 
 GLuint delta = 0;
@@ -364,11 +371,10 @@ void render( )
 	GL_ASSERT_NO_ERROR( );
 
 
-	raster_font_drawf( font, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), 1.5f, "Cube" );
-	raster_font_drawf( font, &VEC2(2, 2), &VEC3(1,1,1), 1.0f, "FPS: %.1f", frame_rate(delta) );
+	raster_font_shadowed_writef( font2, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), &VEC3_ZERO, 1.0f, "Cube" );
+	raster_font_shadowed_writef( font1, &VEC2(2, 2), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "FPS: %.1f", frame_rate(delta) );
 
 	SDL_GL_SwapWindow( window );
-	//print_frame_rate ( delta /* milliseconds */ );
 }
 
 void dump_sdl_error( void )

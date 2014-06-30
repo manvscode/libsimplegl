@@ -12,7 +12,7 @@ uniform uint u_character;
 
 void main( )
 {
-	vec2 offset = vec2( 0, 1 - ((u_character + 1u) * u_glyph_height / 1024.0) );
+	vec2 offset = vec2( 0, 1 - ((u_character + 1u) * u_glyph_height / float(u_height)) );
 
 	mat2 scale = mat2( 
 		u_glyph_width / float(u_width),                         0,

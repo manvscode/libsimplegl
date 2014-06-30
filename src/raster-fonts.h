@@ -25,13 +25,12 @@
 extern const GLubyte raster_font_vincent[ 1024 * 8 ];
 extern const GLubyte raster_font_font1[ 1024 * 8 ];
 extern const GLubyte raster_font_font2[ 1024 * 8 ];
-extern const GLubyte raster_font_font3[ 1024 * 16];
+extern const GLubyte raster_font_font3[ 2048 * 16];
 #else
 extern const GLubyte raster_font_vincent[ 128 * 8 ];
 extern const GLubyte raster_font_font1[ 128 * 8 ];
 extern const GLubyte raster_font_font2[ 128 * 8 ];
-extern const GLubyte raster_font_font3[ 128 * 16 ];
+extern const GLubyte raster_font_font3[ 512 * 8 ];
 #endif
-
 
 #endif /* _RASTER_FONT_VINCENT_H_ */

@@ -303,7 +303,6 @@ quit:
 void initialize( void )
 {
 	dump_gl_info( );
-	//glClearColor( 0.5f, 0.5f, 0.5f, 1.0f );
 	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
@@ -318,7 +317,7 @@ void initialize( void )
 	glEnable( GL_POLYGON_SMOOTH );
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-	font2 = raster_font_create( RASTER_FONT_VINCENT_8X8 );
+	font2 = raster_font_create( RASTER_FONT_FONT3_16X16 );
 	if( !font2 )
 	{
 		printf( "Unable to create raster font.\n" );
@@ -589,9 +588,10 @@ void render( )
 
 
 	assert(check_gl() == GL_NO_ERROR);
-	raster_font_drawf( font2, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), 1.5f, "Volume Rendering %s", volume_files[selected_volume] );
-	raster_font_drawf( font1, &VEC2(2, 2), &VEC3(1,1,1), 1.0f, "FPS: %.1f", frame_rate(delta) );
-	raster_font_drawf( font1, &VEC2(620, 2), &VEC3(0,1,1), 1.0f, "Press 1, 2, 3, 4, or 5." );
+	raster_font_shadowed_writef( font2, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), &VEC3(0.2,0.2f,0), 0.8f, "Volume Rendering: %s", strrchr( volume_files[selected_volume], '/' ) + 1 );
+	raster_font_shadowed_writef( font1, &VEC2(2, 2), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "FPS: %.1f", frame_rate(delta) );
+	raster_font_shadowed_writef( font1, &VEC2(620, 2), &VEC3(0,1,1), &VEC3_ZERO, 1.0f, "Press 1, 2, 3, 4, or 5." );
+
 	assert(check_gl() == GL_NO_ERROR);
 	SDL_GL_SwapWindow( window );
 	print_frame_rate ( delta /* milliseconds */ );

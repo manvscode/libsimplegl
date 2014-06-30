@@ -12,7 +12,8 @@ libsimplegl_src = 3d-axes.c \
                   raster-font.c \
                   raster-font-vincent.c \
                   raster-font-font1.c \
-                  raster-font-font2.c
+                  raster-font-font2.c \
+                  raster-font-font3.c
 
 # Add new files in alphabetical order. Thanks.
 libsimplegl_headers = simplegl.h

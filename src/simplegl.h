@@ -193,12 +193,13 @@ typedef struct raster_font raster_font_t;
 #define RASTER_FONT_FONT2_8X8        (2)
 #define RASTER_FONT_FONT3_16X16      (3)
 
-raster_font_t* raster_font_create        ( GLushort type );
-void           raster_font_destroy       ( raster_font_t* fnt );
-GLushort       raster_font_glyph_width   ( const raster_font_t* fnt );
-GLushort       raster_font_glyph_height  ( const raster_font_t* fnt );
-void           raster_font_drawf         ( const raster_font_t* fnt, const vec2_t* position, const vec3_t* color, GLfloat size, const char* format, ... );
-void           raster_font_draw_boundedf ( const raster_font_t* fnt, GLint x, GLint y, GLint width, GLint height, const char* format, ... );
+raster_font_t* raster_font_create          ( GLushort type );
+void           raster_font_destroy         ( raster_font_t* fnt );
+GLushort       raster_font_glyph_width     ( const raster_font_t* fnt );
+GLushort       raster_font_glyph_height    ( const raster_font_t* fnt );
+void           raster_font_write           ( const raster_font_t* fnt, const vec2_t* position, const vec3_t* color, GLfloat size, const char* text );
+void           raster_font_writef          ( const raster_font_t* fnt, const vec2_t* position, const vec3_t* color, GLfloat size, const char* format, ... );
+void           raster_font_shadowed_writef ( const raster_font_t* fnt, const vec2_t* position, const vec3_t* color, const vec3_t* shadow, GLfloat size, const char* format, ... );
 
 /*
  * Objects

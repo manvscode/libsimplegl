@@ -64,7 +64,7 @@ static const char* fragment_shader_source =
 	"uniform uint u_glyph_height;"
 	"uniform uint u_character;"
 	"void main( ) {"
-	"    vec2 offset = vec2( 0, 1 - ((u_character + 1u) * u_glyph_height / 1024.0) );"
+	"    vec2 offset = vec2( 0, 1 - ((u_character + 1u) * u_glyph_height / float(u_height)) );"
 	"    mat2 scale = mat2( "
 	"        u_glyph_width / float(u_width),                         0,"
 	"        0,                       u_glyph_height / float(u_height)"
@@ -181,8 +181,8 @@ raster_font_t font_instances[ RASTER_FONT_MAX_FONTS ] = {
 		.width           = 16,
 		.height          = 2048,
 		.glyph_count     = 128,
-		.glyph_width     = 8,
-		.glyph_height    = 8,
+		.glyph_width     = 16,
+		.glyph_height    = 16,
 		#ifdef USE_PRE_EXPANDED_FONTS
 		.bits_per_pixel  = 8,
 		#else
@@ -397,7 +397,7 @@ bool raster_font_initialize( raster_font_t* font )
 		GLubyte* pixels = raster_font_expand( font );
 		glTexImage2D( GL_TEXTURE_2D, 0, pixel_format, font->width, font->height, 0, pixel_format, GL_UNSIGNED_BYTE, pixels );
 
-		#if 0
+		#if 1
 		image_t img = {
 			.width = font->width,
 			.height = font->height,
@@ -510,15 +510,8 @@ GLushort raster_font_glyph_height( const raster_font_t* fnt )
 	return fnt->glyph_height;
 }
 
-void raster_font_drawf( const raster_font_t* fnt, const vec2_t* position, const vec3_t* color, GLfloat size, const char* format, ... )
+void raster_font_write( const raster_font_t* fnt, const vec2_t* position, const vec3_t* color, GLfloat size, const char* text )
 {
-	char text[ RASTER_FONT_MAX_STRLEN ];
-	va_list args;
-
-	va_start( args, format );
-	vsnprintf( text, sizeof(text), format, args );
-	text[ sizeof(text) - 1 ] = '\0';
-	va_end( args );
 	assert(check_gl() == GL_NO_ERROR);
 	GLint viewport[ 4 ];
 
@@ -579,7 +572,7 @@ void raster_font_drawf( const raster_font_t* fnt, const vec2_t* position, const 
 	glBindVertexArray( 0 );
 }
 
-void raster_font_draw_boundedf( const raster_font_t* fnt, GLint x, GLint y, GLint width, GLint height, const char* format, ... )
+void raster_font_writef( const raster_font_t* fnt, const vec2_t* position, const vec3_t* color, GLfloat size, const char* format, ... )
 {
 	char text[ RASTER_FONT_MAX_STRLEN ];
 	va_list args;
@@ -589,8 +582,19 @@ void raster_font_draw_boundedf( const raster_font_t* fnt, GLint x, GLint y, GLin
 	text[ sizeof(text) - 1 ] = '\0';
 	va_end( args );
 
-	glScissor( x, y, width, height );
-
-	// TODO: draw text
+	raster_font_write( fnt, position, color, size, text );
 }
 
+void raster_font_shadowed_writef( const raster_font_t* fnt, const vec2_t* position, const vec3_t* color, const vec3_t* shadow, GLfloat size, const char* format, ... )
+{
+	char text[ RASTER_FONT_MAX_STRLEN ];
+	va_list args;
+
+	va_start( args, format );
+	vsnprintf( text, sizeof(text), format, args );
+	text[ sizeof(text) - 1 ] = '\0';
+	va_end( args );
+
+	raster_font_write( fnt, &VEC2(position->x + 1, position->y - 1), shadow, size, text );
+	raster_font_write( fnt, position, color, size, text );
+}
