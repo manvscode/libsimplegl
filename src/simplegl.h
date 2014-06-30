@@ -177,6 +177,7 @@ vec3_t        camera_up_vector          ( const camera_t* camera );
 vec3_t        camera_side_vector        ( const camera_t* camera );
 void          camera_set_perspective    ( camera_t* camera, GLint screen_width, GLint screen_height, GLfloat near, GLfloat far, GLfloat fov );
 void          camera_set_position       ( camera_t* camera, const pt3_t* position );
+const vec3_t* camera_position           ( const camera_t* camera );
 void          camera_offset_orientation ( camera_t* camera, GLfloat xangle, GLfloat yangle );
 void          camera_move_forwards      ( camera_t* camera, GLfloat a );
 void          camera_move_sideways      ( camera_t* camera, GLfloat a );

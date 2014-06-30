@@ -199,6 +199,11 @@ void camera_set_position( camera_t* camera, const pt3_t* position )
 	camera->position = *position;
 }
 
+const vec3_t* camera_position( const camera_t* camera )
+{
+	return &camera->position;
+}
+
 void camera_offset_orientation( camera_t* camera, GLfloat xangle, GLfloat yangle )
 {
 	assert( camera );

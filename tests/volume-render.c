@@ -502,30 +502,18 @@ void render( )
 
 	static float angle = -270.0;
 	if( angle >= 360.0f ) angle = 0.0f;
-	#if 0
-	int width; int height;
-	SDL_GetWindowSize( window, &width, &height );
-	GLfloat aspect = ((GLfloat)width) / height;
-	vec3_t translation = VEC3( 0.0, 0.0, -10 );
-	mat4_t projection = orthographic( -10.0, 10.0, -6.0*aspect, 6.0*aspect, -100.0, 100.0 );
-	mat4_t rotation = rotate_xyz( "yx", angle, -5.0 );
-	angle += 0.1f;
-	mat4_t transform = translate( &translation );
-	transform = mat4_mult_matrix( &transform, &rotation );
-	mat4_t model_view = mat4_mult_matrix( &projection, &transform );
-	#else
+
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)width) / height;
 	mat4_t projection = perspective( 30.0 * RADIANS_PER_DEGREE, aspect, 0.1, 100.0 );
 	quat_t q1 = quat_from_axis3_angle( &VEC3( 0.0f, 1.0f, 0.0f ), angle * RADIANS_PER_DEGREE );
-	angle += 1.0f;
+	angle += 0.05f * delta;
 	mat4_t rotation_tfx  = quat_to_mat4( &q1 );
 	const vec4_t* dimensions = &volume_dimensions[ selected_volume ];
 	const scaler_t max_dimension = vec3_max_component( vec4_to_vec3( dimensions ) );
 	const vec3_t scaled_dimension = VEC3(dimensions->x / max_dimension, dimensions->y / max_dimension, dimensions->z / max_dimension);
 
-	//printf( "%.3f  %s\n", max_dimension, vec3_to_string( &scaled_dimension ) );
 	mat4_t scale_tfx     = scale( &scaled_dimension );
 	mat4_t translate_tfx = translate( &VEC3( 0.0, 0.0, -6 ) );
 	mat4_t transform_tfx = MAT4_IDENTITY;
@@ -533,7 +521,6 @@ void render( )
 	transform_tfx = mat4_mult_matrix( &transform_tfx, &translate_tfx );
 	transform_tfx = mat4_mult_matrix( &transform_tfx, &rotation_tfx );
 	mat4_t model_view = mat4_mult_matrix( &projection, &transform_tfx );
-	#endif
 
 
 	assert(check_gl() == GL_NO_ERROR);
@@ -594,7 +581,6 @@ void render( )
 
 	assert(check_gl() == GL_NO_ERROR);
 	SDL_GL_SwapWindow( window );
-	print_frame_rate ( delta /* milliseconds */ );
 }
 
 void dump_sdl_error( void )
