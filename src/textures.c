@@ -49,7 +49,7 @@ GLuint tex_create( void )
 	GLuint texture = 0;
 	glGenTextures( 1, &texture );
 	assert( texture > 0 );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	return texture;
 }
 
@@ -107,7 +107,7 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 		}
 		const GLint border = flags & TEX_BORDER;
 		glTexImage1D( texture_type, 0, pixel_format, width, border, pixel_format, GL_UNSIGNED_BYTE, pixels );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 	}
 	else if( texture_dimensions == 2 )
 	{
@@ -129,12 +129,12 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 			}
 			GLsizei image_size = width * height / 2;
 			glCompressedTexImage2D( texture_type, 0, pixel_format, width, height, 0 /*must be zero*/, image_size, pixels );
-			assert(check_gl() == GL_NO_ERROR);
+			assert(gl_error() == GL_NO_ERROR);
 			#else
 			GLenum pixel_format = (bit_depth == 32 ? GL_COMPRESSED_RGBA : GL_COMPRESSED_RGB);
 			GLsizei image_size = width * height / 2;
 			glCompressedTexImage2D( texture_type, 0, pixel_format, width, height, 0 /*must be zero*/, image_size, pixels );
-			assert(check_gl() == GL_NO_ERROR);
+			assert(gl_error() == GL_NO_ERROR);
 			assert( false && "Not implemented" );
 			#endif
 		}
@@ -157,7 +157,7 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 			}
 			const GLint border = flags & TEX_BORDER;
 			glTexImage2D( texture_type, 0, pixel_format, width, height, border, pixel_format, GL_UNSIGNED_BYTE, pixels );
-			assert(check_gl() == GL_NO_ERROR);
+			assert(gl_error() == GL_NO_ERROR);
 		}
 	}
 	else if( texture_dimensions == 3 ) /* 3D textures */
@@ -193,7 +193,7 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 		}
 		const GLint border = 0; /* Must be zero for 3D textures */
 		glTexImage3D( texture_type, 0, internal_format, width, height, depth, border, pixel_format, type, pixels );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 	}
 
 	bool generate_mipmaps = false;
@@ -244,7 +244,7 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 		glGenerateMipmap( texture_type );
 	}
 
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 }
 
 
@@ -259,7 +259,7 @@ bool tex_load_1d( GLuint texture, const GLchar* filename, GLint min_filter, GLin
 
 	image_file_format_t format;
 	image_t image;
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
     #ifdef SIMPLEGL_DEBUG
     printf( "Loading %s\n", filename );
@@ -279,7 +279,7 @@ bool tex_load_1d( GLuint texture, const GLchar* filename, GLint min_filter, GLin
 			imageio_flip_vertically( image.width, image.height, image.bits_per_pixel >> 3, image.pixels );
 		}
 
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 
 		tex_setup_texture( texture, image.width, image.height, 0, image.bits_per_pixel, image.pixels, min_filter, mag_filter, flags, 1 );
 		assert( glIsTexture(texture) );
@@ -310,7 +310,7 @@ bool tex_load_2d( GLuint texture, const GLchar* filename, GLint min_filter, GLin
 
 	image_file_format_t format;
 	image_t image;
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
     #ifdef SIMPLEGL_DEBUG
     printf( "Loading %s\n", filename );
@@ -330,7 +330,7 @@ bool tex_load_2d( GLuint texture, const GLchar* filename, GLint min_filter, GLin
 			imageio_flip_vertically( image.width, image.height, image.bits_per_pixel >> 3, image.pixels );
 		}
 
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 
 		tex_setup_texture( texture, image.width, image.height, 0, image.bits_per_pixel, image.pixels, min_filter, mag_filter, flags, 2 );
 		assert( glIsTexture(texture) );
@@ -370,7 +370,7 @@ bool tex_load_3d( GLuint texture, const GLchar* filename, GLsizei voxel_bit_dept
 	}
 
 	const GLchar* extension = strrchr( filename, '.' );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	if( extension )
 	{
@@ -422,7 +422,7 @@ bool tex_load_3d( GLuint texture, const GLchar* filename, GLsizei voxel_bit_dept
 				fclose( volume_data_file );
 
 				tex_setup_texture( texture, width, height, length, voxel_bit_depth, volume_data, min_filter, mag_filter, flags, 3 );
-				assert(check_gl() == GL_NO_ERROR);
+				assert(gl_error() == GL_NO_ERROR);
 				assert( glIsTexture(texture) );
 				free( volume_data );
 				result = true;

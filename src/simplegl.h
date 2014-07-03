@@ -69,6 +69,7 @@ extern "C" {
 	#endif
 	#else
 	#include <OpenGL/gl3.h>
+	#include <OpenGL/gl3ext.h>
 	#endif
 #else 
 	#include <GL/gl.h>
@@ -156,7 +157,7 @@ const GLchar* glsl_object_type_string( GLenum type );
 /*
  * Buffers
  */
-GLboolean buffer_create  ( GLuint* id, const GLvoid* geometry, size_t element_size, size_t count, GLenum target /*GL_ARRAY_BUFFER*/, GLenum usage /*GL_STATIC_DRAW*/ );
+GLboolean buffer_create  ( GLuint* id, const GLvoid* geometry, GLsizei element_size, GLsizei count, GLenum target /*GL_ARRAY_BUFFER*/, GLenum usage /*GL_STATIC_DRAW*/ );
 GLboolean buffer_destroy ( const GLuint* id );
 
 /*
@@ -207,19 +208,20 @@ void           raster_font_shadowed_writef ( const raster_font_t* fnt, const vec
  */
 typedef struct polyhedra {
 	GLfloat* vertices;
-	size_t vertices_count;
+	GLsizei vertices_count;
 	GLushort* indices;
-	size_t indices_count;
+	GLsizei indices_count;
 	GLfloat* tex_coords;
-	size_t tex_coords_count;
+	GLsizei tex_coords_count;
 	GLfloat* colors;
-	size_t colors_count;
+	GLsizei colors_count;
 } polyhedra_t;
 
 void      polyhedra_create  ( polyhedra_t* polyhedra );
 void      polyhedra_destroy ( polyhedra_t* polyhedra );
 GLboolean tetrahedron       ( polyhedra_t* polyhedra, GLfloat scale, bool withColors );
 GLboolean cube              ( polyhedra_t* polyhedra, GLfloat scale, bool withColors );
+
 
 /*
  * 3D Axes Helper
@@ -235,14 +237,24 @@ void      axes_3d_render  ( axes_3d_t axes, const GLfloat* model_view );
 /*
  * Miscellaneous
  */ 
-void    dump_gl_info     ( void );
-GLenum  check_gl         ( void );
-GLuint  frame_delta      ( GLuint now /* milliseconds */ );
-GLfloat frame_rate       ( GLuint delta /* milliseconds */ );
-void    print_frame_rate ( GLuint delta /* milliseconds */ );
+const GLchar* gl_vendor         ( void );
+const GLchar* gl_renderer       ( void );
+const GLchar* gl_version        ( void );
+const GLchar* gl_shader_version ( void );
+void          gl_info_print     ( void );
+GLenum        gl_error          ( void );
+GLuint        frame_delta       ( GLuint now /* milliseconds */ );
+GLfloat       frame_rate        ( GLuint delta /* milliseconds */ );
+void          frame_rate_print  ( GLuint delta /* milliseconds */ );
+
+/*
+ * Extensions
+ */
+bool  gl_has_extension  ( const GLchar* ext );
+void* gl_extension      ( const GLchar* procName );
 
 #ifdef SIMPLEGL_DEBUG
-#define GL_ASSERT_NO_ERROR()    assert(check_gl() == GL_NO_ERROR);
+#define GL_ASSERT_NO_ERROR()    assert(gl_error() == GL_NO_ERROR);
 #else
 #define GL_ASSERT_NO_ERROR()
 #endif

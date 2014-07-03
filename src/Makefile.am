@@ -3,6 +3,7 @@ libsimplegl_src = 3d-axes.c \
                   buffers.c \
                   camera.c \
                   cube-map.c \
+                  extensions.c \
                   projections.c \
                   shaders.c \
                   textures.c \

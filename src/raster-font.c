@@ -275,7 +275,7 @@ bool raster_font_shader_initialize( raster_font_shader_t* shader )
 
 		glsl_attach_shader( program, vertex_shader );
 		glsl_attach_shader( program, fragment_shader );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 
 		if( !glsl_link_program( program ) )
 		{
@@ -298,7 +298,7 @@ bool raster_font_shader_initialize( raster_font_shader_t* shader )
 		uniform_texture      = glsl_bind_uniform( program, "u_texture" );
 		//uniform_width        = glsl_bind_uniform( program, "u_width" );
 		//uniform_height       = glsl_bind_uniform( program, "u_height" );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 
 		glGenVertexArrays( 1, &vao );
 		if( !vao ) goto failure;
@@ -309,7 +309,7 @@ bool raster_font_shader_initialize( raster_font_shader_t* shader )
 			glEnableVertexAttribArray( attribute_vertex );
 			glVertexAttribPointer( attribute_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0 );
 			glDisableVertexAttribArray( attribute_vertex );
-			assert(check_gl() == GL_NO_ERROR);
+			assert(gl_error() == GL_NO_ERROR);
 		}
 		else
 		{
@@ -334,7 +334,7 @@ bool raster_font_shader_initialize( raster_font_shader_t* shader )
 
 	shader->font_count += 1;
 	result = true;
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 
 	return result;
@@ -397,6 +397,7 @@ bool raster_font_initialize( raster_font_t* font )
 		GLubyte* pixels = raster_font_expand( font );
 		glTexImage2D( GL_TEXTURE_2D, 0, pixel_format, font->width, font->height, 0, pixel_format, GL_UNSIGNED_BYTE, pixels );
 
+
 		#if 1
 		image_t img = {
 			.width = font->width,
@@ -405,7 +406,9 @@ bool raster_font_initialize( raster_font_t* font )
 			.channels = 1,
 			.pixels = pixels
 		};
-		imageio_image_save( &img, "./out.png", IMAGEIO_PNG );
+		char font_name[ 16 ];
+		snprintf( font_name, sizeof(font_name), "./font-%ld.png", font - (&font_instances[0]) );
+		imageio_image_save( &img, font_name, IMAGEIO_PNG );
 		#endif
 		free( pixels );
 	}
@@ -512,7 +515,7 @@ GLushort raster_font_glyph_height( const raster_font_t* fnt )
 
 void raster_font_write( const raster_font_t* fnt, const vec2_t* position, const vec3_t* color, GLfloat size, const char* text )
 {
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	GLint viewport[ 4 ];
 
 	glGetIntegerv( GL_VIEWPORT, viewport );
@@ -522,52 +525,52 @@ void raster_font_write( const raster_font_t* fnt, const vec2_t* position, const 
 	glDepthMask( GL_FALSE );
 
 	glUseProgram( font_shader.program );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glBindVertexArray( font_shader.vao );
 
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glEnableVertexAttribArray( font_shader.attribute_vertex );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glUniformMatrix4fv(font_shader.uniform_projection, 1, GL_FALSE, projection.m );
 	glUniform3fv( font_shader.uniform_color, 1, (GLfloat*) color );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glActiveTexture( GL_TEXTURE0 );
 	glBindTexture( GL_TEXTURE_2D, fnt->texture );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glUniform1i( font_shader.uniform_texture, 0 );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glUniform1ui( font_shader.uniform_glyph_width, fnt->glyph_width );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glUniform1ui( font_shader.uniform_glyph_height, fnt->glyph_height );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glUniform1ui( font_shader.uniform_width, fnt->width );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glUniform1ui( font_shader.uniform_height, fnt->height );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glUniform1f( font_shader.uniform_size, size );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	for( size_t i = 0; text[i] != '\0' && i < RASTER_FONT_MAX_STRLEN; i++ )
 	{
 		glUniform3fv( font_shader.uniform_position, 1, (GLfloat*) &VEC3( position->x + i * size * fnt->glyph_width, position->y, 0.0f ) );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glUniform1ui( font_shader.uniform_character, text[i] );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glDrawArrays( GL_TRIANGLES, 0, 6 );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 	}
 
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glDisableVertexAttribArray( font_shader.attribute_vertex );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glDepthMask( GL_TRUE );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glBindVertexArray( 0 );
 }

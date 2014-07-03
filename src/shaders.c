@@ -142,7 +142,7 @@ GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const G
 {
 	assert( p_shader );
 	GLuint s = glCreateShader( type );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	if( !source || (source && *source == '\0') )
 	{
@@ -174,14 +174,14 @@ GLboolean glsl_shader_create_from_source( GLuint* p_shader, GLenum type, const G
 	#else
 	glShaderSource( s, 1, &source, NULL );
 	#endif
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glCompileShader( s );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	GLint compileStatus;
 	glGetShaderiv( s, GL_COMPILE_STATUS, &compileStatus );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	if( compileStatus == GL_FALSE )
 	{
@@ -393,7 +393,7 @@ GLboolean glsl_link_program( GLuint program )
 GLint glsl_bind_attribute( GLuint program, const GLchar* name )
 {
 	GLuint result = glGetAttribLocation( program, name );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	#ifdef SIMPLEGL_DEBUG
 	if( result == -1 )
@@ -408,7 +408,7 @@ GLint glsl_bind_attribute( GLuint program, const GLchar* name )
 GLint glsl_bind_uniform( GLuint program, const GLchar* name )
 {
 	GLuint result = glGetUniformLocation( program, name );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	#ifdef SIMPLEGL_DEBUG
 	if( result == -1 )

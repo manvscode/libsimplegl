@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2014 by Joseph A. Marrero, http://www.manvscode.com/
+ /* Copyright (C) 2013-2014 by Joseph A. Marrero, http://www.manvscode.com/
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,9 +34,6 @@ SDL_Window* window = NULL;
 SDL_GLContext ctx = NULL;
 
 GLuint program = 0;
-GLint attribute_vertex = 0;
-GLint attribute_tex_coord = 0;
-GLint attribute_color = 0;
 GLint uniform_model_view = 0;
 GLint uniform_texture = 0;
 
@@ -57,9 +54,10 @@ int main( int argc, char* argv[] )
 		goto quit;
 	}
 
-	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
-	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 2 );
+	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 4 );
+	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0 );
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
+	SDL_GL_SetAttribute( SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG );
 
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 	SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 8 );
@@ -95,6 +93,9 @@ int main( int argc, char* argv[] )
 		SDL_Event e;
 		bool done = false;
 		bool fullscreen = false;
+
+		SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
+		SDL_ShowCursor( fullscreen ? SDL_DISABLE : SDL_ENABLE );
 
 		while( !done )
 		{
@@ -139,9 +140,29 @@ quit:
 	return 0;
 }
 
+
+
+void (*glPushGroupMarker)( GLsizei length, const GLchar* marker ) = NULL;
+void (*glPopGroupMarker)( ) = NULL;
+void (*glLabelObject)( GLenum type, GLuint object, GLsizei length, const GLchar *label ) = NULL;
+void (*glGetObjectLabel)( GLenum type, GLuint object, GLsizei bufSize, GLsizei *length, GLchar *label ) = NULL;
+
 void initialize( void )
 {
-	dump_gl_info( );
+
+	if( gl_has_extension( "GL_EXT_debug_marker" ) )
+	{
+		glPushGroupMarker = gl_extension( "glPushGroupMarkerEXT" );
+		glPopGroupMarker  = gl_extension( "glPopGroupMarkerEXT" );
+	}
+
+	if( gl_has_extension( "GL_EXT_debug_label" ) )
+	{
+		glLabelObject     = gl_extension( "glLabelObjectEXT" );
+		glGetObjectLabel  = gl_extension( "glGetObjectLabelEXT" );
+	}
+
+	gl_info_print( );
 	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
@@ -193,13 +214,8 @@ void initialize( void )
 
 		exit( EXIT_FAILURE );
 	}
+	glLabelObject( GL_PROGRAM_OBJECT_EXT, program, 0, "Cube Shader Program" );
 
-	attribute_vertex = glsl_bind_attribute( program, "a_vertex" );
-	GL_ASSERT_NO_ERROR( );
-	attribute_tex_coord = glsl_bind_attribute( program, "a_tex_coord" );
-	GL_ASSERT_NO_ERROR( );
-	attribute_color  = glsl_bind_attribute( program, "a_color" );
-	GL_ASSERT_NO_ERROR( );
 	uniform_model_view = glsl_bind_uniform( program, "u_model_view" );
 	GL_ASSERT_NO_ERROR( );
 	uniform_texture = glsl_bind_uniform( program, "u_texture" );
@@ -213,6 +229,7 @@ void initialize( void )
 		GL_ASSERT_NO_ERROR( );
 		tex_load_2d_with_mipmaps( texture, "./tests/assets/textures/checkered.png", TEX_CLAMP_S | TEX_CLAMP_T );
 		GL_ASSERT_NO_ERROR( );
+		glLabelObject( GL_TEXTURE, texture, 0, "Cube Texture" );
 	}
 	else
 	{
@@ -228,19 +245,10 @@ void initialize( void )
 	cube( &polyhedra, 3.0f, true );
 	#endif
 
-	glGenVertexArrays( 1, &vao );
-	GL_ASSERT_NO_ERROR( );
-	glBindVertexArray( vao );
 
 	if( buffer_create( &vbo_vertices, polyhedra.vertices, sizeof(GLfloat), polyhedra.vertices_count, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		GL_ASSERT_NO_ERROR( );
-		glEnableVertexAttribArray( attribute_vertex );
-		GL_ASSERT_NO_ERROR( );
-		glVertexAttribPointer( attribute_vertex, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-		GL_ASSERT_NO_ERROR( );
-		glDisableVertexAttribArray( attribute_vertex );
-		GL_ASSERT_NO_ERROR( );
+		glLabelObject( GL_BUFFER_OBJECT_EXT, vbo_vertices, 0, "Cube Vertices VBO" );
 	}
 	else
 	{
@@ -249,13 +257,7 @@ void initialize( void )
 
 	if( buffer_create( &vbo_tex_coords, polyhedra.tex_coords, sizeof(GLfloat), polyhedra.tex_coords_count, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		GL_ASSERT_NO_ERROR( );
-		glEnableVertexAttribArray( attribute_tex_coord );
-		GL_ASSERT_NO_ERROR( );
-		glVertexAttribPointer( attribute_tex_coord, 2, GL_FLOAT, GL_FALSE, 0, 0 );
-		GL_ASSERT_NO_ERROR( );
-		glDisableVertexAttribArray( attribute_tex_coord );
-		GL_ASSERT_NO_ERROR( );
+		glLabelObject( GL_BUFFER_OBJECT_EXT, vbo_tex_coords, 0, "Cube Texture Coordinates VBO" );
 	}
 	else
 	{
@@ -264,13 +266,7 @@ void initialize( void )
 
 	if( buffer_create( &vbo_colors, polyhedra.colors, sizeof(GLfloat), polyhedra.colors_count, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		GL_ASSERT_NO_ERROR( );
-		glEnableVertexAttribArray( attribute_color );
-		GL_ASSERT_NO_ERROR( );
-		glVertexAttribPointer( attribute_color, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-		GL_ASSERT_NO_ERROR( );
-		glDisableVertexAttribArray( attribute_color );
-		GL_ASSERT_NO_ERROR( );
+		glLabelObject( GL_BUFFER_OBJECT_EXT, vbo_colors, 0, "Cube Colors VBO" );
 	}
 	else
 	{
@@ -280,11 +276,32 @@ void initialize( void )
 
 	if( buffer_create( &ibo_indices, polyhedra.indices, sizeof(GLushort), polyhedra.indices_count, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
+		glLabelObject( GL_BUFFER_OBJECT_EXT, ibo_indices, 0, "Cube Vertex Indices VBO" );
 	}
 	else
 	{
 		dump_sdl_error( );
 	}
+
+	glGenVertexArrays( 1, &vao );
+	glLabelObject( GL_BUFFER_OBJECT_EXT, vao, 0, "Cube VAO" );
+	GL_ASSERT_NO_ERROR( );
+	glBindVertexArray( vao );
+	glEnableVertexAttribArray( 0 );
+	glEnableVertexAttribArray( 1 );
+	glEnableVertexAttribArray( 2 );
+	GL_ASSERT_NO_ERROR( );
+
+	glBindBuffer( GL_ARRAY_BUFFER, vbo_vertices );
+	glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, 0 );
+
+	glBindBuffer( GL_ARRAY_BUFFER, vbo_tex_coords );
+	glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, 0 );
+
+	glBindBuffer( GL_ARRAY_BUFFER, vbo_colors );
+	glVertexAttribPointer( 2, 3, GL_FLOAT, GL_FALSE, 0, 0 );
+
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibo_indices );
 
 	glPointSize( 1.0 );
 
@@ -325,7 +342,11 @@ void render( )
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)width) / height;
 	vec3_t translation = VEC3( 0.0, 0.0, -10 );
+	#if 1
 	mat4_t projection = perspective( 80.0 * RADIANS_PER_DEGREE, aspect, 0.1, 100.0 );
+	#else
+	mat4_t projection = orthographic( -10.0f, 10.0f, -10.0f, 10.0f, -20.0f, 20.0f );
+	#endif
 	quat_t q1 = quat_from_axis3_angle( &VEC3(0, 1, 1), angle * RADIANS_PER_DEGREE );
 	mat4_t rotation = quat_to_mat4( &q1 );
 	angle += 0.05f * delta;
@@ -336,25 +357,16 @@ void render( )
 
 	glUseProgram( program );
 	glBindVertexArray( vao );
-	assert(check_gl() == GL_NO_ERROR);
-	glEnableVertexAttribArray( attribute_vertex );
-	assert(check_gl() == GL_NO_ERROR);
-	glEnableVertexAttribArray( attribute_tex_coord );
-	assert(check_gl() == GL_NO_ERROR);
-	glEnableVertexAttribArray( attribute_color );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glUniformMatrix4fv( uniform_model_view, 1, GL_FALSE, model_view.m );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 
 	glBindTexture( GL_TEXTURE_2D, texture );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glDrawElements( GL_TRIANGLES, polyhedra.indices_count, GL_UNSIGNED_SHORT, 0 );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
-	glDisableVertexAttribArray( attribute_vertex );
-	glDisableVertexAttribArray( attribute_tex_coord );
-	glDisableVertexAttribArray( attribute_color );
 	glBindVertexArray( 0 );
 	GL_ASSERT_NO_ERROR( );
 

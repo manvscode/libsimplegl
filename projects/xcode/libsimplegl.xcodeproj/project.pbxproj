@@ -37,6 +37,8 @@
 		D82B50EE194E057400EF5CE4 /* libimageio.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D82B50D2194E045100EF5CE4 /* libimageio.dylib */; };
 		D83B84641946AC8400201CD5 /* camera.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84631946AC8400201CD5 /* camera.c */; };
 		D83B84661946AC9900201CD5 /* cube-map.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84651946AC9900201CD5 /* cube-map.c */; };
+		D8ADCFB7196686DA002E178C /* extensions.c in Sources */ = {isa = PBXBuildFile; fileRef = D8ADCFB6196686DA002E178C /* extensions.c */; };
+		D8ADCFB8196686DA002E178C /* extensions.c in Sources */ = {isa = PBXBuildFile; fileRef = D8ADCFB6196686DA002E178C /* extensions.c */; };
 		D8D909411958084400E48C4B /* raster-font.c in Sources */ = {isa = PBXBuildFile; fileRef = D8D909401958084400E48C4B /* raster-font.c */; };
 		D8D909421958084400E48C4B /* raster-font.c in Sources */ = {isa = PBXBuildFile; fileRef = D8D909401958084400E48C4B /* raster-font.c */; };
 		D8E8C256196007F2008D51BB /* raster-font-vincent.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C255196007F2008D51BB /* raster-font-vincent.c */; };
@@ -155,6 +157,7 @@
 		D82B50ED194E045400EF5CE4 /* libsimplegl.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsimplegl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83B84631946AC8400201CD5 /* camera.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = camera.c; path = ../../src/camera.c; sourceTree = "<group>"; };
 		D83B84651946AC9900201CD5 /* cube-map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "cube-map.c"; path = "../../src/cube-map.c"; sourceTree = "<group>"; };
+		D8ADCFB6196686DA002E178C /* extensions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = extensions.c; path = ../../src/extensions.c; sourceTree = "<group>"; };
 		D8D909401958084400E48C4B /* raster-font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "raster-font.c"; path = "../../src/raster-font.c"; sourceTree = "<group>"; };
 		D8E8C247195F49AB008D51BB /* text.f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = text.f.glsl; sourceTree = "<group>"; };
 		D8E8C248195F49AB008D51BB /* text.v.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = text.v.glsl; sourceTree = "<group>"; };
@@ -222,11 +225,7 @@
 		08F9B7B3180DD10200DC30C4 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				D8E8C258196007FE008D51BB /* raster-fonts.h */,
-				D8E8C255196007F2008D51BB /* raster-font-vincent.c */,
-				D8E8C25E1960164A008D51BB /* raster-font-font1.c */,
-				D8E8C25F1960164A008D51BB /* raster-font-font2.c */,
-				D8E8C2641960C81A008D51BB /* raster-font-font3.c */,
+				D8ADCFB6196686DA002E178C /* extensions.c */,
 				08C2846E180DD15300E96BF5 /* 3d-axes.c */,
 				08C2846F180DD15300E96BF5 /* buffers.c */,
 				D83B84631946AC8400201CD5 /* camera.c */,
@@ -240,6 +239,11 @@
 				08C28476180DD15300E96BF5 /* textures.c */,
 				08C28477180DD15300E96BF5 /* transformations.c */,
 				D8D909401958084400E48C4B /* raster-font.c */,
+				D8E8C258196007FE008D51BB /* raster-fonts.h */,
+				D8E8C255196007F2008D51BB /* raster-font-vincent.c */,
+				D8E8C25E1960164A008D51BB /* raster-font-font1.c */,
+				D8E8C25F1960164A008D51BB /* raster-font-font2.c */,
+				D8E8C2641960C81A008D51BB /* raster-font-font3.c */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -471,6 +475,7 @@
 				D8E8C2651960C81A008D51BB /* raster-font-font3.c in Sources */,
 				08C28479180DD15300E96BF5 /* buffers.c in Sources */,
 				D83B84661946AC9900201CD5 /* cube-map.c in Sources */,
+				D8ADCFB7196686DA002E178C /* extensions.c in Sources */,
 				08C2847E180DD15300E96BF5 /* simplegl.c in Sources */,
 				08C2847D180DD15300E96BF5 /* shaders.c in Sources */,
 			);
@@ -493,6 +498,7 @@
 				D8E8C2661960C81A008D51BB /* raster-font-font3.c in Sources */,
 				D82B50DF194E045400EF5CE4 /* buffers.c in Sources */,
 				D82B50E0194E045400EF5CE4 /* cube-map.c in Sources */,
+				D8ADCFB8196686DA002E178C /* extensions.c in Sources */,
 				D82B50E1194E045400EF5CE4 /* simplegl.c in Sources */,
 				D82B50E2194E045400EF5CE4 /* shaders.c in Sources */,
 			);

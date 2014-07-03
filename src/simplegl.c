@@ -24,25 +24,51 @@
 #include <assert.h>
 #include "simplegl.h"
 
-void dump_gl_info( void )
-{
-	const GLchar* vendor       = (const GLchar*) glGetString(GL_VENDOR);
-	const GLchar* renderer     = (const GLchar*) glGetString(GL_RENDERER);
-	const GLchar* version      = (const GLchar*) glGetString(GL_VERSION);
-	const GLchar* glsl_version = (const GLchar*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+#define UNKNOWN   "unknown"
 
-	fprintf( stdout, "[GL] Vendor: %s\n", vendor ? vendor : "unknown" );
-	fprintf( stdout, "[GL] Renderer: %s\n", renderer ? renderer : "unknown" );
-	fprintf( stdout, "[GL] Version: %s\n", version ? version : "unknown" );
-	fprintf( stdout, "[GL] Shading Language: %s\n", glsl_version ? glsl_version : "unknown" );
+const GLchar* gl_vendor( void )
+{
+	const GLchar* vendor = (const GLchar*) glGetString(GL_VENDOR);
+	return vendor ? vendor : UNKNOWN;
+}
+
+const GLchar* gl_renderer( void )
+{
+	const GLchar* renderer = (const GLchar*) glGetString(GL_RENDERER);
+	return renderer ? renderer : UNKNOWN;
+}
+
+const GLchar* gl_version( void )
+{
+	const GLchar* version = (const GLchar*) glGetString(GL_VERSION);
+	return version ? version : UNKNOWN;
+}
+
+const GLchar* gl_shader_version( void )
+{
+	const GLchar* glsl_version = (const GLchar*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+	return glsl_version ? glsl_version : UNKNOWN;
+}
+
+void gl_info_print( void )
+{
+	const GLchar* vendor       = gl_vendor();
+	const GLchar* renderer     = gl_renderer();
+	const GLchar* version      = gl_version();
+	const GLchar* glsl_version = gl_shader_version();
+
+	fprintf( stdout, "[GL] Vendor: %s\n", vendor );
+	fprintf( stdout, "[GL] Renderer: %s\n", renderer );
+	fprintf( stdout, "[GL] Version: %s\n", version );
+	fprintf( stdout, "[GL] Shading Language: %s\n", glsl_version );
 
 	#ifdef GL_NUM_EXTENSIONS
 	fprintf( stdout, "[GL] Extensions: " );
 
 	int extensionsCount = 0;
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glGetIntegerv( GL_NUM_EXTENSIONS, &extensionsCount );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	for( int i = 0; i < extensionsCount; i++ )
 	{
@@ -51,7 +77,7 @@ void dump_gl_info( void )
 	#endif
 }
 
-GLenum check_gl( void )
+GLenum gl_error( void )
 {
 	GLenum error = glGetError();
 	const GLchar* error_str;
@@ -118,7 +144,7 @@ GLfloat frame_rate( GLuint delta /* milliseconds */ )
 	return (1000.0f) / delta;
 }
 
-void print_frame_rate( GLuint delta /* milliseconds */ )
+void frame_rate_print( GLuint delta /* milliseconds */ )
 {
 	static GLuint frame_rate_call_count = 0;
 

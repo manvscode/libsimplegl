@@ -141,7 +141,7 @@ axes_3d_t axes_3d_create( GLfloat line_width )
 
 		glsl_attach_shader( program, vertex_shader );
 		glsl_attach_shader( program, fragment_shader );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 
 		if( !glsl_link_program( program ) )
 		{
@@ -154,7 +154,7 @@ axes_3d_t axes_3d_create( GLfloat line_width )
 		GLint attribute_vertex   = glsl_bind_attribute( program, "a_vertex" );
 		GLint attribute_color    = glsl_bind_attribute( program, "a_color" );
 		GLint uniform_model_view = glsl_bind_uniform( program, "u_model_view" );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 
 		if( buffer_create( &axes->vbo, axes_and_colors, sizeof(GLfloat), AXES_ARRAY_LENGTH, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 		{
@@ -172,7 +172,7 @@ axes_3d_t axes_3d_create( GLfloat line_width )
 			glEnableVertexAttribArray( attribute_color );
 			glVertexAttribPointer( attribute_color, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, (const void*) (sizeof(GLfloat) * 3) );
 			//glDisableVertexAttribArray( attribute_color );
-			assert(check_gl() == GL_NO_ERROR);
+			assert(gl_error() == GL_NO_ERROR);
 
 			glBindVertexArray( 0 );
 		}
@@ -218,24 +218,24 @@ void axes_3d_render( axes_3d_t axes, const GLfloat* model_view )
 	GLfloat current_line_width;
 	glGetFloatv( GL_LINE_WIDTH, &current_line_width );
 	glLineWidth( axes->line_width );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glUseProgram( axes->program );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glBindVertexArray( axes->vao );
 		//glEnableVertexAttribArray( axes->attribute_vertex );
 		//glEnableVertexAttribArray( axes->attribute_color );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glUniformMatrix4fv( axes->uniform_model_view, 1, GL_FALSE, model_view );
 
 		glDrawArrays( GL_LINES, 0, AXES_ARRAY_LENGTH );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		//glDisableVertexAttribArray( axes->attribute_vertex );
 		//glDisableVertexAttribArray( axes->attribute_color );
 
 	glBindVertexArray( 0 );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glLineWidth( current_line_width );
 }

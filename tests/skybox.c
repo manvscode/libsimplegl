@@ -129,7 +129,7 @@ int main( int argc, char* argv[] )
 	ctx = SDL_GL_CreateContext( window );
 	SDL_GL_SetSwapInterval( 1 ); /* vsync */
 
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	if( !ctx )
 	{
 		dump_sdl_error( );
@@ -139,7 +139,7 @@ int main( int argc, char* argv[] )
 	initialize( );
 
 	bool done = false;
-	bool fullscreen = false;
+	bool fullscreen = true;
 
 	SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
 	SDL_ShowCursor( fullscreen ? SDL_DISABLE : SDL_ENABLE );
@@ -204,18 +204,18 @@ quit:
 
 void initialize( void )
 {
-	assert(check_gl() == GL_NO_ERROR);
-	dump_gl_info( );
+	assert(gl_error() == GL_NO_ERROR);
+	gl_info_print( );
 	glClearColor( 0.2f, 0.2f, 0.2f, 1.0f );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glEnable( GL_DEPTH_TEST );
 	//glEnable( GL_CULL_FACE );
 	glDisable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
 	glFrontFace( GL_CCW );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glEnable( GL_BLEND );
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -224,7 +224,7 @@ void initialize( void )
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     //glEnable( GL_TEXTURE_CUBE_MAP );
 	glEnable( GL_TEXTURE_CUBE_MAP_SEAMLESS );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	font2 = raster_font_create( RASTER_FONT_FONT3_16X16 );
 	if( !font2 )
@@ -264,33 +264,33 @@ void initialize( void )
 	}
 
 	attribute_vertex = glsl_bind_attribute( program, "a_vertex" );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	uniform_eye_position = glsl_bind_uniform( program, "u_eye_position" );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	uniform_projection = glsl_bind_uniform( program, "u_projection" );
-    assert(check_gl() == GL_NO_ERROR);
+    assert(gl_error() == GL_NO_ERROR);
 
     uniform_orientation = glsl_bind_uniform( program, "u_orientation" );
-    assert(check_gl() == GL_NO_ERROR);
+    assert(gl_error() == GL_NO_ERROR);
 	uniform_cubemap = glsl_bind_uniform( program, "u_cubemap" );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 
 	for( int i = 0; i < 3; i++ )
 	{
 		cube_map_texture[ i ] = tex_create( );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		if( cube_map_texture[ i ] )
 		{
 			glActiveTexture( GL_TEXTURE0 );
-			assert(check_gl() == GL_NO_ERROR);
+			assert(gl_error() == GL_NO_ERROR);
 			bool cubemap_setup = false;
 
 			if( i == 0 )
 			{
-				cubemap_setup = tex_cube_map_setup( cube_map_texture[ i ], "./tests/assets/env/gardenrt.png", "./tests/assets/env/gardenlf.png",
-																           "./tests/assets/env/gardenup.png", "./tests/assets/env/gardendn.png",
-																           "./tests/assets/env/gardenft.png", "./tests/assets/env/gardenbk.png" );
+				cubemap_setup = tex_cube_map_setup( cube_map_texture[ i ], "./tests/assets/env/drakeq_rt.png", "./tests/assets/env/drakeq_lf.png",
+																           "./tests/assets/env/drakeq_up.png", "./tests/assets/env/drakeq_dn.png",
+																           "./tests/assets/env/drakeq_ft.png", "./tests/assets/env/drakeq_bk.png" );
 			}
 			else if( i == 1 )
 			{
@@ -311,7 +311,7 @@ void initialize( void )
 				exit( EXIT_FAILURE );
 			}
 
-			assert(check_gl() == GL_NO_ERROR);
+			assert(gl_error() == GL_NO_ERROR);
 		}
 		else
 		{
@@ -322,18 +322,18 @@ void initialize( void )
 
 
 	glGenVertexArrays( 1, &vao );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glBindVertexArray( vao );
 
 	if( buffer_create( &vbo_vertices, cube_map_vertices, sizeof(GLfloat), sizeof(cube_map_vertices)/sizeof(cube_map_vertices[0]), GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glEnableVertexAttribArray( attribute_vertex );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glVertexAttribPointer( attribute_vertex, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glDisableVertexAttribArray( attribute_vertex );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 	}
 	else
 	{
@@ -348,7 +348,7 @@ void initialize( void )
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	glViewport(0, 0, width, height );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 
 	camera = camera_create( width, height, 2.0f, 1000.0f, 45.0f, &VEC3(0.0f, 0.0f, 0.0f) );
@@ -377,17 +377,17 @@ void render( )
 	delta = frame_delta( now /* milliseconds */ );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 	camera_update( camera, delta );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
     render_skybox();
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	assert( camera != NULL );
 
 	raster_font_shadowed_writef( font2, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), &VEC3_ZERO, 1.0f, "Skybox" );
 	raster_font_shadowed_writef( font1, &VEC2(2, 2), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "FPS: %.1f", frame_rate(delta) );
 	raster_font_shadowed_writef( font1, &VEC2(890, 2), &VEC3(0,1,1), &VEC3_ZERO, 1.0f, "Press 1, 2, or 3." );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	SDL_GL_SwapWindow( window );
 }
@@ -405,30 +405,30 @@ void dump_sdl_error( void )
 void render_skybox( void )
 {
 	glUseProgram( program );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glBindVertexArray( vao );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glEnableVertexAttribArray( attribute_vertex );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glUniformMatrix4fv( uniform_projection, 1, GL_FALSE, (float*) camera_projection_matrix(camera) );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glUniformMatrix4fv( uniform_orientation, 1, GL_FALSE, (float*) camera_orientation_matrix(camera) );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 
     glBindTexture( GL_TEXTURE_CUBE_MAP, cube_map_texture[ selected_skybox ] );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glDepthMask( GL_FALSE );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glDrawArrays( GL_TRIANGLES, 0, sizeof(cube_map_vertices)/sizeof(cube_map_vertices[0]) );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glDepthMask( GL_TRUE );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glDisableVertexAttribArray( attribute_vertex );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 }
 
 void set_view_by_mouse( )

@@ -117,7 +117,7 @@ quit:
 
 void initialize( void )
 {
-	dump_gl_info( );
+	gl_info_print( );
 	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
 	glEnable( GL_DEPTH_TEST );

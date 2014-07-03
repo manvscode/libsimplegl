@@ -24,7 +24,7 @@
 #include <assert.h>
 #include "simplegl.h"
 
-GLboolean buffer_create( GLuint* id, const GLvoid* geometry, size_t element_size, size_t count, GLenum target /*GL_ARRAY_BUFFER*/, GLenum usage /*GL_STATIC_DRAW*/ )
+GLboolean buffer_create( GLuint* id, const GLvoid* geometry, GLsizei element_size, GLsizei count, GLenum target /*GL_ARRAY_BUFFER*/, GLenum usage /*GL_STATIC_DRAW*/ )
 {
 	GLboolean result = GL_FALSE;
 
@@ -33,9 +33,9 @@ GLboolean buffer_create( GLuint* id, const GLvoid* geometry, size_t element_size
 	if( *id )
 	{
 		glBindBuffer( target, *id );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glBufferData( target, element_size * count, geometry, usage );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		return GL_TRUE;
 	}
 
@@ -49,7 +49,7 @@ GLboolean buffer_destroy( const GLuint* id )
 	if( glIsBuffer(*id) )
 	{
 		glDeleteBuffers( 1, id );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		return GL_TRUE;
 	}
 

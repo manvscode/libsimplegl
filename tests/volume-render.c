@@ -238,7 +238,7 @@ int main( int argc, char* argv[] )
 	initialize( );
 
 	bool done = false;
-	bool fullscreen = false;
+	bool fullscreen = true;
 
 	SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
 	SDL_ShowCursor( SDL_DISABLE );
@@ -302,7 +302,7 @@ quit:
 
 void initialize( void )
 {
-	dump_gl_info( );
+	gl_info_print( );
 	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
@@ -334,7 +334,7 @@ void initialize( void )
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	glViewport( 0, 0, width, height );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	GLchar* shader_log  = NULL;
 	GLchar* program_log = NULL;
@@ -359,16 +359,16 @@ void initialize( void )
 		exit( EXIT_FAILURE );
 	}
 
-	attribute_vertex = glsl_bind_attribute( program, "a_vertex" ); assert(check_gl() == GL_NO_ERROR);
-	attribute_tex_coord = glsl_bind_attribute( program, "a_tex_coord" ); assert(check_gl() == GL_NO_ERROR);
-	attribute_color  = glsl_bind_attribute( program, "a_color" ); assert(check_gl() == GL_NO_ERROR);
-	uniform_model_view = glsl_bind_uniform( program, "u_model_view" ); assert(check_gl() == GL_NO_ERROR);
-	uniform_voxel_data = glsl_bind_uniform( program, "u_voxel_data" ); assert(check_gl() == GL_NO_ERROR);
-	uniform_back_voxels = glsl_bind_uniform( program, "u_back_voxels" ); assert(check_gl() == GL_NO_ERROR);
-	uniform_color_transfer = glsl_bind_uniform( program, "u_color_transfer" ); assert(check_gl() == GL_NO_ERROR);
-	uniform_rendering_pass = glsl_bind_uniform( program, "u_render_pass" ); assert(check_gl() == GL_NO_ERROR);
-	uniform_seed = glsl_bind_uniform( program, "u_seed" ); assert(check_gl() == GL_NO_ERROR);
-	uniform_render_mode = glsl_bind_uniform( program, "u_render_mode" ); assert(check_gl() == GL_NO_ERROR);
+	attribute_vertex = glsl_bind_attribute( program, "a_vertex" ); assert(gl_error() == GL_NO_ERROR);
+	attribute_tex_coord = glsl_bind_attribute( program, "a_tex_coord" ); assert(gl_error() == GL_NO_ERROR);
+	attribute_color  = glsl_bind_attribute( program, "a_color" ); assert(gl_error() == GL_NO_ERROR);
+	uniform_model_view = glsl_bind_uniform( program, "u_model_view" ); assert(gl_error() == GL_NO_ERROR);
+	uniform_voxel_data = glsl_bind_uniform( program, "u_voxel_data" ); assert(gl_error() == GL_NO_ERROR);
+	uniform_back_voxels = glsl_bind_uniform( program, "u_back_voxels" ); assert(gl_error() == GL_NO_ERROR);
+	uniform_color_transfer = glsl_bind_uniform( program, "u_color_transfer" ); assert(gl_error() == GL_NO_ERROR);
+	uniform_rendering_pass = glsl_bind_uniform( program, "u_render_pass" ); assert(gl_error() == GL_NO_ERROR);
+	uniform_seed = glsl_bind_uniform( program, "u_seed" ); assert(gl_error() == GL_NO_ERROR);
+	uniform_render_mode = glsl_bind_uniform( program, "u_render_mode" ); assert(gl_error() == GL_NO_ERROR);
 
 
 	load_volumes( );
@@ -379,14 +379,14 @@ void initialize( void )
 	if( color_transfer_texture )
 	{
 		//glActiveTexture( GL_TEXTURE2 );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		if( !tex_load_1d( color_transfer_texture, "./tests/assets/textures/intensity.png", GL_LINEAR, GL_LINEAR, TEX_CLAMP_S ) )
 		{
 			dump_sdl_error( );
 			exit( EXIT_FAILURE );
 		}
 
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 	}
 	else
 	{
@@ -394,22 +394,22 @@ void initialize( void )
 	}
 
 	glGenVertexArrays( 1, &vao );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glBindVertexArray( vao );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	assert( vertex_count > 4 );
 	assert( tex_coords_count > 4 );
 
 	if( buffer_create( &vbo_vertices, vertices, sizeof(GLfloat), vertex_count, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glEnableVertexAttribArray( attribute_vertex );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glVertexAttribPointer( attribute_vertex, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glDisableVertexAttribArray( attribute_vertex );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 	}
 	else
 	{
@@ -418,13 +418,13 @@ void initialize( void )
 
 	if( buffer_create( &vbo_tex_coords, tex_coords, sizeof(GLfloat), tex_coords_count, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glEnableVertexAttribArray( attribute_tex_coord );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glVertexAttribPointer( attribute_tex_coord, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 		glDisableVertexAttribArray( attribute_tex_coord );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 	}
 	else
 	{
@@ -433,7 +433,7 @@ void initialize( void )
 
 	if( buffer_create( &ibo_indices, indices, sizeof(GLushort), indices_count, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 	}
 	else
 	{
@@ -450,7 +450,7 @@ void initialize( void )
 		glBindRenderbuffer( GL_RENDERBUFFER, colorRenderBuffer );
 		glRenderbufferStorage( GL_RENDERBUFFER, GL_RGBA8, width, height );
 		glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderBuffer );
-		assert(check_gl() == GL_NO_ERROR);
+		assert(gl_error() == GL_NO_ERROR);
 
 
 		GLenum status = glCheckFramebufferStatus( GL_FRAMEBUFFER );
@@ -470,7 +470,7 @@ void initialize( void )
 	}
 
 	glPointSize( 4.0 );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 }
 
 void deinitialize( void )
@@ -506,7 +506,11 @@ void render( )
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)width) / height;
+	#if 1
 	mat4_t projection = perspective( 30.0 * RADIANS_PER_DEGREE, aspect, 0.1, 100.0 );
+	#else
+	mat4_t projection = orthographic( -2.0f, 2.0f, -2.0f, 2.0f, -10.0f, 10.0f );
+	#endif
 	quat_t q1 = quat_from_axis3_angle( &VEC3( 0.0f, 1.0f, 0.0f ), angle * RADIANS_PER_DEGREE );
 	angle += 0.05f * delta;
 	mat4_t rotation_tfx  = quat_to_mat4( &q1 );
@@ -523,7 +527,7 @@ void render( )
 	mat4_t model_view = mat4_mult_matrix( &projection, &transform_tfx );
 
 
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glUseProgram( program );
 
 	glBindVertexArray( vao );
@@ -532,13 +536,13 @@ void render( )
 	glEnableVertexAttribArray( attribute_tex_coord );
 	//glEnableVertexAttribArray( attribute_color );
 	glUniformMatrix4fv( uniform_model_view, 1, GL_FALSE, model_view.m );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glUniform1i( uniform_voxel_data, 0 ); // texture unit 0 holds the voxel data
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glUniform1i( uniform_back_voxels, 1 ); // texture unit 1 holds the backing facing voxels
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glUniform1i( uniform_color_transfer, 2 ); // texture unit 2 holds the color transfer function
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	glActiveTexture( GL_TEXTURE0 );
 	glBindTexture( GL_TEXTURE_3D, voxel_texture[ selected_volume ] );
 	glActiveTexture( GL_TEXTURE1 );
@@ -561,7 +565,7 @@ void render( )
 	glUniform1ui( uniform_seed, now );
 	glUniform1ui( uniform_render_mode, render_mode );
 	glDrawElements( GL_TRIANGLES, indices_count, GL_UNSIGNED_SHORT, 0 );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
 	glActiveTexture( GL_TEXTURE0 );
 	glBindTexture( GL_TEXTURE_3D, 0 );
@@ -574,12 +578,12 @@ void render( )
 	//glDisableVertexAttribArray( attribute_color );
 
 
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	raster_font_shadowed_writef( font2, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), &VEC3(0.2,0.2f,0), 0.8f, "Volume Rendering: %s", strrchr( volume_files[selected_volume], '/' ) + 1 );
 	raster_font_shadowed_writef( font1, &VEC2(2, 2), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "FPS: %.1f", frame_rate(delta) );
 	raster_font_shadowed_writef( font1, &VEC2(620, 2), &VEC3(0,1,1), &VEC3_ZERO, 1.0f, "Press 1, 2, 3, 4, or 5." );
 
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	SDL_GL_SwapWindow( window );
 }
 
@@ -602,7 +606,7 @@ void load_volumes( void )
 		if( voxel_texture[ i ] )
 		{
 			glActiveTexture( GL_TEXTURE0 );
-			assert(check_gl() == GL_NO_ERROR);
+			assert(gl_error() == GL_NO_ERROR);
 			int flags = TEX_CLAMP_S | TEX_CLAMP_T | TEX_CLAMP_R;
 
 			if( tex_load_3d( voxel_texture[ i ], volume_files[ i ], volume_dimensions[ i ].w, volume_dimensions[ i ].x, volume_dimensions[ i ].y, volume_dimensions[ i ].z, GL_LINEAR, GL_LINEAR, flags ) )
@@ -616,7 +620,7 @@ void load_volumes( void )
 				exit( EXIT_FAILURE );
 			}
 
-			assert(check_gl() == GL_NO_ERROR);
+			assert(gl_error() == GL_NO_ERROR);
 		}
 		else
 		{

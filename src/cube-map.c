@@ -129,15 +129,15 @@ bool tex_cube_map_setup( GLuint texture, const char* xpos, const char* xneg, con
 		}
 	}
 
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
     glBindTexture( GL_TEXTURE_CUBE_MAP, texture );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
     glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
     glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE );
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 
     if( xpos_image.pixels )
 	{
@@ -193,7 +193,7 @@ bool tex_cube_map_setup( GLuint texture, const char* xpos, const char* xneg, con
     	glTexImage2D( GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, pixel_format, zneg_image.width, zneg_image.height, 0, pixel_format, GL_UNSIGNED_BYTE, zneg_image.pixels );
 	}
 
-	assert(check_gl() == GL_NO_ERROR);
+	assert(gl_error() == GL_NO_ERROR);
 	result = true;
 
 done:
