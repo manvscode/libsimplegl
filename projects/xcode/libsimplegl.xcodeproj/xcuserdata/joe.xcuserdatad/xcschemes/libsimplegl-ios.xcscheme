@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D8240465194E1D8C000FB985"
-               BuildableName = "skybox"
-               BlueprintName = "skybox"
-               ReferencedContainer = "container:skybox.xcodeproj">
+               BlueprintIdentifier = "D8DFF707196939440035430B"
+               BuildableName = "libsimplegl.a"
+               BlueprintName = "libsimplegl-ios"
+               ReferencedContainer = "container:libsimplegl.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,35 +29,16 @@
       buildConfiguration = "Debug">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D8240465194E1D8C000FB985"
-            BuildableName = "skybox"
-            BlueprintName = "skybox"
-            ReferencedContainer = "container:skybox.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      customWorkingDirectory = "/Users/joe/projects/libsimplegl"
       buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D8240465194E1D8C000FB985"
-            BuildableName = "skybox"
-            BlueprintName = "skybox"
-            ReferencedContainer = "container:skybox.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -67,15 +48,6 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D8240465194E1D8C000FB985"
-            BuildableName = "skybox"
-            BlueprintName = "skybox"
-            ReferencedContainer = "container:skybox.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

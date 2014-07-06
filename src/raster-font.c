@@ -27,6 +27,11 @@
 #include "simplegl.h"
 #include "raster-fonts.h"
 
+#ifdef SIMPLEGL_DEBUG
+extern void glsl_shader_error  ( GLuint shader );
+extern void glsl_program_error ( GLuint program );
+#endif
+
 #define RASTER_FONT_MAX_STRLEN    (256)
 #define RASTER_FONT_MAX_FONTS     (4)
 
@@ -215,6 +220,7 @@ static const GLfloat font_glyph_mesh[] = {
 };
 #define FONT_GLYPH_MESH_LENGTH         (sizeof(font_glyph_mesh)/sizeof(font_glyph_mesh[0]))
 
+#include <unistd.h>
 
 bool raster_font_shader_initialize( raster_font_shader_t* shader )
 {
@@ -252,9 +258,20 @@ bool raster_font_shader_initialize( raster_font_shader_t* shader )
 			goto failure;
 		}
 
+		char debug_cwd[ 256 ];
+		getcwd( debug_cwd, 256 );
+
+        #if TARGET_OS_IPHONE
+		char* vertex_shader_source = glsl_shader_load( "assets/shaders/text-100.v.glsl" );
+        #else
 		char* vertex_shader_source = glsl_shader_load( "assets/shaders/text-150.v.glsl" );
+		#endif
 		if( !glsl_shader_compile( vertex_shader, vertex_shader_source ) )
 		{
+			#ifdef SIMPLEGL_DEBUG
+			fprintf( stderr, "[GLSL] Failed to compile shader %u.\n", vertex_shader );
+			glsl_shader_error( vertex_shader );
+			#endif
 			free( vertex_shader_source );
 			goto failure;
 		}
@@ -267,9 +284,17 @@ bool raster_font_shader_initialize( raster_font_shader_t* shader )
 			goto failure;
 		}
 
+		#if TARGET_OS_IPHONE
+		char* fragment_shader_source = glsl_shader_load( "assets/shaders/text-100.f.glsl" );
+		#else
 		char* fragment_shader_source = glsl_shader_load( "assets/shaders/text-150.f.glsl" );
+		#endif
 		if( !glsl_shader_compile( fragment_shader, fragment_shader_source ) )
 		{
+			#ifdef SIMPLEGL_DEBUG
+			fprintf( stderr, "[GLSL] Failed to compile shader %u.\n", fragment_shader );
+			glsl_shader_error( fragment_shader );
+			#endif
 			free( fragment_shader_source );
 			goto failure;
 		}
@@ -281,6 +306,10 @@ bool raster_font_shader_initialize( raster_font_shader_t* shader )
 
 		if( !glsl_link_program( program ) )
 		{
+			#ifdef SIMPLEGL_DEBUG
+			fprintf( stderr, "[GLSL] Failed to link program.\n" );
+			glsl_program_error( program );
+			#endif
 			goto failure;
 		}
 
@@ -378,7 +407,11 @@ bool raster_font_initialize( raster_font_t* font )
 	{
 		case 1:
 		case 8:
+			#if TARGET_OS_IPHONE
+			pixel_format = GL_LUMINANCE;
+			#else
 			pixel_format = GL_RED;
+			#endif
 			break;
 		case 32:
 			pixel_format = GL_RGBA;
@@ -397,7 +430,7 @@ bool raster_font_initialize( raster_font_t* font )
 		glTexImage2D( GL_TEXTURE_2D, 0, pixel_format, font->width, font->height, 0, pixel_format, GL_UNSIGNED_BYTE, pixels );
 
 
-		#if 1
+		#if 0
 		image_t img = {
 			.width = font->width,
 			.height = font->height,
@@ -541,13 +574,13 @@ void raster_font_write( const raster_font_t* fnt, const vec2_t* position, const 
 	glUniform1i( font_shader.uniform_texture, 0 );
 	assert(gl_error() == GL_NO_ERROR);
 
-	glUniform1ui( font_shader.uniform_glyph_width, fnt->glyph_width );
+	glUniform1f( font_shader.uniform_glyph_width, fnt->glyph_width );
 	assert(gl_error() == GL_NO_ERROR);
-	glUniform1ui( font_shader.uniform_glyph_height, fnt->glyph_height );
+	glUniform1f( font_shader.uniform_glyph_height, fnt->glyph_height );
 	assert(gl_error() == GL_NO_ERROR);
-	glUniform1ui( font_shader.uniform_width, fnt->width );
+	glUniform1f( font_shader.uniform_width, fnt->width );
 	assert(gl_error() == GL_NO_ERROR);
-	glUniform1ui( font_shader.uniform_height, fnt->height );
+	glUniform1f( font_shader.uniform_height, fnt->height );
 	assert(gl_error() == GL_NO_ERROR);
 	glUniform1f( font_shader.uniform_size, size );
 	assert(gl_error() == GL_NO_ERROR);
@@ -556,7 +589,7 @@ void raster_font_write( const raster_font_t* fnt, const vec2_t* position, const 
 	{
 		glUniform3fv( font_shader.uniform_position, 1, (GLfloat*) &VEC3( position->x + i * size * fnt->glyph_width, position->y, 0.0f ) );
 		assert(gl_error() == GL_NO_ERROR);
-		glUniform1ui( font_shader.uniform_character, text[i] );
+		glUniform1i( font_shader.uniform_character, text[i] );
 		assert(gl_error() == GL_NO_ERROR);
 		glDrawArrays( GL_TRIANGLES, 0, 6 );
 		assert(gl_error() == GL_NO_ERROR);
@@ -593,6 +626,8 @@ void raster_font_shadowed_writef( const raster_font_t* fnt, const vec2_t* positi
 	text[ sizeof(text) - 1 ] = '\0';
 	va_end( args );
 
-	raster_font_write( fnt, &VEC2(position->x + 1, position->y - 1), shadow, size, text );
+	float shadow_offset = size > 1.0f ? size : 1.0f;
+
+	raster_font_write( fnt, &VEC2(position->x + shadow_offset, position->y - shadow_offset), shadow, size, text );
 	raster_font_write( fnt, position, color, size, text );
 }

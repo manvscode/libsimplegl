@@ -18,8 +18,6 @@
 		08C2847F180DD15300E96BF5 /* simplegl.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C28475180DD15300E96BF5 /* simplegl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08C28480180DD15300E96BF5 /* textures.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28476180DD15300E96BF5 /* textures.c */; };
 		08C28481180DD15300E96BF5 /* transformations.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28477180DD15300E96BF5 /* transformations.c */; };
-		D82B50BB194DFA3C00EF5CE4 /* lib3dmath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 08F9B7B9180DD11800DC30C4 /* lib3dmath.a */; };
-		D82B50BC194DFA3C00EF5CE4 /* libimageio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 08C2846D180DD12C00E96BF5 /* libimageio.a */; };
 		D82B50D9194E045400EF5CE4 /* 3d-axes.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C2846E180DD15300E96BF5 /* 3d-axes.c */; };
 		D82B50DA194E045400EF5CE4 /* camera.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84631946AC8400201CD5 /* camera.c */; };
 		D82B50DB194E045400EF5CE4 /* textures.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28476180DD15300E96BF5 /* textures.c */; };
@@ -30,17 +28,47 @@
 		D82B50E0194E045400EF5CE4 /* cube-map.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84651946AC9900201CD5 /* cube-map.c */; };
 		D82B50E1194E045400EF5CE4 /* simplegl.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28474180DD15300E96BF5 /* simplegl.c */; };
 		D82B50E2194E045400EF5CE4 /* shaders.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28473180DD15300E96BF5 /* shaders.c */; };
-		D82B50E4194E045400EF5CE4 /* lib3dmath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 08F9B7B9180DD11800DC30C4 /* lib3dmath.a */; };
 		D82B50E6194E045400EF5CE4 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0882A3D61814F0E6005CA20A /* OpenGL.framework */; };
 		D82B50E8194E045400EF5CE4 /* simplegl.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C28475180DD15300E96BF5 /* simplegl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D82B50E9194E045400EF5CE4 /* libsimplegl-config.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C28470180DD15300E96BF5 /* libsimplegl-config.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D82B50EE194E057400EF5CE4 /* libimageio.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D82B50D2194E045100EF5CE4 /* libimageio.dylib */; };
 		D83B84641946AC8400201CD5 /* camera.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84631946AC8400201CD5 /* camera.c */; };
 		D83B84661946AC9900201CD5 /* cube-map.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84651946AC9900201CD5 /* cube-map.c */; };
+		D84A200B1969B45C00DFCB31 /* assets in CopyFiles */ = {isa = PBXBuildFile; fileRef = D84A200A1969B45100DFCB31 /* assets */; };
+		D84A200D1969B46B00DFCB31 /* assets in CopyFiles */ = {isa = PBXBuildFile; fileRef = D84A200A1969B45100DFCB31 /* assets */; };
+		D84A200F1969B48200DFCB31 /* assets in CopyFiles */ = {isa = PBXBuildFile; fileRef = D84A200A1969B45100DFCB31 /* assets */; };
+		D84A20111969B53A00DFCB31 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D84A20101969B53A00DFCB31 /* libz.dylib */; };
+		D84A20121969B54400DFCB31 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D84A20101969B53A00DFCB31 /* libz.dylib */; };
 		D8ADCFB7196686DA002E178C /* extensions.c in Sources */ = {isa = PBXBuildFile; fileRef = D8ADCFB6196686DA002E178C /* extensions.c */; };
 		D8ADCFB8196686DA002E178C /* extensions.c in Sources */ = {isa = PBXBuildFile; fileRef = D8ADCFB6196686DA002E178C /* extensions.c */; };
 		D8D909411958084400E48C4B /* raster-font.c in Sources */ = {isa = PBXBuildFile; fileRef = D8D909401958084400E48C4B /* raster-font.c */; };
 		D8D909421958084400E48C4B /* raster-font.c in Sources */ = {isa = PBXBuildFile; fileRef = D8D909401958084400E48C4B /* raster-font.c */; };
+		D8DFF709196939440035430B /* 3d-axes.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C2846E180DD15300E96BF5 /* 3d-axes.c */; };
+		D8DFF70A196939440035430B /* camera.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84631946AC8400201CD5 /* camera.c */; };
+		D8DFF70B196939440035430B /* textures.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28476180DD15300E96BF5 /* textures.c */; };
+		D8DFF70C196939440035430B /* raster-font-font1.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C25E1960164A008D51BB /* raster-font-font1.c */; };
+		D8DFF70D196939440035430B /* objects.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28471180DD15300E96BF5 /* objects.c */; };
+		D8DFF70E196939440035430B /* raster-font-font2.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C25F1960164A008D51BB /* raster-font-font2.c */; };
+		D8DFF70F196939440035430B /* projections.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28472180DD15300E96BF5 /* projections.c */; };
+		D8DFF710196939440035430B /* transformations.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28477180DD15300E96BF5 /* transformations.c */; };
+		D8DFF711196939440035430B /* raster-font.c in Sources */ = {isa = PBXBuildFile; fileRef = D8D909401958084400E48C4B /* raster-font.c */; };
+		D8DFF712196939440035430B /* raster-font-vincent.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C255196007F2008D51BB /* raster-font-vincent.c */; };
+		D8DFF713196939440035430B /* raster-font-font3.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C2641960C81A008D51BB /* raster-font-font3.c */; };
+		D8DFF714196939440035430B /* overlays.c in Sources */ = {isa = PBXBuildFile; fileRef = D8FF748E1967BCE400D20138 /* overlays.c */; };
+		D8DFF715196939440035430B /* buffers.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C2846F180DD15300E96BF5 /* buffers.c */; };
+		D8DFF716196939440035430B /* cube-map.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84651946AC9900201CD5 /* cube-map.c */; };
+		D8DFF717196939440035430B /* extensions.c in Sources */ = {isa = PBXBuildFile; fileRef = D8ADCFB6196686DA002E178C /* extensions.c */; };
+		D8DFF718196939440035430B /* simplegl.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28474180DD15300E96BF5 /* simplegl.c */; };
+		D8DFF719196939440035430B /* shaders.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28473180DD15300E96BF5 /* shaders.c */; };
+		D8DFF71B196939440035430B /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0882A3D61814F0E6005CA20A /* OpenGL.framework */; };
+		D8DFF71D196939440035430B /* simplegl.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C28475180DD15300E96BF5 /* simplegl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D8DFF71E196939440035430B /* raster-fonts.h in Headers */ = {isa = PBXBuildFile; fileRef = D8E8C258196007FE008D51BB /* raster-fonts.h */; };
+		D8DFF71F196939440035430B /* libsimplegl-config.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C28470180DD15300E96BF5 /* libsimplegl-config.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D8DFF72E196939E10035430B /* lib3dmath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D8DFF6DE196937370035430B /* lib3dmath.a */; };
+		D8DFF72F196939E10035430B /* libimageio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D8DFF6D61969372B0035430B /* libimageio.a */; };
+		D8DFF73419693A020035430B /* lib3dmath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D8DFF6DE196937370035430B /* lib3dmath.a */; };
+		D8DFF73519693A020035430B /* libimageio.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D8DFF6D81969372B0035430B /* libimageio.dylib */; };
+		D8DFF73A19693A2B0035430B /* lib3dmath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D8DFF6DE196937370035430B /* lib3dmath.a */; };
+		D8DFF73B19693A2B0035430B /* libimageio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D8DFF6D61969372B0035430B /* libimageio.a */; };
 		D8E8C256196007F2008D51BB /* raster-font-vincent.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C255196007F2008D51BB /* raster-font-vincent.c */; };
 		D8E8C257196007F2008D51BB /* raster-font-vincent.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C255196007F2008D51BB /* raster-font-vincent.c */; };
 		D8E8C259196007FE008D51BB /* raster-fonts.h in Headers */ = {isa = PBXBuildFile; fileRef = D8E8C258196007FE008D51BB /* raster-fonts.h */; };
@@ -51,65 +79,127 @@
 		D8E8C2631960164A008D51BB /* raster-font-font2.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C25F1960164A008D51BB /* raster-font-font2.c */; };
 		D8E8C2651960C81A008D51BB /* raster-font-font3.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C2641960C81A008D51BB /* raster-font-font3.c */; };
 		D8E8C2661960C81A008D51BB /* raster-font-font3.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C2641960C81A008D51BB /* raster-font-font3.c */; };
+		D8F20AF0196957CA0072DE84 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D8F20AEF196957CA0072DE84 /* libpng.a */; };
+		D8F20AF2196957D00072DE84 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D8F20AF1196957D00072DE84 /* libpng.a */; };
 		D8FF748F1967BCE400D20138 /* overlays.c in Sources */ = {isa = PBXBuildFile; fileRef = D8FF748E1967BCE400D20138 /* overlays.c */; };
 		D8FF74901967BCE400D20138 /* overlays.c in Sources */ = {isa = PBXBuildFile; fileRef = D8FF748E1967BCE400D20138 /* overlays.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		08C2846C180DD12C00E96BF5 /* PBXContainerItemProxy */ = {
+		D8DFF6D51969372B0035430B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 08C28467180DD12C00E96BF5 /* libimageio.xcodeproj */;
+			containerPortal = D8DFF6D01969372B0035430B /* libimageio.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 087C825D180D8072003D5A59;
-			remoteInfo = libimageio;
+			remoteInfo = "libimageio-static";
 		};
-		08C28482180DD1A300E96BF5 /* PBXContainerItemProxy */ = {
+		D8DFF6D71969372B0035430B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 08C28467180DD12C00E96BF5 /* libimageio.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 087C825C180D8072003D5A59;
-			remoteInfo = libimageio;
-		};
-		08C28484180DD1A300E96BF5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08F9B7B4180DD11800DC30C4 /* lib3dmath.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 0855E68A180D7BDA00E1CF69;
-			remoteInfo = lib3dmath;
-		};
-		08F9B7B8180DD11800DC30C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08F9B7B4180DD11800DC30C4 /* lib3dmath.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 0855E68B180D7BDA00E1CF69;
-			remoteInfo = lib3dmath;
-		};
-		D82B50D1194E045100EF5CE4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08C28467180DD12C00E96BF5 /* libimageio.xcodeproj */;
+			containerPortal = D8DFF6D01969372B0035430B /* libimageio.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D82B50CD194E002B00EF5CE4;
 			remoteInfo = "libimageio-shared";
 		};
-		D82B50D5194E045400EF5CE4 /* PBXContainerItemProxy */ = {
+		D8DFF6DD196937370035430B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 08C28467180DD12C00E96BF5 /* libimageio.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 087C825C180D8072003D5A59;
-			remoteInfo = libimageio;
+			containerPortal = D8DFF6D9196937370035430B /* lib3dmath.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0855E68B180D7BDA00E1CF69;
+			remoteInfo = "lib3dmath-static";
 		};
-		D82B50D7194E045400EF5CE4 /* PBXContainerItemProxy */ = {
+		D8DFF725196939440035430B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 08F9B7B4180DD11800DC30C4 /* lib3dmath.xcodeproj */;
+			containerPortal = D8DFF6D9196937370035430B /* lib3dmath.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D8DFF6FB196937FA0035430B;
+			remoteInfo = "lib3dmath-ios";
+		};
+		D8DFF728196939440035430B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D8DFF6D01969372B0035430B /* libimageio.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D8DFF706196938680035430B;
+			remoteInfo = "libimageio-ios";
+		};
+		D8DFF72A196939BB0035430B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D8DFF6D9196937370035430B /* lib3dmath.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 0855E68A180D7BDA00E1CF69;
-			remoteInfo = lib3dmath;
+			remoteInfo = "lib3dmath-static";
+		};
+		D8DFF72C196939BB0035430B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D8DFF6D01969372B0035430B /* libimageio.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 087C825C180D8072003D5A59;
+			remoteInfo = "libimageio-static";
+		};
+		D8DFF730196939F40035430B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D8DFF6D9196937370035430B /* lib3dmath.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0855E68A180D7BDA00E1CF69;
+			remoteInfo = "lib3dmath-static";
+		};
+		D8DFF732196939F40035430B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D8DFF6D01969372B0035430B /* libimageio.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D82B50C3194E002B00EF5CE4;
+			remoteInfo = "libimageio-shared";
+		};
+		D8DFF73619693A210035430B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D8DFF6D9196937370035430B /* lib3dmath.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D8DFF6DF196937FA0035430B;
+			remoteInfo = "lib3dmath-ios";
+		};
+		D8DFF73819693A210035430B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D8DFF6D01969372B0035430B /* libimageio.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D8DFF6FC196938680035430B;
+			remoteInfo = "libimageio-ios";
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		D84A20091969B3D700DFCB31 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				D84A200B1969B45C00DFCB31 /* assets in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D84A200C1969B46400DFCB31 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				D84A200D1969B46B00DFCB31 /* assets in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D84A200E1969B46F00DFCB31 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				D84A200F1969B48200DFCB31 /* assets in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0882A3D61814F0E6005CA20A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		08C28467180DD12C00E96BF5 /* libimageio.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libimageio.xcodeproj; path = ../../../libimageio/projects/xcode/libimageio.xcodeproj; sourceTree = "<group>"; };
 		08C2846E180DD15300E96BF5 /* 3d-axes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "3d-axes.c"; path = "../../src/3d-axes.c"; sourceTree = "<group>"; };
 		08C2846F180DD15300E96BF5 /* buffers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buffers.c; path = ../../src/buffers.c; sourceTree = "<group>"; };
 		08C28470180DD15300E96BF5 /* libsimplegl-config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "libsimplegl-config.h"; path = "../../src/libsimplegl-config.h"; sourceTree = "<group>"; };
@@ -121,72 +211,24 @@
 		08C28476180DD15300E96BF5 /* textures.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = textures.c; path = ../../src/textures.c; sourceTree = "<group>"; };
 		08C28477180DD15300E96BF5 /* transformations.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = transformations.c; path = ../../src/transformations.c; sourceTree = "<group>"; };
 		08F9B7AC180DD0E000DC30C4 /* libsimplegl.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsimplegl.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		08F9B7B4180DD11800DC30C4 /* lib3dmath.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = lib3dmath.xcodeproj; path = ../../../lib3dmath/projects/xcode/lib3dmath.xcodeproj; sourceTree = "<group>"; };
 		D82B50ED194E045400EF5CE4 /* libsimplegl.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsimplegl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83B84631946AC8400201CD5 /* camera.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = camera.c; path = ../../src/camera.c; sourceTree = "<group>"; };
 		D83B84651946AC9900201CD5 /* cube-map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "cube-map.c"; path = "../../src/cube-map.c"; sourceTree = "<group>"; };
-		D8AC96151968FB0A000B0A97 /* desertplains_xneg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = desertplains_xneg.png; sourceTree = "<group>"; };
-		D8AC96161968FB0A000B0A97 /* desertplains_xpos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = desertplains_xpos.png; sourceTree = "<group>"; };
-		D8AC96171968FB0A000B0A97 /* desertplains_ypos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = desertplains_ypos.png; sourceTree = "<group>"; };
-		D8AC96181968FB0A000B0A97 /* desertplains_zneg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = desertplains_zneg.png; sourceTree = "<group>"; };
-		D8AC96191968FB0A000B0A97 /* desertplains_zpos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = desertplains_zpos.png; sourceTree = "<group>"; };
-		D8AC961A1968FB0A000B0A97 /* drakeq_bk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drakeq_bk.png; sourceTree = "<group>"; };
-		D8AC961B1968FB0A000B0A97 /* drakeq_dn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drakeq_dn.png; sourceTree = "<group>"; };
-		D8AC961C1968FB0A000B0A97 /* drakeq_ft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drakeq_ft.png; sourceTree = "<group>"; };
-		D8AC961D1968FB0A000B0A97 /* drakeq_lf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drakeq_lf.png; sourceTree = "<group>"; };
-		D8AC961E1968FB0A000B0A97 /* drakeq_rt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drakeq_rt.png; sourceTree = "<group>"; };
-		D8AC961F1968FB0A000B0A97 /* drakeq_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drakeq_up.png; sourceTree = "<group>"; };
-		D8AC96201968FB0A000B0A97 /* gardenbk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gardenbk.png; sourceTree = "<group>"; };
-		D8AC96211968FB0A000B0A97 /* gardendn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gardendn.png; sourceTree = "<group>"; };
-		D8AC96221968FB0A000B0A97 /* gardenft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gardenft.png; sourceTree = "<group>"; };
-		D8AC96231968FB0A000B0A97 /* gardenlf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gardenlf.png; sourceTree = "<group>"; };
-		D8AC96241968FB0A000B0A97 /* gardenrt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gardenrt.png; sourceTree = "<group>"; };
-		D8AC96251968FB0A000B0A97 /* gardenup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gardenup.png; sourceTree = "<group>"; };
-		D8AC96261968FB0A000B0A97 /* sahara_bk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sahara_bk.png; sourceTree = "<group>"; };
-		D8AC96271968FB0A000B0A97 /* sahara_dn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sahara_dn.png; sourceTree = "<group>"; };
-		D8AC96281968FB0A000B0A97 /* sahara_ft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sahara_ft.png; sourceTree = "<group>"; };
-		D8AC96291968FB0A000B0A97 /* sahara_lf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sahara_lf.png; sourceTree = "<group>"; };
-		D8AC962A1968FB0A000B0A97 /* sahara_rt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sahara_rt.png; sourceTree = "<group>"; };
-		D8AC962B1968FB0A000B0A97 /* sahara_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sahara_up.png; sourceTree = "<group>"; };
-		D8AC962C1968FB0A000B0A97 /* sorbin_bk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sorbin_bk.png; sourceTree = "<group>"; };
-		D8AC962D1968FB0A000B0A97 /* sorbin_dn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sorbin_dn.png; sourceTree = "<group>"; };
-		D8AC962E1968FB0A000B0A97 /* sorbin_ft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sorbin_ft.png; sourceTree = "<group>"; };
-		D8AC962F1968FB0A000B0A97 /* sorbin_lf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sorbin_lf.png; sourceTree = "<group>"; };
-		D8AC96301968FB0A000B0A97 /* sorbin_rt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sorbin_rt.png; sourceTree = "<group>"; };
-		D8AC96311968FB0A000B0A97 /* sorbin_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sorbin_up.png; sourceTree = "<group>"; };
-		D8AC96331968FB0A000B0A97 /* cube.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = cube.f.glsl; sourceTree = "<group>"; };
-		D8AC96341968FB0A000B0A97 /* cube.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = cube.v.glsl; sourceTree = "<group>"; };
-		D8AC96351968FB0A000B0A97 /* fire.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = fire.f.glsl; sourceTree = "<group>"; };
-		D8AC96361968FB0A000B0A97 /* fire.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = fire.v.glsl; sourceTree = "<group>"; };
-		D8AC96371968FB0A000B0A97 /* overlay-150.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "overlay-150.f.glsl"; sourceTree = "<group>"; };
-		D8AC96381968FB0A000B0A97 /* overlay-150.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "overlay-150.v.glsl"; sourceTree = "<group>"; };
-		D8AC96391968FB0A000B0A97 /* skybox.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = skybox.f.glsl; sourceTree = "<group>"; };
-		D8AC963A1968FB0A000B0A97 /* skybox.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = skybox.v.glsl; sourceTree = "<group>"; };
-		D8AC963B1968FB0A000B0A97 /* text-150.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "text-150.f.glsl"; sourceTree = "<group>"; };
-		D8AC963C1968FB0A000B0A97 /* text-150.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "text-150.v.glsl"; sourceTree = "<group>"; };
-		D8AC963D1968FB0A000B0A97 /* volume-render.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "volume-render.f.glsl"; sourceTree = "<group>"; };
-		D8AC963E1968FB0A000B0A97 /* volume-render.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "volume-render.v.glsl"; sourceTree = "<group>"; };
-		D8AC96401968FB0A000B0A97 /* checkered.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkered.png; sourceTree = "<group>"; };
-		D8AC96411968FB0A000B0A97 /* intensity-overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "intensity-overlay.png"; sourceTree = "<group>"; };
-		D8AC96421968FB0A000B0A97 /* intensity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = intensity.png; sourceTree = "<group>"; };
-		D8AC96431968FB0A000B0A97 /* subtitle-overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "subtitle-overlay.png"; sourceTree = "<group>"; };
-		D8AC96441968FB0A000B0A97 /* temperature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = temperature.png; sourceTree = "<group>"; };
-		D8AC96461968FB0A000B0A97 /* carp-256x256x512-2.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "carp-256x256x512-2.raw"; sourceTree = "<group>"; };
-		D8AC96471968FB0A000B0A97 /* foot-256x256x256.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "foot-256x256x256.raw"; sourceTree = "<group>"; };
-		D8AC96481968FB0A000B0A97 /* head-256x256x256.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "head-256x256x256.raw"; sourceTree = "<group>"; };
-		D8AC96491968FB0A000B0A97 /* lobster-301x324x56.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "lobster-301x324x56.raw"; sourceTree = "<group>"; };
-		D8AC964A1968FB0A000B0A97 /* mouse-150x150x276.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mouse-150x150x276.raw"; sourceTree = "<group>"; };
-		D8AC964B1968FB0A000B0A97 /* skull-256x256x256.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "skull-256x256x256.raw"; sourceTree = "<group>"; };
-		D8AC964C1968FB0A000B0A97 /* stagbeetle-832x832x494.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "stagbeetle-832x832x494.raw"; sourceTree = "<group>"; };
-		D8AC964D1968FB0A000B0A97 /* stent-512x512x174.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "stent-512x512x174.raw"; sourceTree = "<group>"; };
-		D8AC964E1968FB0A000B0A97 /* virgo-256x256x256-3.raw */ = {isa = PBXFileReference; lastKnownFileType = file; path = "virgo-256x256x256-3.raw"; sourceTree = "<group>"; };
+		D84A200A1969B45100DFCB31 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../../assets; sourceTree = "<group>"; };
+		D84A20101969B53A00DFCB31 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		D84A20131969B54F00DFCB31 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
 		D8ADCFB6196686DA002E178C /* extensions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = extensions.c; path = ../../src/extensions.c; sourceTree = "<group>"; };
 		D8D909401958084400E48C4B /* raster-font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "raster-font.c"; path = "../../src/raster-font.c"; sourceTree = "<group>"; };
+		D8DFF6D01969372B0035430B /* libimageio.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libimageio.xcodeproj; path = ../../../libimageio/projects/xcode/libimageio.xcodeproj; sourceTree = "<group>"; };
+		D8DFF6D9196937370035430B /* lib3dmath.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = lib3dmath.xcodeproj; path = ../../../lib3dmath/projects/xcode/lib3dmath.xcodeproj; sourceTree = "<group>"; };
+		D8DFF723196939440035430B /* libsimplegl.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsimplegl.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8E8C255196007F2008D51BB /* raster-font-vincent.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "raster-font-vincent.c"; path = "../../src/raster-font-vincent.c"; sourceTree = "<group>"; };
 		D8E8C258196007FE008D51BB /* raster-fonts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "raster-fonts.h"; path = "../../src/raster-fonts.h"; sourceTree = "<group>"; };
 		D8E8C25E1960164A008D51BB /* raster-font-font1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "raster-font-font1.c"; path = "../../src/raster-font-font1.c"; sourceTree = "<group>"; };
 		D8E8C25F1960164A008D51BB /* raster-font-font2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "raster-font-font2.c"; path = "../../src/raster-font-font2.c"; sourceTree = "<group>"; };
 		D8E8C2641960C81A008D51BB /* raster-font-font3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "raster-font-font3.c"; path = "../../src/raster-font-font3.c"; sourceTree = "<group>"; };
+		D8F20AEF196957CA0072DE84 /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng.a; path = "../../../libpng-1.6.12/projects/xcode/build/Release/libpng.a"; sourceTree = "<group>"; };
+		D8F20AF1196957D00072DE84 /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng.a; path = "../../../libpng-1.6.12/projects/xcode/build/Debug-iphoneos/libpng.a"; sourceTree = "<group>"; };
 		D8FF748E1967BCE400D20138 /* overlays.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = overlays.c; path = ../../src/overlays.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -195,8 +237,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D82B50BB194DFA3C00EF5CE4 /* lib3dmath.a in Frameworks */,
-				D82B50BC194DFA3C00EF5CE4 /* libimageio.a in Frameworks */,
+				D84A20111969B53A00DFCB31 /* libz.dylib in Frameworks */,
+				D8F20AF0196957CA0072DE84 /* libpng.a in Frameworks */,
+				D8DFF72E196939E10035430B /* lib3dmath.a in Frameworks */,
+				D8DFF72F196939E10035430B /* libimageio.a in Frameworks */,
 				0882A3D71814F0E6005CA20A /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -205,31 +249,38 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D82B50EE194E057400EF5CE4 /* libimageio.dylib in Frameworks */,
-				D82B50E4194E045400EF5CE4 /* lib3dmath.a in Frameworks */,
+				D84A20121969B54400DFCB31 /* libz.dylib in Frameworks */,
+				D8DFF73419693A020035430B /* lib3dmath.a in Frameworks */,
+				D8DFF73519693A020035430B /* libimageio.dylib in Frameworks */,
 				D82B50E6194E045400EF5CE4 /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8DFF71A196939440035430B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8F20AF2196957D00072DE84 /* libpng.a in Frameworks */,
+				D8DFF73A19693A2B0035430B /* lib3dmath.a in Frameworks */,
+				D8DFF73B19693A2B0035430B /* libimageio.a in Frameworks */,
+				D8DFF71B196939440035430B /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		08C28468180DD12C00E96BF5 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				08C2846D180DD12C00E96BF5 /* libimageio.a */,
-				D82B50D2194E045100EF5CE4 /* libimageio.dylib */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		08F9B7A3180DD0E000DC30C4 = {
 			isa = PBXGroup;
 			children = (
-				D8AC96131968FB0A000B0A97 /* assets */,
+				D84A200A1969B45100DFCB31 /* assets */,
+				D84A20131969B54F00DFCB31 /* libz.dylib */,
+				D84A20101969B53A00DFCB31 /* libz.dylib */,
+				D8F20AF1196957D00072DE84 /* libpng.a */,
+				D8F20AEF196957CA0072DE84 /* libpng.a */,
+				D8DFF6D9196937370035430B /* lib3dmath.xcodeproj */,
+				D8DFF6D01969372B0035430B /* libimageio.xcodeproj */,
 				0882A3D61814F0E6005CA20A /* OpenGL.framework */,
-				08C28467180DD12C00E96BF5 /* libimageio.xcodeproj */,
-				08F9B7B4180DD11800DC30C4 /* lib3dmath.xcodeproj */,
 				08F9B7B3180DD10200DC30C4 /* src */,
 				08F9B7AD180DD0E000DC30C4 /* Products */,
 			);
@@ -240,6 +291,7 @@
 			children = (
 				08F9B7AC180DD0E000DC30C4 /* libsimplegl.a */,
 				D82B50ED194E045400EF5CE4 /* libsimplegl.dylib */,
+				D8DFF723196939440035430B /* libsimplegl.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -271,107 +323,23 @@
 			name = src;
 			sourceTree = "<group>";
 		};
-		08F9B7B5180DD11800DC30C4 /* Products */ = {
+		D8DFF6D11969372B0035430B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				08F9B7B9180DD11800DC30C4 /* lib3dmath.a */,
+				D8DFF6D61969372B0035430B /* libimageio.a */,
+				D8DFF6D81969372B0035430B /* libimageio.dylib */,
+				D8DFF729196939440035430B /* libimageio.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D8AC96131968FB0A000B0A97 /* assets */ = {
+		D8DFF6DA196937370035430B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D8AC96141968FB0A000B0A97 /* env */,
-				D8AC96321968FB0A000B0A97 /* shaders */,
-				D8AC963F1968FB0A000B0A97 /* textures */,
-				D8AC96451968FB0A000B0A97 /* volumes */,
+				D8DFF6DE196937370035430B /* lib3dmath.a */,
+				D8DFF726196939440035430B /* lib3dmath.a */,
 			);
-			name = assets;
-			path = ../../assets;
-			sourceTree = "<group>";
-		};
-		D8AC96141968FB0A000B0A97 /* env */ = {
-			isa = PBXGroup;
-			children = (
-				D8AC96151968FB0A000B0A97 /* desertplains_xneg.png */,
-				D8AC96161968FB0A000B0A97 /* desertplains_xpos.png */,
-				D8AC96171968FB0A000B0A97 /* desertplains_ypos.png */,
-				D8AC96181968FB0A000B0A97 /* desertplains_zneg.png */,
-				D8AC96191968FB0A000B0A97 /* desertplains_zpos.png */,
-				D8AC961A1968FB0A000B0A97 /* drakeq_bk.png */,
-				D8AC961B1968FB0A000B0A97 /* drakeq_dn.png */,
-				D8AC961C1968FB0A000B0A97 /* drakeq_ft.png */,
-				D8AC961D1968FB0A000B0A97 /* drakeq_lf.png */,
-				D8AC961E1968FB0A000B0A97 /* drakeq_rt.png */,
-				D8AC961F1968FB0A000B0A97 /* drakeq_up.png */,
-				D8AC96201968FB0A000B0A97 /* gardenbk.png */,
-				D8AC96211968FB0A000B0A97 /* gardendn.png */,
-				D8AC96221968FB0A000B0A97 /* gardenft.png */,
-				D8AC96231968FB0A000B0A97 /* gardenlf.png */,
-				D8AC96241968FB0A000B0A97 /* gardenrt.png */,
-				D8AC96251968FB0A000B0A97 /* gardenup.png */,
-				D8AC96261968FB0A000B0A97 /* sahara_bk.png */,
-				D8AC96271968FB0A000B0A97 /* sahara_dn.png */,
-				D8AC96281968FB0A000B0A97 /* sahara_ft.png */,
-				D8AC96291968FB0A000B0A97 /* sahara_lf.png */,
-				D8AC962A1968FB0A000B0A97 /* sahara_rt.png */,
-				D8AC962B1968FB0A000B0A97 /* sahara_up.png */,
-				D8AC962C1968FB0A000B0A97 /* sorbin_bk.png */,
-				D8AC962D1968FB0A000B0A97 /* sorbin_dn.png */,
-				D8AC962E1968FB0A000B0A97 /* sorbin_ft.png */,
-				D8AC962F1968FB0A000B0A97 /* sorbin_lf.png */,
-				D8AC96301968FB0A000B0A97 /* sorbin_rt.png */,
-				D8AC96311968FB0A000B0A97 /* sorbin_up.png */,
-			);
-			path = env;
-			sourceTree = "<group>";
-		};
-		D8AC96321968FB0A000B0A97 /* shaders */ = {
-			isa = PBXGroup;
-			children = (
-				D8AC96331968FB0A000B0A97 /* cube.f.glsl */,
-				D8AC96341968FB0A000B0A97 /* cube.v.glsl */,
-				D8AC96351968FB0A000B0A97 /* fire.f.glsl */,
-				D8AC96361968FB0A000B0A97 /* fire.v.glsl */,
-				D8AC96371968FB0A000B0A97 /* overlay-150.f.glsl */,
-				D8AC96381968FB0A000B0A97 /* overlay-150.v.glsl */,
-				D8AC96391968FB0A000B0A97 /* skybox.f.glsl */,
-				D8AC963A1968FB0A000B0A97 /* skybox.v.glsl */,
-				D8AC963B1968FB0A000B0A97 /* text-150.f.glsl */,
-				D8AC963C1968FB0A000B0A97 /* text-150.v.glsl */,
-				D8AC963D1968FB0A000B0A97 /* volume-render.f.glsl */,
-				D8AC963E1968FB0A000B0A97 /* volume-render.v.glsl */,
-			);
-			path = shaders;
-			sourceTree = "<group>";
-		};
-		D8AC963F1968FB0A000B0A97 /* textures */ = {
-			isa = PBXGroup;
-			children = (
-				D8AC96401968FB0A000B0A97 /* checkered.png */,
-				D8AC96411968FB0A000B0A97 /* intensity-overlay.png */,
-				D8AC96421968FB0A000B0A97 /* intensity.png */,
-				D8AC96431968FB0A000B0A97 /* subtitle-overlay.png */,
-				D8AC96441968FB0A000B0A97 /* temperature.png */,
-			);
-			path = textures;
-			sourceTree = "<group>";
-		};
-		D8AC96451968FB0A000B0A97 /* volumes */ = {
-			isa = PBXGroup;
-			children = (
-				D8AC96461968FB0A000B0A97 /* carp-256x256x512-2.raw */,
-				D8AC96471968FB0A000B0A97 /* foot-256x256x256.raw */,
-				D8AC96481968FB0A000B0A97 /* head-256x256x256.raw */,
-				D8AC96491968FB0A000B0A97 /* lobster-301x324x56.raw */,
-				D8AC964A1968FB0A000B0A97 /* mouse-150x150x276.raw */,
-				D8AC964B1968FB0A000B0A97 /* skull-256x256x256.raw */,
-				D8AC964C1968FB0A000B0A97 /* stagbeetle-832x832x494.raw */,
-				D8AC964D1968FB0A000B0A97 /* stent-512x512x174.raw */,
-				D8AC964E1968FB0A000B0A97 /* virgo-256x256x256-3.raw */,
-			);
-			path = volumes;
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -397,6 +365,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D8DFF71C196939440035430B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8DFF71D196939440035430B /* simplegl.h in Headers */,
+				D8DFF71E196939440035430B /* raster-fonts.h in Headers */,
+				D8DFF71F196939440035430B /* libsimplegl-config.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -407,12 +385,13 @@
 				08F9B7A8180DD0E000DC30C4 /* Sources */,
 				08F9B7A9180DD0E000DC30C4 /* Frameworks */,
 				08F9B7AA180DD0E000DC30C4 /* Headers */,
+				D84A20091969B3D700DFCB31 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				08C28483180DD1A300E96BF5 /* PBXTargetDependency */,
-				08C28485180DD1A300E96BF5 /* PBXTargetDependency */,
+				D8DFF72B196939BB0035430B /* PBXTargetDependency */,
+				D8DFF72D196939BB0035430B /* PBXTargetDependency */,
 			);
 			name = "libsimplegl-static";
 			productName = libsimplegl;
@@ -426,16 +405,37 @@
 				D82B50D8194E045400EF5CE4 /* Sources */,
 				D82B50E3194E045400EF5CE4 /* Frameworks */,
 				D82B50E7194E045400EF5CE4 /* Headers */,
+				D84A200C1969B46400DFCB31 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				D82B50D4194E045400EF5CE4 /* PBXTargetDependency */,
-				D82B50D6194E045400EF5CE4 /* PBXTargetDependency */,
+				D8DFF731196939F40035430B /* PBXTargetDependency */,
+				D8DFF733196939F40035430B /* PBXTargetDependency */,
 			);
 			name = "libsimplegl-shared";
 			productName = libsimplegl;
 			productReference = D82B50ED194E045400EF5CE4 /* libsimplegl.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D8DFF707196939440035430B /* libsimplegl-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8DFF720196939440035430B /* Build configuration list for PBXNativeTarget "libsimplegl-ios" */;
+			buildPhases = (
+				D8DFF708196939440035430B /* Sources */,
+				D8DFF71A196939440035430B /* Frameworks */,
+				D8DFF71C196939440035430B /* Headers */,
+				D84A200E1969B46F00DFCB31 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D8DFF73719693A210035430B /* PBXTargetDependency */,
+				D8DFF73919693A210035430B /* PBXTargetDependency */,
+			);
+			name = "libsimplegl-ios";
+			productName = libsimplegl;
+			productReference = D8DFF723196939440035430B /* libsimplegl.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -459,42 +459,57 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 08F9B7B5180DD11800DC30C4 /* Products */;
-					ProjectRef = 08F9B7B4180DD11800DC30C4 /* lib3dmath.xcodeproj */;
+					ProductGroup = D8DFF6DA196937370035430B /* Products */;
+					ProjectRef = D8DFF6D9196937370035430B /* lib3dmath.xcodeproj */;
 				},
 				{
-					ProductGroup = 08C28468180DD12C00E96BF5 /* Products */;
-					ProjectRef = 08C28467180DD12C00E96BF5 /* libimageio.xcodeproj */;
+					ProductGroup = D8DFF6D11969372B0035430B /* Products */;
+					ProjectRef = D8DFF6D01969372B0035430B /* libimageio.xcodeproj */;
 				},
 			);
 			projectRoot = "";
 			targets = (
 				08F9B7AB180DD0E000DC30C4 /* libsimplegl-static */,
 				D82B50D3194E045400EF5CE4 /* libsimplegl-shared */,
+				D8DFF707196939440035430B /* libsimplegl-ios */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		08C2846D180DD12C00E96BF5 /* libimageio.a */ = {
+		D8DFF6D61969372B0035430B /* libimageio.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libimageio.a;
-			remoteRef = 08C2846C180DD12C00E96BF5 /* PBXContainerItemProxy */;
+			remoteRef = D8DFF6D51969372B0035430B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		08F9B7B9180DD11800DC30C4 /* lib3dmath.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = lib3dmath.a;
-			remoteRef = 08F9B7B8180DD11800DC30C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D82B50D2194E045100EF5CE4 /* libimageio.dylib */ = {
+		D8DFF6D81969372B0035430B /* libimageio.dylib */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libimageio.dylib;
-			remoteRef = D82B50D1194E045100EF5CE4 /* PBXContainerItemProxy */;
+			remoteRef = D8DFF6D71969372B0035430B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D8DFF6DE196937370035430B /* lib3dmath.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = lib3dmath.a;
+			remoteRef = D8DFF6DD196937370035430B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D8DFF726196939440035430B /* lib3dmath.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = lib3dmath.a;
+			remoteRef = D8DFF725196939440035430B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D8DFF729196939440035430B /* libimageio.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libimageio.a;
+			remoteRef = D8DFF728196939440035430B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -548,28 +563,62 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D8DFF708196939440035430B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8DFF709196939440035430B /* 3d-axes.c in Sources */,
+				D8DFF70A196939440035430B /* camera.c in Sources */,
+				D8DFF70B196939440035430B /* textures.c in Sources */,
+				D8DFF70C196939440035430B /* raster-font-font1.c in Sources */,
+				D8DFF70D196939440035430B /* objects.c in Sources */,
+				D8DFF70E196939440035430B /* raster-font-font2.c in Sources */,
+				D8DFF70F196939440035430B /* projections.c in Sources */,
+				D8DFF710196939440035430B /* transformations.c in Sources */,
+				D8DFF711196939440035430B /* raster-font.c in Sources */,
+				D8DFF712196939440035430B /* raster-font-vincent.c in Sources */,
+				D8DFF713196939440035430B /* raster-font-font3.c in Sources */,
+				D8DFF714196939440035430B /* overlays.c in Sources */,
+				D8DFF715196939440035430B /* buffers.c in Sources */,
+				D8DFF716196939440035430B /* cube-map.c in Sources */,
+				D8DFF717196939440035430B /* extensions.c in Sources */,
+				D8DFF718196939440035430B /* simplegl.c in Sources */,
+				D8DFF719196939440035430B /* shaders.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		08C28483180DD1A300E96BF5 /* PBXTargetDependency */ = {
+		D8DFF72B196939BB0035430B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = libimageio;
-			targetProxy = 08C28482180DD1A300E96BF5 /* PBXContainerItemProxy */;
+			name = "lib3dmath-static";
+			targetProxy = D8DFF72A196939BB0035430B /* PBXContainerItemProxy */;
 		};
-		08C28485180DD1A300E96BF5 /* PBXTargetDependency */ = {
+		D8DFF72D196939BB0035430B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = lib3dmath;
-			targetProxy = 08C28484180DD1A300E96BF5 /* PBXContainerItemProxy */;
+			name = "libimageio-static";
+			targetProxy = D8DFF72C196939BB0035430B /* PBXContainerItemProxy */;
 		};
-		D82B50D4194E045400EF5CE4 /* PBXTargetDependency */ = {
+		D8DFF731196939F40035430B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = libimageio;
-			targetProxy = D82B50D5194E045400EF5CE4 /* PBXContainerItemProxy */;
+			name = "lib3dmath-static";
+			targetProxy = D8DFF730196939F40035430B /* PBXContainerItemProxy */;
 		};
-		D82B50D6194E045400EF5CE4 /* PBXTargetDependency */ = {
+		D8DFF733196939F40035430B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = lib3dmath;
-			targetProxy = D82B50D7194E045400EF5CE4 /* PBXContainerItemProxy */;
+			name = "libimageio-shared";
+			targetProxy = D8DFF732196939F40035430B /* PBXContainerItemProxy */;
+		};
+		D8DFF73719693A210035430B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "lib3dmath-ios";
+			targetProxy = D8DFF73619693A210035430B /* PBXContainerItemProxy */;
+		};
+		D8DFF73919693A210035430B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "libimageio-ios";
+			targetProxy = D8DFF73819693A210035430B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -655,7 +704,12 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_IOS=1";
+				GCC_PREPROCESSOR_DEFINITIONS = SIMPLEGL_DEBUG;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/joe/projects/libpng-1.6.12/projects/xcode/build/Debug",
+					"/Users/joe/projects/libpng-1.6.12/projects/xcode/build/Release",
+				);
 				PRODUCT_NAME = libsimplegl;
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
 				SDKROOT = macosx;
@@ -671,7 +725,12 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_IOS=1";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/joe/projects/libpng-1.6.12/projects/xcode/build/Debug",
+					"/Users/joe/projects/libpng-1.6.12/projects/xcode/build/Release",
+				);
 				PRODUCT_NAME = libsimplegl;
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
 				SDKROOT = macosx;
@@ -690,7 +749,7 @@
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_DEBUG=1";
+				GCC_PREPROCESSOR_DEFINITIONS = SIMPLEGL_DEBUG;
 				MACH_O_TYPE = mh_dylib;
 				PRODUCT_NAME = libsimplegl;
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
@@ -711,11 +770,54 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = fast;
-				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_DEBUG=1";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				MACH_O_TYPE = mh_dylib;
 				PRODUCT_NAME = libsimplegl;
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
 				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		D8DFF721196939440035430B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"SIMPLEGL_IOS=1",
+					SIMPLEGL_DEBUG,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/joe/projects/libpng-1.6.12/projects/xcode/build/Debug-iphoneos",
+				);
+				PRODUCT_NAME = libsimplegl;
+				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		D8DFF722196939440035430B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "SIMPLEGL_IOS=1";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/joe/projects/libpng-1.6.12/projects/xcode/build/Debug-iphoneos",
+				);
+				PRODUCT_NAME = libsimplegl;
+				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PRODUCT_NAME)";
+				SDKROOT = iphoneos;
 			};
 			name = Release;
 		};
@@ -745,6 +847,15 @@
 			buildConfigurations = (
 				D82B50EB194E045400EF5CE4 /* Debug */,
 				D82B50EC194E045400EF5CE4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D8DFF720196939440035430B /* Build configuration list for PBXNativeTarget "libsimplegl-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8DFF721196939440035430B /* Debug */,
+				D8DFF722196939440035430B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

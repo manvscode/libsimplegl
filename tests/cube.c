@@ -382,8 +382,9 @@ void render( )
 	glUniformMatrix4fv( uniform_model_view, 1, GL_FALSE, model_view.m );
 	assert(gl_error() == GL_NO_ERROR);
 
-
+	glActiveTexture( GL_TEXTURE0 );
 	glBindTexture( GL_TEXTURE_2D, checkered_pattern_texture );
+	glUniform1i( uniform_texture, 0 );
 	assert(gl_error() == GL_NO_ERROR);
 	glDrawElements( GL_TRIANGLES, polyhedra.indices_count, GL_UNSIGNED_SHORT, 0 );
 	assert(gl_error() == GL_NO_ERROR);

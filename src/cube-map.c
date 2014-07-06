@@ -136,7 +136,9 @@ bool tex_cube_map_setup( GLuint texture, const char* xpos, const char* xneg, con
     glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
     glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+	#ifndef TARGET_OS_IPHONE
     glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE );
+	#endif
 	assert(gl_error() == GL_NO_ERROR);
 
     if( xpos_image.pixels )

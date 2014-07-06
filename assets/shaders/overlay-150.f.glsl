@@ -4,8 +4,8 @@ in vec3 f_vertex;
 out vec4 color;
 uniform vec3 u_color;
 uniform sampler2D u_texture;
-uniform uint u_width;
-uniform uint u_height;
+uniform int u_width;
+uniform int u_height;
 uniform bool u_use_texture;
 
 void main( )

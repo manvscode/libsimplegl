@@ -64,15 +64,19 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 
 	switch( texture_dimensions )
 	{
+		#if TARGET_OS_IPHONE
+		/* 3d and 1d textures not supported for iOS */
+		#else
 		case 3:
 			texture_type = GL_TEXTURE_3D;
 			break;
-		case 2:
-			texture_type = GL_TEXTURE_2D;
-			break;
-		case 1: /* fall-through */
-		default:
+		case 1:
 			texture_type = GL_TEXTURE_1D;
+			break;
+		#endif
+		case 2: /* fall-through */
+		default:
+			texture_type = GL_TEXTURE_2D;
 			break;
 	}
 
@@ -90,11 +94,18 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 
 	if( texture_dimensions == 1 )
 	{
+		#if TARGET_OS_IPHONE
+		return;
+		#else
 		GLenum pixel_format;
 		switch( bit_depth )
 		{
 			case 8:
+				#if TARGET_OS_IPHONE
+				pixel_format = GL_LUMINANCE;
+				#else
 				pixel_format = GL_RED;
+				#endif
 				break;
 			case 32:
 				pixel_format = GL_RGBA;
@@ -108,6 +119,7 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 		const GLint border = flags & TEX_BORDER;
 		glTexImage1D( texture_type, 0, pixel_format, width, border, pixel_format, GL_UNSIGNED_BYTE, pixels );
 		assert(gl_error() == GL_NO_ERROR);
+		#endif
 	}
 	else if( texture_dimensions == 2 )
 	{
@@ -144,7 +156,11 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 			switch( bit_depth )
 			{
 				case 8:
+					#if TARGET_OS_IPHONE
+					pixel_format = GL_LUMINANCE;
+					#else
 					pixel_format = GL_RED;
+					#endif
 					break;
 				case 32:
 					pixel_format = GL_RGBA;
@@ -162,6 +178,9 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 	}
 	else if( texture_dimensions == 3 ) /* 3D textures */
 	{
+		#if TARGET_OS_IPHONE
+		return;
+		#else
 		GLenum pixel_format;
 		GLenum internal_format;
 		GLenum type;
@@ -194,6 +213,7 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 		const GLint border = 0; /* Must be zero for 3D textures */
 		glTexImage3D( texture_type, 0, internal_format, width, height, depth, border, pixel_format, type, pixels );
 		assert(gl_error() == GL_NO_ERROR);
+		#endif
 	}
 
 	bool generate_mipmaps = false;
@@ -233,11 +253,15 @@ void tex_setup_texture( GLuint texture, GLsizei width, GLsizei height, GLsizei d
 	{
 		glTexParameteri( texture_type, GL_TEXTURE_WRAP_T, (flags & TEX_CLAMP_T) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
 	}
+	assert(gl_error() == GL_NO_ERROR);
 
+	#if TARGET_OS_IPHONE /* 3d and 1d textures not supported for iOS */
+	#else
 	if( texture_dimensions >= 3 )
 	{
 		glTexParameteri( texture_type, GL_TEXTURE_WRAP_R, (flags & TEX_CLAMP_R) ? GL_CLAMP_TO_EDGE : GL_REPEAT );
 	}
+	#endif
 
 	if( generate_mipmaps )
 	{

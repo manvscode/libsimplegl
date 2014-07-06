@@ -25,8 +25,8 @@
 #include "simplegl.h"
 
 #ifdef SIMPLEGL_DEBUG
-static __inline void glsl_shader_error  ( GLuint shader );
-static __inline void glsl_program_error ( GLuint program );
+void glsl_shader_error  ( GLuint shader );
+void glsl_program_error ( GLuint program );
 #endif
 
 
@@ -460,7 +460,6 @@ GLchar* glsl_log( GLuint object )
 	return p_log;
 }
 
-#ifdef SIMPLEGL_DEBUG
 void glsl_shader_error( GLuint shader )
 {
 	const GLchar* p_log = glsl_log( shader );
@@ -490,7 +489,6 @@ void glsl_program_error( GLuint program )
 		fprintf( stderr, "[Program %u Error] unknown\n", program );
 	}
 }
-#endif
 
 const GLchar* glsl_object_type_string( GLenum type )
 {
@@ -538,6 +536,7 @@ typedef struct glsl_version_mapping {
 } glsl_version_mapping_t;
 
 static const glsl_version_mapping_t shader_version_map[] = {
+	{ "1.00", 100 }, /* OpenGL 2.0 */
 	{ "1.10", 110 }, /* OpenGL 2.0 */
 	{ "1.20", 120 }, /* OpenGL 2.1 */
 	{ "1.20", 120 }, /* OpenGL 2.1 */

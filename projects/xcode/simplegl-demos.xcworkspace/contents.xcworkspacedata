@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:libsimplegl.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:volume-renderer.xcodeproj">
    </FileRef>
    <FileRef
@@ -9,8 +12,5 @@
    </FileRef>
    <FileRef
       location = "group:cube.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:libsimplegl.xcodeproj">
    </FileRef>
 </Workspace>

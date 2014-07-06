@@ -3,19 +3,19 @@ in vec3 f_vertex;
 out vec4 color;
 uniform vec3 u_color;
 uniform sampler2D u_texture;
-uniform uint u_width;
-uniform uint u_height;
-uniform uint u_glyph_width;
-uniform uint u_glyph_height;
-uniform uint u_character;
+uniform float u_width;
+uniform float u_height;
+uniform float u_glyph_width;
+uniform float u_glyph_height;
+uniform int u_character;
 
 void main( )
 {
-	vec2 offset = vec2( 0, 1 - ((u_character + 1u) * u_glyph_height / float(u_height)) );
+	vec2 offset = vec2( 0, 1 - ((u_character + 1) * u_glyph_height / u_height) );
 
 	mat2 scale = mat2( 
-		u_glyph_width / float(u_width),                         0,
-		0,                       u_glyph_height / float(u_height)
+		u_glyph_width / u_width,                         0,
+		0,                       u_glyph_height / u_height
 	);
 
 

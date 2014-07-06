@@ -1,7 +1,7 @@
-#version 150
+#version 100
 
-in vec3 a_vertex;
-out vec3 f_vertex;
+attribute vec3 a_vertex;
+varying vec3 f_vertex;
 uniform mat4 u_projection;
 uniform vec3 u_position;
 uniform int u_width;

@@ -4,10 +4,26 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>libsimplegl-ios.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>9</integer>
+		</dict>
 		<key>libsimplegl-shared.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>6</integer>
+		</dict>
+		<key>libsimplegl-static.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>5</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -18,6 +34,11 @@
 			<true/>
 		</dict>
 		<key>D82B50D3194E045400EF5CE4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D8DFF707196939440035430B</key>
 		<dict>
 			<key>primary</key>
 			<true/>

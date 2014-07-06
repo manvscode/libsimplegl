@@ -100,7 +100,11 @@ bool overlay_initialize( void )
 			goto failure;
 		}
 
+		#if TARGET_OS_IPHONE
+		char* vertex_shader_source = glsl_shader_load( "assets/shaders/overlay-100.v.glsl" );
+		#else
 		char* vertex_shader_source = glsl_shader_load( "assets/shaders/overlay-150.v.glsl" );
+		#endif
 		if( !glsl_shader_compile( vertex_shader, vertex_shader_source ) )
 		{
 			free( vertex_shader_source );
@@ -115,7 +119,11 @@ bool overlay_initialize( void )
 			goto failure;
 		}
 
+		#if TARGET_OS_IPHONE
+		char* fragment_shader_source = glsl_shader_load( "assets/shaders/overlay-100.f.glsl" );
+		#else
 		char* fragment_shader_source = glsl_shader_load( "assets/shaders/overlay-150.f.glsl" );
+		#endif
 		if( !glsl_shader_compile( fragment_shader, fragment_shader_source ) )
 		{
 			free( fragment_shader_source );
@@ -230,21 +238,21 @@ void overlay_render( const vec2_t* position, const vec2_t* size, const vec3_t* c
 		glActiveTexture( GL_TEXTURE0 );
 		glBindTexture( GL_TEXTURE_2D, texture_2d );
 		assert( gl_error() == GL_NO_ERROR );
-		glUniform1ui( overlay_shader.uniform_use_texture, 1 );
+		glUniform1i( overlay_shader.uniform_use_texture, 1 );
 		assert( gl_error() == GL_NO_ERROR );
 	}
 	else
 	{
-		glUniform1ui( overlay_shader.uniform_use_texture, 0 );
+		glUniform1i( overlay_shader.uniform_use_texture, 0 );
 		assert( gl_error() == GL_NO_ERROR );
 	}
 
 	glUniform1i( overlay_shader.uniform_texture, 0 );
 	assert( gl_error() == GL_NO_ERROR );
 
-	glUniform1ui( overlay_shader.uniform_width, size->x );
+	glUniform1i( overlay_shader.uniform_width, size->x );
 	assert( gl_error() == GL_NO_ERROR );
-	glUniform1ui( overlay_shader.uniform_height, size->y );
+	glUniform1i( overlay_shader.uniform_height, size->y );
 	assert( gl_error() == GL_NO_ERROR );
 
 	glUniform3fv( overlay_shader.uniform_position, 1, (GLfloat*) &VEC3( position->x, position->y, 0.0f ) );
