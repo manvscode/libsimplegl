@@ -29,10 +29,10 @@
 		D8240457194E14B5000FB985 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		D824047A194E1EE8000FB985 /* volume-render.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "volume-render.c"; path = "../../tests/volume-render.c"; sourceTree = SOURCE_ROOT; };
 		D824047C194E1FC8000FB985 /* lib3dmath.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lib3dmath.a; path = "../../../../Library/Developer/Xcode/DerivedData/simplegl-demos-ehsecgtvbomdckcezrsickpxluio/Build/Products/Debug/lib3dmath.a"; sourceTree = "<group>"; };
-		D82404CF194E2874000FB985 /* volume-render.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = "volume-render.f.glsl"; path = "../../tests/assets/shaders/volume-render.f.glsl"; sourceTree = "<group>"; };
-		D82404D0194E2874000FB985 /* volume-render.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = "volume-render.v.glsl"; path = "../../tests/assets/shaders/volume-render.v.glsl"; sourceTree = "<group>"; };
 		D82B50EF194E05AD00EF5CE4 /* libsimplegl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsimplegl.dylib; path = "../../../../Library/Developer/Xcode/DerivedData/simplegl-demos-ehsecgtvbomdckcezrsickpxluio/Build/Products/Debug/libsimplegl.dylib"; sourceTree = "<group>"; };
 		D82D1509194DF61700752193 /* volume-renderer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "volume-renderer"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8AC96101968FAF1000B0A97 /* volume-render.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = "volume-render.f.glsl"; path = "../../assets/shaders/volume-render.f.glsl"; sourceTree = "<group>"; };
+		D8AC96111968FAF1000B0A97 /* volume-render.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = "volume-render.v.glsl"; path = "../../assets/shaders/volume-render.v.glsl"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,9 +52,9 @@
 		D82D1500194DF61700752193 = {
 			isa = PBXGroup;
 			children = (
-				D82404CF194E2874000FB985 /* volume-render.f.glsl */,
-				D82404D0194E2874000FB985 /* volume-render.v.glsl */,
 				D824047A194E1EE8000FB985 /* volume-render.c */,
+				D8AC96101968FAF1000B0A97 /* volume-render.f.glsl */,
+				D8AC96111968FAF1000B0A97 /* volume-render.v.glsl */,
 				D824047C194E1FC8000FB985 /* lib3dmath.a */,
 				D8240457194E14B5000FB985 /* SDL2.framework */,
 				D82B50EF194E05AD00EF5CE4 /* libsimplegl.dylib */,

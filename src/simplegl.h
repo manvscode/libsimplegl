@@ -24,18 +24,6 @@
 #include <float.h>
 #include <limits.h>
 #include <assert.h>
-/*
- * Mathematics
- */
-#include <lib3dmath/mathematics.h>
-#include <lib3dmath/vec2.h>
-#include <lib3dmath/vec3.h>
-#include <lib3dmath/vec4.h>
-#include <lib3dmath/mat2.h>
-#include <lib3dmath/mat3.h>
-#include <lib3dmath/mat4.h>
-#include <lib3dmath/quat.h>
-#include <math.h>
 #if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
 #include <stdbool.h>
 #else
@@ -84,7 +72,36 @@ extern "C" {
  * Mathematics
  */
 #include <lib3dmath/mathematics.h>
+#include <lib3dmath/vec2.h>
+#include <lib3dmath/vec3.h>
+#include <lib3dmath/vec4.h>
+#include <lib3dmath/mat2.h>
+#include <lib3dmath/mat3.h>
+#include <lib3dmath/mat4.h>
+#include <lib3dmath/quat.h>
 #include <math.h>
+
+/*
+ * Projections
+ */
+mat4_t orthographic       ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far );
+mat4_t frustum            ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far );
+mat4_t perspective        ( GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far );
+vec4_t viewport_unproject ( const vec2_t* position, const mat4_t* projection, const mat4_t* model );
+vec2_t viewport_project   ( const vec4_t* point, const mat4_t* projection, const mat4_t* model );
+
+/*
+ * Transformations
+ */
+mat4_t translate     ( const vec3_t* t );
+mat4_t scale         ( const vec3_t* s );
+mat4_t uniform_scale ( GLfloat scale );
+mat4_t rotate_x      ( GLfloat angle );
+mat4_t rotate_y      ( GLfloat angle );
+mat4_t rotate_z      ( GLfloat angle );
+mat4_t rotate_xyz    ( const GLchar* order, ... );
+mat4_t orientation   ( vec3_t* forward, vec3_t* left, vec3_t* up );
+mat4_t look_at       ( const pt3_t* eye, const pt3_t* target, const vec3_t* up );
 
 /*
  * Texturing
@@ -110,28 +127,6 @@ bool   tex_load_3d              ( GLuint texture, const GLchar* filename, GLsize
 bool   tex_cube_map_setup       ( GLuint texture, const GLchar* xpos, const GLchar* xneg, const GLchar* ypos, const GLchar* yneg, const GLchar* zpos, const GLchar* zneg );
 
 /*
- * Projections
- */
-mat4_t orthographic       ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far );
-mat4_t frustum            ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far );
-mat4_t perspective        ( GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far );
-vec4_t viewport_unproject ( const vec2_t* position, const mat4_t* projection, const mat4_t* model );
-vec2_t viewport_project   ( const vec4_t* point, const mat4_t* projection, const mat4_t* model );
-
-/*
- * Transformations
- */
-mat4_t translate     ( const vec3_t* t );
-mat4_t scale         ( const vec3_t* s );
-mat4_t uniform_scale ( GLfloat scale );
-mat4_t rotate_x      ( GLfloat angle );
-mat4_t rotate_y      ( GLfloat angle );
-mat4_t rotate_z      ( GLfloat angle );
-mat4_t rotate_xyz    ( const GLchar* order, ... );
-mat4_t orientation   ( vec3_t* forward, vec3_t* left, vec3_t* up );
-mat4_t look_at       ( const pt3_t* eye, const pt3_t* target, const vec3_t* up );
-
-/*
  * Shaders
  */
 typedef struct shader_info {
@@ -152,7 +147,8 @@ GLboolean     glsl_link_program              ( GLuint program );
 GLint         glsl_bind_attribute            ( GLuint program, const GLchar* name );
 GLint         glsl_bind_uniform              ( GLuint program, const GLchar* name );
 GLchar*       glsl_log                       ( GLuint object /* program or shader */ );
-const GLchar* glsl_object_type_string( GLenum type );
+const GLchar* glsl_object_type_string        ( GLenum type );
+const GLchar* glsl_shader_version_code       ( const GLchar* maxVersion );
 
 /*
  * Buffers
@@ -204,7 +200,14 @@ void           raster_font_writef          ( const raster_font_t* fnt, const vec
 void           raster_font_shadowed_writef ( const raster_font_t* fnt, const vec2_t* position, const vec3_t* color, const vec3_t* shadow, GLfloat size, const char* format, ... );
 
 /*
- * Objects
+ * Overlays
+ */
+bool overlay_initialize   ( void );
+void overlay_deinitialize ( void );
+void overlay_render       ( const vec2_t* position, const vec2_t* size, const vec3_t* color, GLuint texture );
+
+/*
+ * Polyhedra
  */
 typedef struct polyhedra {
 	GLfloat* vertices;
@@ -235,6 +238,12 @@ void      axes_3d_destroy ( axes_3d_t* axes );
 void      axes_3d_render  ( axes_3d_t axes, const GLfloat* model_view );
 
 /*
+ * Extensions
+ */
+bool  gl_has_extension  ( const GLchar* ext );
+void* gl_extension      ( const GLchar* procName );
+
+/*
  * Miscellaneous
  */ 
 const GLchar* gl_vendor         ( void );
@@ -246,12 +255,6 @@ GLenum        gl_error          ( void );
 GLuint        frame_delta       ( GLuint now /* milliseconds */ );
 GLfloat       frame_rate        ( GLuint delta /* milliseconds */ );
 void          frame_rate_print  ( GLuint delta /* milliseconds */ );
-
-/*
- * Extensions
- */
-bool  gl_has_extension  ( const GLchar* ext );
-void* gl_extension      ( const GLchar* procName );
 
 #ifdef SIMPLEGL_DEBUG
 #define GL_ASSERT_NO_ERROR()    assert(gl_error() == GL_NO_ERROR);

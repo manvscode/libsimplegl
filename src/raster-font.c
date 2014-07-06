@@ -30,6 +30,7 @@
 #define RASTER_FONT_MAX_STRLEN    (256)
 #define RASTER_FONT_MAX_FONTS     (4)
 
+#if 0
 static const char* vertex_shader_source =
 	"#version 150\n"
 	"in vec3 a_vertex;"
@@ -73,6 +74,7 @@ static const char* fragment_shader_source =
 	"    vec4 texel = texture( u_texture, texture_coord );"
 	"    color = vec4(u_color, 1) * vec4( texel.r );"
 	"}";
+#endif
 
 typedef struct raster_font_shader {
 	GLuint program;
@@ -250,13 +252,13 @@ bool raster_font_shader_initialize( raster_font_shader_t* shader )
 			goto failure;
 		}
 
-		//const char* vertex_shader_source = glsl_shader_load( "./tests/assets/shaders/text.v.glsl" );
+		char* vertex_shader_source = glsl_shader_load( "assets/shaders/text-150.v.glsl" );
 		if( !glsl_shader_compile( vertex_shader, vertex_shader_source ) )
 		{
-			//free( vertex_shader_source );
+			free( vertex_shader_source );
 			goto failure;
 		}
-		//free( vertex_shader_source );
+		free( vertex_shader_source );
 
 		fragment_shader = glsl_create( GL_FRAGMENT_SHADER );
 
@@ -265,13 +267,13 @@ bool raster_font_shader_initialize( raster_font_shader_t* shader )
 			goto failure;
 		}
 
-		//const char* fragment_shader_source = glsl_shader_load( "./tests/assets/shaders/text.f.glsl" );
+		char* fragment_shader_source = glsl_shader_load( "assets/shaders/text-150.f.glsl" );
 		if( !glsl_shader_compile( fragment_shader, fragment_shader_source ) )
 		{
-			//free( fragment_shader_source );
+			free( fragment_shader_source );
 			goto failure;
 		}
-		//free( fragment_shader_source );
+		free( fragment_shader_source );
 
 		glsl_attach_shader( program, vertex_shader );
 		glsl_attach_shader( program, fragment_shader );
@@ -296,8 +298,6 @@ bool raster_font_shader_initialize( raster_font_shader_t* shader )
 		uniform_height       = glsl_bind_uniform( program, "u_height" );
 		uniform_character    = glsl_bind_uniform( program, "u_character" );
 		uniform_texture      = glsl_bind_uniform( program, "u_texture" );
-		//uniform_width        = glsl_bind_uniform( program, "u_width" );
-		//uniform_height       = glsl_bind_uniform( program, "u_height" );
 		assert(gl_error() == GL_NO_ERROR);
 
 		glGenVertexArrays( 1, &vao );
@@ -308,7 +308,6 @@ bool raster_font_shader_initialize( raster_font_shader_t* shader )
 		{
 			glEnableVertexAttribArray( attribute_vertex );
 			glVertexAttribPointer( attribute_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0 );
-			glDisableVertexAttribArray( attribute_vertex );
 			assert(gl_error() == GL_NO_ERROR);
 		}
 		else
@@ -530,8 +529,6 @@ void raster_font_write( const raster_font_t* fnt, const vec2_t* position, const 
 	glBindVertexArray( font_shader.vao );
 
 	assert(gl_error() == GL_NO_ERROR);
-	glEnableVertexAttribArray( font_shader.attribute_vertex );
-	assert(gl_error() == GL_NO_ERROR);
 
 	glUniformMatrix4fv(font_shader.uniform_projection, 1, GL_FALSE, projection.m );
 	glUniform3fv( font_shader.uniform_color, 1, (GLfloat*) color );
@@ -567,8 +564,6 @@ void raster_font_write( const raster_font_t* fnt, const vec2_t* position, const 
 
 	assert(gl_error() == GL_NO_ERROR);
 
-	glDisableVertexAttribArray( font_shader.attribute_vertex );
-	assert(gl_error() == GL_NO_ERROR);
 	glDepthMask( GL_TRUE );
 	assert(gl_error() == GL_NO_ERROR);
 

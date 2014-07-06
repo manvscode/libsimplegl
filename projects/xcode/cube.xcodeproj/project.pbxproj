@@ -27,10 +27,10 @@
 /* Begin PBXFileReference section */
 		D8240457194E14B5000FB985 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		D824045B194E1596000FB985 /* cube.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cube.c; path = ../../tests/cube.c; sourceTree = SOURCE_ROOT; };
-		D82404D3194E28B7000FB985 /* cube.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = cube.f.glsl; path = ../../tests/assets/shaders/cube.f.glsl; sourceTree = "<group>"; };
-		D82404D4194E28B7000FB985 /* cube.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = cube.v.glsl; path = ../../tests/assets/shaders/cube.v.glsl; sourceTree = "<group>"; };
 		D82B50EF194E05AD00EF5CE4 /* libsimplegl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsimplegl.dylib; path = "../../../../Library/Developer/Xcode/DerivedData/simplegl-demos-ehsecgtvbomdckcezrsickpxluio/Build/Products/Debug/libsimplegl.dylib"; sourceTree = "<group>"; };
 		D82D1509194DF61700752193 /* cube */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cube; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8AC960C1968FAD8000B0A97 /* cube.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = cube.f.glsl; path = ../../assets/shaders/cube.f.glsl; sourceTree = "<group>"; };
+		D8AC960D1968FAD8000B0A97 /* cube.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = cube.v.glsl; path = ../../assets/shaders/cube.v.glsl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,9 +49,9 @@
 		D82D1500194DF61700752193 = {
 			isa = PBXGroup;
 			children = (
-				D82404D3194E28B7000FB985 /* cube.f.glsl */,
-				D82404D4194E28B7000FB985 /* cube.v.glsl */,
 				D824045B194E1596000FB985 /* cube.c */,
+				D8AC960C1968FAD8000B0A97 /* cube.f.glsl */,
+				D8AC960D1968FAD8000B0A97 /* cube.v.glsl */,
 				D8240457194E14B5000FB985 /* SDL2.framework */,
 				D82B50EF194E05AD00EF5CE4 /* libsimplegl.dylib */,
 				D82D150A194DF61700752193 /* Products */,

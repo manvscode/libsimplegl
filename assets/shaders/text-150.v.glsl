@@ -1,5 +1,4 @@
 #version 150
-
 in vec3 a_vertex;
 out vec3 f_vertex;
 uniform mat4 u_projection;

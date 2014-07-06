@@ -42,7 +42,8 @@ GLuint vbo_vertices = 0;
 GLuint vbo_colors = 0;
 GLuint vbo_tex_coords = 0;
 GLuint ibo_indices = 0;
-GLuint texture = 0;
+GLuint checkered_pattern_texture = 0;
+GLuint subtitle_texture_overlay;
 polyhedra_t polyhedra;
 raster_font_t* font1 = NULL;
 raster_font_t* font2 = NULL;
@@ -195,8 +196,8 @@ void initialize( void )
 	GLchar* shader_log  = NULL;
 	GLchar* program_log = NULL;
 	const shader_info_t shaders[] = {
-		{ GL_VERTEX_SHADER,   "./tests/assets/shaders/cube.v.glsl" },
-		{ GL_FRAGMENT_SHADER, "./tests/assets/shaders/cube.f.glsl" }
+		{ GL_VERTEX_SHADER,   "assets/shaders/cube.v.glsl" },
+		{ GL_FRAGMENT_SHADER, "assets/shaders/cube.f.glsl" }
 	};
 
 	if( !glsl_program_from_shaders( &program, shaders, shader_info_count(shaders), &shader_log, &program_log ) )
@@ -221,15 +222,33 @@ void initialize( void )
 	uniform_texture = glsl_bind_uniform( program, "u_texture" );
 	GL_ASSERT_NO_ERROR( );
 
-	texture = tex_create( );
+	checkered_pattern_texture = tex_create( );
 	GL_ASSERT_NO_ERROR( );
-	if( texture )
+	if( checkered_pattern_texture )
 	{
 		glActiveTexture( GL_TEXTURE0 );
 		GL_ASSERT_NO_ERROR( );
-		tex_load_2d_with_mipmaps( texture, "./tests/assets/textures/checkered.png", TEX_CLAMP_S | TEX_CLAMP_T );
+		tex_load_2d_with_mipmaps( checkered_pattern_texture, "assets/textures/checkered.png", TEX_CLAMP_S | TEX_CLAMP_T );
 		GL_ASSERT_NO_ERROR( );
-		glLabelObject( GL_TEXTURE, texture, 0, "Cube Texture" );
+		glLabelObject( GL_TEXTURE, checkered_pattern_texture, 0, "Cube Texture" );
+	}
+	else
+	{
+		dump_sdl_error( );
+	}
+
+	subtitle_texture_overlay = tex_create( );
+
+	if( subtitle_texture_overlay )
+	{
+		assert( gl_error() == GL_NO_ERROR );
+		if( !tex_load_2d( subtitle_texture_overlay, "assets/textures/subtitle-overlay.png", GL_NEAREST, GL_NEAREST, TEX_CLAMP_S | TEX_CLAMP_T ) )
+		{
+			dump_sdl_error( );
+			exit( EXIT_FAILURE );
+		}
+
+		assert( gl_error() == GL_NO_ERROR );
 	}
 	else
 	{
@@ -305,7 +324,7 @@ void initialize( void )
 
 	glPointSize( 1.0 );
 
-
+	overlay_initialize( );
 
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
@@ -315,7 +334,8 @@ void initialize( void )
 
 void deinitialize( void )
 {
-	tex_destroy( texture );
+	tex_destroy( checkered_pattern_texture );
+	tex_destroy( subtitle_texture_overlay );
 	glDeleteVertexArrays( 1, &vao );
 	glDeleteBuffers( 1, &vbo_vertices );
 	glDeleteBuffers( 1, &vbo_tex_coords );
@@ -325,6 +345,7 @@ void deinitialize( void )
 	polyhedra_destroy( &polyhedra );
 	raster_font_destroy( font1 );
 	raster_font_destroy( font2 );
+	overlay_deinitialize( );
 }
 
 GLuint delta = 0;
@@ -362,7 +383,7 @@ void render( )
 	assert(gl_error() == GL_NO_ERROR);
 
 
-	glBindTexture( GL_TEXTURE_2D, texture );
+	glBindTexture( GL_TEXTURE_2D, checkered_pattern_texture );
 	assert(gl_error() == GL_NO_ERROR);
 	glDrawElements( GL_TRIANGLES, polyhedra.indices_count, GL_UNSIGNED_SHORT, 0 );
 	assert(gl_error() == GL_NO_ERROR);
@@ -370,8 +391,9 @@ void render( )
 	glBindVertexArray( 0 );
 	GL_ASSERT_NO_ERROR( );
 
+	overlay_render( &VEC2(0,0), &VEC2(540,32), &VEC3(1,1,1), subtitle_texture_overlay );
 
-	raster_font_shadowed_writef( font2, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), &VEC3_ZERO, 1.0f, "Cube" );
+	raster_font_shadowed_writef( font2, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), &VEC3_ZERO, 0.8f, "Cube" );
 	raster_font_shadowed_writef( font1, &VEC2(2, 2), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "FPS: %.1f", frame_rate(delta) );
 
 	SDL_GL_SwapWindow( window );

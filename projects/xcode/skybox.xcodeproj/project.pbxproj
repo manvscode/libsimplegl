@@ -31,8 +31,8 @@
 		D8240476194E1E29000FB985 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		D8240478194E1E92000FB985 /* libsimplegl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsimplegl.dylib; path = "../../../../Library/Developer/Xcode/DerivedData/simplegl-demos-ehsecgtvbomdckcezrsickpxluio/Build/Products/Debug/libsimplegl.dylib"; sourceTree = "<group>"; };
 		D824047E194E202F000FB985 /* lib3dmath.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lib3dmath.a; path = "../../../../Library/Developer/Xcode/DerivedData/simplegl-demos-ehsecgtvbomdckcezrsickpxluio/Build/Products/Debug/lib3dmath.a"; sourceTree = "<group>"; };
-		D82404D1194E288C000FB985 /* skybox.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = skybox.f.glsl; path = ../../tests/assets/shaders/skybox.f.glsl; sourceTree = SOURCE_ROOT; };
-		D82404D2194E288C000FB985 /* skybox.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = skybox.v.glsl; path = ../../tests/assets/shaders/skybox.v.glsl; sourceTree = "<group>"; };
+		D8AC960E1968FAE3000B0A97 /* skybox.f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = skybox.f.glsl; path = ../../assets/shaders/skybox.f.glsl; sourceTree = "<group>"; };
+		D8AC960F1968FAE3000B0A97 /* skybox.v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = skybox.v.glsl; path = ../../assets/shaders/skybox.v.glsl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,9 +52,9 @@
 		D824045D194E1D8C000FB985 = {
 			isa = PBXGroup;
 			children = (
-				D82404D1194E288C000FB985 /* skybox.f.glsl */,
-				D82404D2194E288C000FB985 /* skybox.v.glsl */,
 				D8240474194E1DEE000FB985 /* skybox.c */,
+				D8AC960E1968FAE3000B0A97 /* skybox.f.glsl */,
+				D8AC960F1968FAE3000B0A97 /* skybox.v.glsl */,
 				D824047E194E202F000FB985 /* lib3dmath.a */,
 				D8240478194E1E92000FB985 /* libsimplegl.dylib */,
 				D8240476194E1E29000FB985 /* SDL2.framework */,

@@ -1,5 +1,4 @@
 #version 150
-
 in vec3 f_vertex;
 out vec4 color;
 uniform vec3 u_color;

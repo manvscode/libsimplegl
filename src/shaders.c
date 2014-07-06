@@ -328,9 +328,9 @@ GLchar* glsl_shader_load( const GLchar* path )
 
 GLboolean glsl_shader_compile( GLuint shader, const GLchar* source )
 {
-	GLboolean result = GL_TRUE;
+	GLboolean result = GL_FALSE;
 
-	if( glIsShader(shader) )
+	if( source && glIsShader(shader) )
 	{
 		glShaderSource( shader, 1, &source, NULL );
 		glCompileShader( shader );
@@ -530,4 +530,51 @@ const GLchar* glsl_object_type_string( GLenum type )
 	}
 
 	return type_str;
+}
+
+typedef struct glsl_version_mapping {
+	const char* glsl_version;
+	unsigned short version;
+} glsl_version_mapping_t;
+
+static const glsl_version_mapping_t shader_version_map[] = {
+	{ "1.10", 110 }, /* OpenGL 2.0 */
+	{ "1.20", 120 }, /* OpenGL 2.1 */
+	{ "1.20", 120 }, /* OpenGL 2.1 */
+	{ "1.30", 130 }, /* OpenGL 3.0 */
+	{ "1.40", 140 }, /* OpenGL 3.1 */
+	{ "1.50", 150 }, /* OpenGL 3.2 */
+	{ "3.30", 330 }, /* OpenGL 3.3 */
+	{ "4.00", 400 }, /* OpenGL 4.0 */
+	{ "4.10", 410 }, /* OpenGL 4.1 */
+	{ "4.20", 420 }, /* OpenGL 4.2 */
+	{ "4.30", 430 }, /* OpenGL 4.3 */
+	{ "4.40", 440 }, /* OpenGL 4.4 */
+};
+#define GLSL_VERSION_MAPPING_LENGTH    (sizeof(shader_version_map) / sizeof(shader_version_map[0]))
+
+const GLchar* glsl_shader_version_code( const GLchar* maxVersion )
+{
+	static char result[ 16 ];
+	const char* glsl_version = gl_shader_version( );
+	bool found = false;
+
+	for( int i = 0; !found && i < GLSL_VERSION_MAPPING_LENGTH; i++ )
+	{
+		if( strcmp(shader_version_map[ i ].glsl_version, glsl_version) == 0 ||
+		    (maxVersion && strcmp(shader_version_map[ i ].glsl_version, maxVersion) == 0 ))
+		{
+			snprintf( result, sizeof(result), "#version %d\n", shader_version_map[ i ].version );
+			found = true;
+		}
+	}
+
+	if( !found )
+	{
+		snprintf( result, sizeof(result), "#version %d\n", shader_version_map[ 0 ].version );
+	}
+
+	result[ sizeof(result) - 1 ] = '\0';
+
+	return result;
 }

@@ -243,8 +243,8 @@ void initialize( void )
 	GLchar* shader_log  = NULL;
 	GLchar* program_log = NULL;
 	const shader_info_t shaders[] = {
-		{ GL_VERTEX_SHADER,   "./tests/assets/shaders/skybox.v.glsl" },
-		{ GL_FRAGMENT_SHADER, "./tests/assets/shaders/skybox.f.glsl" }
+		{ GL_VERTEX_SHADER,   "assets/shaders/skybox.v.glsl" },
+		{ GL_FRAGMENT_SHADER, "assets/shaders/skybox.f.glsl" }
 	};
 
 	if( !glsl_program_from_shaders( &program, shaders, shader_info_count(shaders), &shader_log, &program_log ) )
@@ -288,21 +288,21 @@ void initialize( void )
 
 			if( i == 0 )
 			{
-				cubemap_setup = tex_cube_map_setup( cube_map_texture[ i ], "./tests/assets/env/drakeq_rt.png", "./tests/assets/env/drakeq_lf.png",
-																           "./tests/assets/env/drakeq_up.png", "./tests/assets/env/drakeq_dn.png",
-																           "./tests/assets/env/drakeq_ft.png", "./tests/assets/env/drakeq_bk.png" );
+				cubemap_setup = tex_cube_map_setup( cube_map_texture[ i ], "assets/env/drakeq_rt.png", "assets/env/drakeq_lf.png",
+																           "assets/env/drakeq_up.png", "assets/env/drakeq_dn.png",
+																           "assets/env/drakeq_ft.png", "assets/env/drakeq_bk.png" );
 			}
 			else if( i == 1 )
 			{
-				cubemap_setup = tex_cube_map_setup( cube_map_texture[ i ], "./tests/assets/env/sahara_rt.png", "./tests/assets/env/sahara_lf.png",
-																           "./tests/assets/env/sahara_up.png", "./tests/assets/env/sahara_dn.png",
-																           "./tests/assets/env/sahara_ft.png", "./tests/assets/env/sahara_bk.png" );
+				cubemap_setup = tex_cube_map_setup( cube_map_texture[ i ], "assets/env/sahara_rt.png", "assets/env/sahara_lf.png",
+																           "assets/env/sahara_up.png", "assets/env/sahara_dn.png",
+																           "assets/env/sahara_ft.png", "assets/env/sahara_bk.png" );
 			}
 			else
 			{
-				cubemap_setup = tex_cube_map_setup( cube_map_texture[ i ], "./tests/assets/env/sorbin_rt.png", "./tests/assets/env/sorbin_lf.png",
-																           "./tests/assets/env/sorbin_up.png", "./tests/assets/env/sorbin_dn.png",
-																           "./tests/assets/env/sorbin_ft.png", "./tests/assets/env/sorbin_bk.png" );
+				cubemap_setup = tex_cube_map_setup( cube_map_texture[ i ], "assets/env/sorbin_rt.png", "assets/env/sorbin_lf.png",
+																           "assets/env/sorbin_up.png", "assets/env/sorbin_dn.png",
+																           "assets/env/sorbin_ft.png", "assets/env/sorbin_bk.png" );
 			}
 
 			if( !cubemap_setup )

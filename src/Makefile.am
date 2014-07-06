@@ -10,6 +10,7 @@ libsimplegl_src = 3d-axes.c \
                   transformations.c \
                   simplegl.c \
                   objects.c \
+                  overlays.c \
                   raster-font.c \
                   raster-font-vincent.c \
                   raster-font-font1.c \

@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 #include "../src/simplegl.h"
 #include <lib3dmath/vec3.h>
 #include <lib3dmath/quat.h>
@@ -30,17 +31,17 @@
 #define RENDER_MODE_HIGH_INTENSITY_PROJECTION 1u
 #define RENDER_PASS_BACK_VOXELS               0u
 #define RENDER_PASS_SAMPLED_VOXELS            1u
-#define MAX_VOLUMES                           5
+#define MAX_VOLUMES                           6
 
 static const char* volume_files[ MAX_VOLUMES ] = {
-	"./tests/assets/volumes/head-256x256x256.raw",
-	"./tests/assets/volumes/foot-256x256x256.raw",
-	"./tests/assets/volumes/skull-256x256x256.raw",
-	"./tests/assets/volumes/stent-512x512x174.raw",
-	//"./tests/assets/volumes/lobster-301x324x56.raw",
-	//"./tests/assets/volumes/stagbeetle-832x832x494.raw",
-	//"./tests/assets/volumes/carp-256x256x512-2.raw",
-	"./tests/assets/volumes/virgo-256x256x256-3.raw",
+	"assets/volumes/head-256x256x256.raw",
+	"assets/volumes/foot-256x256x256.raw",
+	"assets/volumes/skull-256x256x256.raw",
+	"assets/volumes/stent-512x512x174.raw",
+	//"assets/volumes/lobster-301x324x56.raw",
+	//"assets/volumes/stagbeetle-832x832x494.raw",
+	"assets/volumes/carp-256x256x512-2.raw",
+	"assets/volumes/virgo-256x256x256-3.raw",
 };
 
 static const vec4_t volume_dimensions[ MAX_VOLUMES ] = {
@@ -50,7 +51,7 @@ static const vec4_t volume_dimensions[ MAX_VOLUMES ] = {
 	VEC4( 512, 512, 174, 8 ),
 	//VEC4( 301, 324, 56, 8 ),
 	//VEC4( 832, 832, 494, 16 ),
-	//VEC4( 256, 256, 512, 16 ),
+	VEC4( 256, 256, 512, 16 ),
 	VEC4( 256, 256, 256, 24 ),
 };
 
@@ -85,11 +86,14 @@ GLuint framebuffer = 0;
 GLuint colorRenderBuffer;
 GLuint back_voxel_texture;
 GLuint color_transfer_texture;
+GLuint color_transfer_texture_overlay;
+GLuint subtitle_texture_overlay;
 
 GLuint selected_volume = 0;
 GLuint render_mode = 0;
 raster_font_t* font1 = NULL;
 raster_font_t* font2 = NULL;
+GLfloat zoom = -6.0f;
 
 
 
@@ -238,7 +242,7 @@ int main( int argc, char* argv[] )
 	initialize( );
 
 	bool done = false;
-	bool fullscreen = true;
+	bool fullscreen = false;
 
 	SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
 	SDL_ShowCursor( SDL_DISABLE );
@@ -287,6 +291,28 @@ int main( int argc, char* argv[] )
 		{
 			selected_volume = 4;
 		}
+		if( state[SDL_SCANCODE_6] )
+		{
+			selected_volume = 5;
+		}
+		/*
+		if( state[SDL_SCANCODE_7] )
+		{
+			selected_volume = 6;
+		}
+		if( state[SDL_SCANCODE_8] )
+		{
+			selected_volume = 7;
+		}
+		*/
+		if( state[SDL_SCANCODE_A] )
+		{
+			zoom += 0.1f;
+		}
+		if( state[SDL_SCANCODE_Z] )
+		{
+			zoom += -0.1f;
+		}
 
 		render( );
 	}
@@ -303,7 +329,10 @@ quit:
 void initialize( void )
 {
 	gl_info_print( );
-	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+	char cwd[ 256 ];
+	getcwd( cwd, sizeof(cwd) );
+	printf( "Current Working Dir.: %s\n", cwd );
+	glClearColor( 0.17f, 0.17f, 0.17f, 1.0f );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
 	glEnable( GL_DEPTH_TEST );
@@ -334,13 +363,13 @@ void initialize( void )
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	glViewport( 0, 0, width, height );
-	assert(gl_error() == GL_NO_ERROR);
+	assert( gl_error() == GL_NO_ERROR );
 
 	GLchar* shader_log  = NULL;
 	GLchar* program_log = NULL;
 	const shader_info_t shaders[] = {
-		{ GL_VERTEX_SHADER,   "./tests/assets/shaders/volume-render.v.glsl" },
-		{ GL_FRAGMENT_SHADER, "./tests/assets/shaders/volume-render.f.glsl" }
+		{ GL_VERTEX_SHADER,   "assets/shaders/volume-render.v.glsl" },
+		{ GL_FRAGMENT_SHADER, "assets/shaders/volume-render.f.glsl" }
 	};
 
 	if( !glsl_program_from_shaders( &program, shaders, shader_info_count(shaders), &shader_log, &program_log ) )
@@ -359,16 +388,16 @@ void initialize( void )
 		exit( EXIT_FAILURE );
 	}
 
-	attribute_vertex = glsl_bind_attribute( program, "a_vertex" ); assert(gl_error() == GL_NO_ERROR);
-	attribute_tex_coord = glsl_bind_attribute( program, "a_tex_coord" ); assert(gl_error() == GL_NO_ERROR);
-	attribute_color  = glsl_bind_attribute( program, "a_color" ); assert(gl_error() == GL_NO_ERROR);
-	uniform_model_view = glsl_bind_uniform( program, "u_model_view" ); assert(gl_error() == GL_NO_ERROR);
-	uniform_voxel_data = glsl_bind_uniform( program, "u_voxel_data" ); assert(gl_error() == GL_NO_ERROR);
-	uniform_back_voxels = glsl_bind_uniform( program, "u_back_voxels" ); assert(gl_error() == GL_NO_ERROR);
-	uniform_color_transfer = glsl_bind_uniform( program, "u_color_transfer" ); assert(gl_error() == GL_NO_ERROR);
-	uniform_rendering_pass = glsl_bind_uniform( program, "u_render_pass" ); assert(gl_error() == GL_NO_ERROR);
-	uniform_seed = glsl_bind_uniform( program, "u_seed" ); assert(gl_error() == GL_NO_ERROR);
-	uniform_render_mode = glsl_bind_uniform( program, "u_render_mode" ); assert(gl_error() == GL_NO_ERROR);
+	attribute_vertex = glsl_bind_attribute( program, "a_vertex" ); assert( gl_error() == GL_NO_ERROR );
+	attribute_tex_coord = glsl_bind_attribute( program, "a_tex_coord" ); assert( gl_error() == GL_NO_ERROR );
+	attribute_color  = glsl_bind_attribute( program, "a_color" ); assert( gl_error() == GL_NO_ERROR );
+	uniform_model_view = glsl_bind_uniform( program, "u_model_view" ); assert( gl_error() == GL_NO_ERROR );
+	uniform_voxel_data = glsl_bind_uniform( program, "u_voxel_data" ); assert( gl_error() == GL_NO_ERROR );
+	uniform_back_voxels = glsl_bind_uniform( program, "u_back_voxels" ); assert( gl_error() == GL_NO_ERROR );
+	uniform_color_transfer = glsl_bind_uniform( program, "u_color_transfer" ); assert( gl_error() == GL_NO_ERROR );
+	uniform_rendering_pass = glsl_bind_uniform( program, "u_render_pass" ); assert( gl_error() == GL_NO_ERROR );
+	uniform_seed = glsl_bind_uniform( program, "u_seed" ); assert( gl_error() == GL_NO_ERROR );
+	uniform_render_mode = glsl_bind_uniform( program, "u_render_mode" ); assert( gl_error() == GL_NO_ERROR );
 
 
 	load_volumes( );
@@ -378,15 +407,50 @@ void initialize( void )
 
 	if( color_transfer_texture )
 	{
-		//glActiveTexture( GL_TEXTURE2 );
-		assert(gl_error() == GL_NO_ERROR);
-		if( !tex_load_1d( color_transfer_texture, "./tests/assets/textures/intensity.png", GL_LINEAR, GL_LINEAR, TEX_CLAMP_S ) )
+		assert( gl_error() == GL_NO_ERROR );
+		if( !tex_load_1d( color_transfer_texture, "assets/textures/intensity.png", GL_LINEAR, GL_LINEAR, TEX_CLAMP_S ) )
 		{
 			dump_sdl_error( );
 			exit( EXIT_FAILURE );
 		}
 
-		assert(gl_error() == GL_NO_ERROR);
+		assert( gl_error() == GL_NO_ERROR );
+	}
+	else
+	{
+		dump_sdl_error( );
+	}
+
+	color_transfer_texture_overlay = tex_create( );
+
+	if( color_transfer_texture_overlay )
+	{
+		assert( gl_error() == GL_NO_ERROR );
+		if( !tex_load_2d( color_transfer_texture_overlay, "assets/textures/intensity-overlay.png", GL_LINEAR, GL_LINEAR, TEX_CLAMP_S | TEX_CLAMP_T ) )
+		{
+			dump_sdl_error( );
+			exit( EXIT_FAILURE );
+		}
+
+		assert( gl_error() == GL_NO_ERROR );
+	}
+	else
+	{
+		dump_sdl_error( );
+	}
+
+	subtitle_texture_overlay = tex_create( );
+
+	if( subtitle_texture_overlay )
+	{
+		assert( gl_error() == GL_NO_ERROR );
+		if( !tex_load_2d( subtitle_texture_overlay, "assets/textures/subtitle-overlay.png", GL_NEAREST, GL_NEAREST, TEX_CLAMP_S | TEX_CLAMP_T ) )
+		{
+			dump_sdl_error( );
+			exit( EXIT_FAILURE );
+		}
+
+		assert( gl_error() == GL_NO_ERROR );
 	}
 	else
 	{
@@ -394,22 +458,20 @@ void initialize( void )
 	}
 
 	glGenVertexArrays( 1, &vao );
-	assert(gl_error() == GL_NO_ERROR);
+	assert( gl_error() == GL_NO_ERROR );
 	glBindVertexArray( vao );
-	assert(gl_error() == GL_NO_ERROR);
+	assert( gl_error() == GL_NO_ERROR );
 
 	assert( vertex_count > 4 );
 	assert( tex_coords_count > 4 );
 
 	if( buffer_create( &vbo_vertices, vertices, sizeof(GLfloat), vertex_count, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		assert(gl_error() == GL_NO_ERROR);
+		assert( gl_error() == GL_NO_ERROR );
 		glEnableVertexAttribArray( attribute_vertex );
-		assert(gl_error() == GL_NO_ERROR);
+		assert( gl_error() == GL_NO_ERROR );
 		glVertexAttribPointer( attribute_vertex, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-		assert(gl_error() == GL_NO_ERROR);
-		glDisableVertexAttribArray( attribute_vertex );
-		assert(gl_error() == GL_NO_ERROR);
+		assert( gl_error() == GL_NO_ERROR );
 	}
 	else
 	{
@@ -418,13 +480,11 @@ void initialize( void )
 
 	if( buffer_create( &vbo_tex_coords, tex_coords, sizeof(GLfloat), tex_coords_count, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		assert(gl_error() == GL_NO_ERROR);
+		assert( gl_error() == GL_NO_ERROR );
 		glEnableVertexAttribArray( attribute_tex_coord );
-		assert(gl_error() == GL_NO_ERROR);
+		assert( gl_error() == GL_NO_ERROR );
 		glVertexAttribPointer( attribute_tex_coord, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-		assert(gl_error() == GL_NO_ERROR);
-		glDisableVertexAttribArray( attribute_tex_coord );
-		assert(gl_error() == GL_NO_ERROR);
+		assert( gl_error() == GL_NO_ERROR );
 	}
 	else
 	{
@@ -433,7 +493,7 @@ void initialize( void )
 
 	if( buffer_create( &ibo_indices, indices, sizeof(GLushort), indices_count, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		assert(gl_error() == GL_NO_ERROR);
+		assert( gl_error() == GL_NO_ERROR );
 	}
 	else
 	{
@@ -450,7 +510,7 @@ void initialize( void )
 		glBindRenderbuffer( GL_RENDERBUFFER, colorRenderBuffer );
 		glRenderbufferStorage( GL_RENDERBUFFER, GL_RGBA8, width, height );
 		glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderBuffer );
-		assert(gl_error() == GL_NO_ERROR);
+		assert( gl_error() == GL_NO_ERROR );
 
 
 		GLenum status = glCheckFramebufferStatus( GL_FRAMEBUFFER );
@@ -470,7 +530,10 @@ void initialize( void )
 	}
 
 	glPointSize( 4.0 );
-	assert(gl_error() == GL_NO_ERROR);
+
+	overlay_initialize( );
+
+	assert( gl_error() == GL_NO_ERROR );
 }
 
 void deinitialize( void )
@@ -479,6 +542,9 @@ void deinitialize( void )
 	{
 		tex_destroy( voxel_texture[ i ] );
 	}
+	tex_destroy( color_transfer_texture );
+	tex_destroy( color_transfer_texture_overlay );
+	tex_destroy( subtitle_texture_overlay );
 	glDeleteFramebuffers( 1, &framebuffer );
 	glDeleteRenderbuffers( 1, &colorRenderBuffer );
 	glDeleteTextures( 1, &back_voxel_texture );
@@ -490,6 +556,7 @@ void deinitialize( void )
 	glDeleteProgram( program );
 	raster_font_destroy( font1 );
 	raster_font_destroy( font2 );
+	overlay_deinitialize( );
 }
 
 GLuint delta = 0;
@@ -512,14 +579,14 @@ void render( )
 	mat4_t projection = orthographic( -2.0f, 2.0f, -2.0f, 2.0f, -10.0f, 10.0f );
 	#endif
 	quat_t q1 = quat_from_axis3_angle( &VEC3( 0.0f, 1.0f, 0.0f ), angle * RADIANS_PER_DEGREE );
-	angle += 0.05f * delta;
+	angle += 0.025f * delta;
 	mat4_t rotation_tfx  = quat_to_mat4( &q1 );
 	const vec4_t* dimensions = &volume_dimensions[ selected_volume ];
 	const scaler_t max_dimension = vec3_max_component( vec4_to_vec3( dimensions ) );
 	const vec3_t scaled_dimension = VEC3(dimensions->x / max_dimension, dimensions->y / max_dimension, dimensions->z / max_dimension);
 
 	mat4_t scale_tfx     = scale( &scaled_dimension );
-	mat4_t translate_tfx = translate( &VEC3( 0.0, 0.0, -6 ) );
+	mat4_t translate_tfx = translate( &VEC3( 0.0, 0.0, zoom ) );
 	mat4_t transform_tfx = MAT4_IDENTITY;
 	transform_tfx = mat4_mult_matrix( &transform_tfx, &scale_tfx );
 	transform_tfx = mat4_mult_matrix( &transform_tfx, &translate_tfx );
@@ -527,29 +594,25 @@ void render( )
 	mat4_t model_view = mat4_mult_matrix( &projection, &transform_tfx );
 
 
-	assert(gl_error() == GL_NO_ERROR);
+	assert( gl_error() == GL_NO_ERROR );
 	glUseProgram( program );
 
 	glBindVertexArray( vao );
 
-	glEnableVertexAttribArray( attribute_vertex );
-	glEnableVertexAttribArray( attribute_tex_coord );
-	//glEnableVertexAttribArray( attribute_color );
 	glUniformMatrix4fv( uniform_model_view, 1, GL_FALSE, model_view.m );
-	assert(gl_error() == GL_NO_ERROR);
+	assert( gl_error() == GL_NO_ERROR );
 	glUniform1i( uniform_voxel_data, 0 ); // texture unit 0 holds the voxel data
-	assert(gl_error() == GL_NO_ERROR);
+	assert( gl_error() == GL_NO_ERROR );
 	glUniform1i( uniform_back_voxels, 1 ); // texture unit 1 holds the backing facing voxels
-	assert(gl_error() == GL_NO_ERROR);
+	assert( gl_error() == GL_NO_ERROR );
 	glUniform1i( uniform_color_transfer, 2 ); // texture unit 2 holds the color transfer function
-	assert(gl_error() == GL_NO_ERROR);
+	assert( gl_error() == GL_NO_ERROR );
 	glActiveTexture( GL_TEXTURE0 );
 	glBindTexture( GL_TEXTURE_3D, voxel_texture[ selected_volume ] );
 	glActiveTexture( GL_TEXTURE1 );
 	glBindTexture( GL_TEXTURE_2D, back_voxel_texture );
 	glActiveTexture( GL_TEXTURE2 );
 	glBindTexture( GL_TEXTURE_1D, color_transfer_texture );
-
 
 
 	// First rendering pass
@@ -565,7 +628,7 @@ void render( )
 	glUniform1ui( uniform_seed, now );
 	glUniform1ui( uniform_render_mode, render_mode );
 	glDrawElements( GL_TRIANGLES, indices_count, GL_UNSIGNED_SHORT, 0 );
-	assert(gl_error() == GL_NO_ERROR);
+	assert( gl_error() == GL_NO_ERROR );
 
 	glActiveTexture( GL_TEXTURE0 );
 	glBindTexture( GL_TEXTURE_3D, 0 );
@@ -573,17 +636,20 @@ void render( )
 	glBindTexture( GL_TEXTURE_2D, 0 );
 	glActiveTexture( GL_TEXTURE2 );
 	glBindTexture( GL_TEXTURE_1D, 0 );
-	glDisableVertexAttribArray( attribute_vertex );
-	glDisableVertexAttribArray( attribute_tex_coord );
-	//glDisableVertexAttribArray( attribute_color );
 
+	overlay_render( &VEC2(20,height-40), &VEC2(200,10), &VEC3(1,1,1), color_transfer_texture_overlay );
+	raster_font_shadowed_writef( font1, &VEC2(10, height-50), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "Low" );
+	raster_font_shadowed_writef( font1, &VEC2(200, height-50), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "High" );
 
-	assert(gl_error() == GL_NO_ERROR);
+	assert( gl_error() == GL_NO_ERROR );
+
+	overlay_render( &VEC2(0,0), &VEC2(540,32), &VEC3(1,1,1), subtitle_texture_overlay );
 	raster_font_shadowed_writef( font2, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), &VEC3(0.2,0.2f,0), 0.8f, "Volume Rendering: %s", strrchr( volume_files[selected_volume], '/' ) + 1 );
 	raster_font_shadowed_writef( font1, &VEC2(2, 2), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "FPS: %.1f", frame_rate(delta) );
-	raster_font_shadowed_writef( font1, &VEC2(620, 2), &VEC3(0,1,1), &VEC3_ZERO, 1.0f, "Press 1, 2, 3, 4, or 5." );
+	raster_font_shadowed_writef( font1, &VEC2(150, 2), &VEC3(1,0.5,0.2), &VEC3_ZERO, 1.0f, render_mode == RENDER_MODE_XRAY ? "Using X-Ray Mode" : "Using HIP Mode" );
+	raster_font_shadowed_writef( font1, &VEC2(350, 2), &VEC3(0,1,1), &VEC3_ZERO, 1.0f, "Press 1, 2, 3, 4, or 5." );
 
-	assert(gl_error() == GL_NO_ERROR);
+	assert( gl_error() == GL_NO_ERROR );
 	SDL_GL_SwapWindow( window );
 }
 
@@ -606,7 +672,7 @@ void load_volumes( void )
 		if( voxel_texture[ i ] )
 		{
 			glActiveTexture( GL_TEXTURE0 );
-			assert(gl_error() == GL_NO_ERROR);
+			assert( gl_error() == GL_NO_ERROR );
 			int flags = TEX_CLAMP_S | TEX_CLAMP_T | TEX_CLAMP_R;
 
 			if( tex_load_3d( voxel_texture[ i ], volume_files[ i ], volume_dimensions[ i ].w, volume_dimensions[ i ].x, volume_dimensions[ i ].y, volume_dimensions[ i ].z, GL_LINEAR, GL_LINEAR, flags ) )
@@ -620,7 +686,7 @@ void load_volumes( void )
 				exit( EXIT_FAILURE );
 			}
 
-			assert(gl_error() == GL_NO_ERROR);
+			assert( gl_error() == GL_NO_ERROR );
 		}
 		else
 		{
