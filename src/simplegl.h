@@ -79,6 +79,7 @@ extern "C" {
 #include <lib3dmath/mat3.h>
 #include <lib3dmath/mat4.h>
 #include <lib3dmath/quat.h>
+#include <lib3dmath/transforms.h>
 #include <math.h>
 
 /*
@@ -89,19 +90,6 @@ mat4_t frustum            ( GLfloat left, GLfloat right, GLfloat bottom, GLfloat
 mat4_t perspective        ( GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far );
 vec4_t viewport_unproject ( const vec2_t* position, const mat4_t* projection, const mat4_t* model );
 vec2_t viewport_project   ( const vec4_t* point, const mat4_t* projection, const mat4_t* model );
-
-/*
- * Transformations
- */
-mat4_t translate     ( const vec3_t* t );
-mat4_t scale         ( const vec3_t* s );
-mat4_t uniform_scale ( GLfloat scale );
-mat4_t rotate_x      ( GLfloat angle );
-mat4_t rotate_y      ( GLfloat angle );
-mat4_t rotate_z      ( GLfloat angle );
-mat4_t rotate_xyz    ( const GLchar* order, ... );
-mat4_t orientation   ( vec3_t* forward, vec3_t* left, vec3_t* up );
-mat4_t look_at       ( const pt3_t* eye, const pt3_t* target, const vec3_t* up );
 
 /*
  * Texturing

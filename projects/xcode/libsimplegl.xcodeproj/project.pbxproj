@@ -17,13 +17,11 @@
 		08C2847E180DD15300E96BF5 /* simplegl.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28474180DD15300E96BF5 /* simplegl.c */; };
 		08C2847F180DD15300E96BF5 /* simplegl.h in Headers */ = {isa = PBXBuildFile; fileRef = 08C28475180DD15300E96BF5 /* simplegl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08C28480180DD15300E96BF5 /* textures.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28476180DD15300E96BF5 /* textures.c */; };
-		08C28481180DD15300E96BF5 /* transformations.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28477180DD15300E96BF5 /* transformations.c */; };
 		D82B50D9194E045400EF5CE4 /* 3d-axes.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C2846E180DD15300E96BF5 /* 3d-axes.c */; };
 		D82B50DA194E045400EF5CE4 /* camera.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84631946AC8400201CD5 /* camera.c */; };
 		D82B50DB194E045400EF5CE4 /* textures.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28476180DD15300E96BF5 /* textures.c */; };
 		D82B50DC194E045400EF5CE4 /* objects.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28471180DD15300E96BF5 /* objects.c */; };
 		D82B50DD194E045400EF5CE4 /* projections.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28472180DD15300E96BF5 /* projections.c */; };
-		D82B50DE194E045400EF5CE4 /* transformations.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28477180DD15300E96BF5 /* transformations.c */; };
 		D82B50DF194E045400EF5CE4 /* buffers.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C2846F180DD15300E96BF5 /* buffers.c */; };
 		D82B50E0194E045400EF5CE4 /* cube-map.c in Sources */ = {isa = PBXBuildFile; fileRef = D83B84651946AC9900201CD5 /* cube-map.c */; };
 		D82B50E1194E045400EF5CE4 /* simplegl.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28474180DD15300E96BF5 /* simplegl.c */; };
@@ -49,7 +47,6 @@
 		D8DFF70D196939440035430B /* objects.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28471180DD15300E96BF5 /* objects.c */; };
 		D8DFF70E196939440035430B /* raster-font-font2.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C25F1960164A008D51BB /* raster-font-font2.c */; };
 		D8DFF70F196939440035430B /* projections.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28472180DD15300E96BF5 /* projections.c */; };
-		D8DFF710196939440035430B /* transformations.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C28477180DD15300E96BF5 /* transformations.c */; };
 		D8DFF711196939440035430B /* raster-font.c in Sources */ = {isa = PBXBuildFile; fileRef = D8D909401958084400E48C4B /* raster-font.c */; };
 		D8DFF712196939440035430B /* raster-font-vincent.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C255196007F2008D51BB /* raster-font-vincent.c */; };
 		D8DFF713196939440035430B /* raster-font-font3.c in Sources */ = {isa = PBXBuildFile; fileRef = D8E8C2641960C81A008D51BB /* raster-font-font3.c */; };
@@ -209,7 +206,6 @@
 		08C28474180DD15300E96BF5 /* simplegl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = simplegl.c; path = ../../src/simplegl.c; sourceTree = "<group>"; };
 		08C28475180DD15300E96BF5 /* simplegl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplegl.h; path = ../../src/simplegl.h; sourceTree = "<group>"; };
 		08C28476180DD15300E96BF5 /* textures.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = textures.c; path = ../../src/textures.c; sourceTree = "<group>"; };
-		08C28477180DD15300E96BF5 /* transformations.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = transformations.c; path = ../../src/transformations.c; sourceTree = "<group>"; };
 		08F9B7AC180DD0E000DC30C4 /* libsimplegl.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsimplegl.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D82B50ED194E045400EF5CE4 /* libsimplegl.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsimplegl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83B84631946AC8400201CD5 /* camera.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = camera.c; path = ../../src/camera.c; sourceTree = "<group>"; };
@@ -312,7 +308,6 @@
 				08C28474180DD15300E96BF5 /* simplegl.c */,
 				08C28475180DD15300E96BF5 /* simplegl.h */,
 				08C28476180DD15300E96BF5 /* textures.c */,
-				08C28477180DD15300E96BF5 /* transformations.c */,
 				D8D909401958084400E48C4B /* raster-font.c */,
 				D8E8C258196007FE008D51BB /* raster-fonts.h */,
 				D8E8C255196007F2008D51BB /* raster-font-vincent.c */,
@@ -526,7 +521,6 @@
 				08C2847B180DD15300E96BF5 /* objects.c in Sources */,
 				D8E8C2621960164A008D51BB /* raster-font-font2.c in Sources */,
 				08C2847C180DD15300E96BF5 /* projections.c in Sources */,
-				08C28481180DD15300E96BF5 /* transformations.c in Sources */,
 				D8D909411958084400E48C4B /* raster-font.c in Sources */,
 				D8E8C256196007F2008D51BB /* raster-font-vincent.c in Sources */,
 				D8E8C2651960C81A008D51BB /* raster-font-font3.c in Sources */,
@@ -550,7 +544,6 @@
 				D82B50DC194E045400EF5CE4 /* objects.c in Sources */,
 				D8E8C2631960164A008D51BB /* raster-font-font2.c in Sources */,
 				D82B50DD194E045400EF5CE4 /* projections.c in Sources */,
-				D82B50DE194E045400EF5CE4 /* transformations.c in Sources */,
 				D8D909421958084400E48C4B /* raster-font.c in Sources */,
 				D8E8C257196007F2008D51BB /* raster-font-vincent.c in Sources */,
 				D8E8C2661960C81A008D51BB /* raster-font-font3.c in Sources */,
@@ -574,7 +567,6 @@
 				D8DFF70D196939440035430B /* objects.c in Sources */,
 				D8DFF70E196939440035430B /* raster-font-font2.c in Sources */,
 				D8DFF70F196939440035430B /* projections.c in Sources */,
-				D8DFF710196939440035430B /* transformations.c in Sources */,
 				D8DFF711196939440035430B /* raster-font.c in Sources */,
 				D8DFF712196939440035430B /* raster-font-vincent.c in Sources */,
 				D8DFF713196939440035430B /* raster-font-font3.c in Sources */,

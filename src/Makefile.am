@@ -7,7 +7,6 @@ libsimplegl_src = 3d-axes.c \
                   projections.c \
                   shaders.c \
                   textures.c \
-                  transformations.c \
                   simplegl.c \
                   objects.c \
                   overlays.c \
