@@ -59,6 +59,8 @@ static const vec4_t volume_dimensions[ MAX_VOLUMES ] = {
 static void initialize     ( void );
 static void deinitialize   ( void );
 static void render         ( void );
+static void render_grid( const mat4_t* projection );
+static void render_volume  ( const mat4_t* projection, GLuint now );
 static void dump_sdl_error ( void );
 static void load_volumes   ( void );
 
@@ -94,6 +96,7 @@ GLuint selected_volume = 0;
 GLuint render_mode = 0;
 raster_font_t* font1 = NULL;
 raster_font_t* font2 = NULL;
+grid_t grid = NULL;
 GLfloat zoom = -6.0f;
 
 
@@ -333,7 +336,7 @@ void initialize( void )
 	char cwd[ 256 ];
 	getcwd( cwd, sizeof(cwd) );
 	printf( "Current Working Dir.: %s\n", cwd );
-	glClearColor( 0.17f, 0.17f, 0.17f, 1.0f );
+	glClearColor( 0.1f, 0.1f, 0.1f, 1.0f );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
 	glEnable( GL_DEPTH_TEST );
@@ -513,7 +516,6 @@ void initialize( void )
 		glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderBuffer );
 		assert( gl_error() == GL_NO_ERROR );
 
-
 		GLenum status = glCheckFramebufferStatus( GL_FRAMEBUFFER );
 		if( status != GL_FRAMEBUFFER_COMPLETE )
 		{
@@ -534,6 +536,8 @@ void initialize( void )
 
 	overlay_initialize( );
 
+
+	grid = grid_create( 50.0f, 1.0f );
 	assert( gl_error() == GL_NO_ERROR );
 }
 
@@ -558,6 +562,7 @@ void deinitialize( void )
 	raster_font_destroy( font1 );
 	raster_font_destroy( font2 );
 	overlay_deinitialize( );
+	grid_destroy( &grid );
 }
 
 GLuint delta = 0;
@@ -572,10 +577,44 @@ void render( )
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)width) / height;
 	#if 1
-	mat4_t projection = perspective( 30.0 * RADIANS_PER_DEGREE, aspect, 0.1, 100.0 );
+	mat4_t projection = perspective( 30.0 * RADIANS_PER_DEGREE, aspect, 0.1, 200.0 );
 	#else
 	mat4_t projection = orthographic( -2.0f, 2.0f, -2.0f, 2.0f, -10.0f, 10.0f );
 	#endif
+
+	render_grid( &projection );
+	render_volume( &projection, now );
+
+	overlay_render( &VEC2(20,height-40), &VEC2(200,10), &VEC3(1,1,1), color_transfer_texture_overlay );
+	raster_font_shadowed_writef( font1, &VEC2(10, height-50), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "Low" );
+	raster_font_shadowed_writef( font1, &VEC2(200, height-50), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "High" );
+
+	assert( gl_error() == GL_NO_ERROR );
+
+	overlay_render( &VEC2(0,0), &VEC2(540,32), &VEC3(1,1,1), subtitle_texture_overlay );
+	raster_font_shadowed_writef( font2, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), &VEC3(0.2,0.2f,0), 0.8f, "Volume Rendering: %s", strrchr( volume_files[selected_volume], '/' ) + 1 );
+	raster_font_shadowed_writef( font1, &VEC2(2, 2), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "FPS: %.1f", frame_rate(delta) );
+	raster_font_shadowed_writef( font1, &VEC2(150, 2), &VEC3(1,0.5,0.2), &VEC3_ZERO, 1.0f, render_mode == RENDER_MODE_XRAY ? "Using X-Ray Mode" : "Using HIP Mode" );
+	raster_font_shadowed_writef( font1, &VEC2(350, 2), &VEC3(0,1,1), &VEC3_ZERO, 1.0f, "Press 1, 2, 3, 4, or 5." );
+
+	assert( gl_error() == GL_NO_ERROR );
+	SDL_GL_SwapWindow( window );
+}
+
+void render_grid( const mat4_t* projection )
+{
+	mat4_t translate_tfx = translate( &VEC3( 0.0, 0.0, zoom * 10 ) );
+	mat4_t rotation_tfx = rotate_x( 90 * RADIANS_PER_DEGREE );
+	mat4_t transform_tfx = MAT4_IDENTITY;
+	transform_tfx = mat4_mult_matrix( &transform_tfx, &translate_tfx );
+	transform_tfx = mat4_mult_matrix( &transform_tfx, &rotation_tfx );
+	mat4_t model_view = mat4_mult_matrix( projection, &transform_tfx );
+
+	grid_render( grid, &model_view, &VEC4(1.0f, 1.0f, 1.0f, 0.05f), &VEC4(1.0f, 1.0f, 1.0f, 0.02f) );
+}
+
+void render_volume( const mat4_t* projection, GLuint now )
+{
 	const float angle = 0.025f;
 	quat_t q = quat_from_axis3_angle( &VEC3(0, 1, 0), angle * RADIANS_PER_DEGREE * delta );
 	volume_orientation = quat_multiply( &volume_orientation, &q );
@@ -590,8 +629,7 @@ void render( )
 	transform_tfx = mat4_mult_matrix( &transform_tfx, &scale_tfx );
 	transform_tfx = mat4_mult_matrix( &transform_tfx, &translate_tfx );
 	transform_tfx = mat4_mult_matrix( &transform_tfx, &rotation_tfx );
-	mat4_t model_view = mat4_mult_matrix( &projection, &transform_tfx );
-
+	mat4_t model_view = mat4_mult_matrix( projection, &transform_tfx );
 
 	assert( gl_error() == GL_NO_ERROR );
 	glUseProgram( program );
@@ -635,21 +673,6 @@ void render( )
 	glBindTexture( GL_TEXTURE_2D, 0 );
 	glActiveTexture( GL_TEXTURE2 );
 	glBindTexture( GL_TEXTURE_1D, 0 );
-
-	overlay_render( &VEC2(20,height-40), &VEC2(200,10), &VEC3(1,1,1), color_transfer_texture_overlay );
-	raster_font_shadowed_writef( font1, &VEC2(10, height-50), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "Low" );
-	raster_font_shadowed_writef( font1, &VEC2(200, height-50), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "High" );
-
-	assert( gl_error() == GL_NO_ERROR );
-
-	overlay_render( &VEC2(0,0), &VEC2(540,32), &VEC3(1,1,1), subtitle_texture_overlay );
-	raster_font_shadowed_writef( font2, &VEC2(2, 2 + 8 * 1.5f ), &VEC3(1,1,0), &VEC3(0.2,0.2f,0), 0.8f, "Volume Rendering: %s", strrchr( volume_files[selected_volume], '/' ) + 1 );
-	raster_font_shadowed_writef( font1, &VEC2(2, 2), &VEC3(1,1,1), &VEC3_ZERO, 1.0f, "FPS: %.1f", frame_rate(delta) );
-	raster_font_shadowed_writef( font1, &VEC2(150, 2), &VEC3(1,0.5,0.2), &VEC3_ZERO, 1.0f, render_mode == RENDER_MODE_XRAY ? "Using X-Ray Mode" : "Using HIP Mode" );
-	raster_font_shadowed_writef( font1, &VEC2(350, 2), &VEC3(0,1,1), &VEC3_ZERO, 1.0f, "Press 1, 2, 3, 4, or 5." );
-
-	assert( gl_error() == GL_NO_ERROR );
-	SDL_GL_SwapWindow( window );
 }
 
 void dump_sdl_error( void )

@@ -4,6 +4,7 @@ libsimplegl_src = 3d-axes.c \
                   camera.c \
                   cube-map.c \
                   extensions.c \
+                  grid.c \
                   projections.c \
                   shaders.c \
                   textures.c \

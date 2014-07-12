@@ -38,6 +38,9 @@
 		D84A20121969B54400DFCB31 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D84A20101969B53A00DFCB31 /* libz.dylib */; };
 		D8ADCFB7196686DA002E178C /* extensions.c in Sources */ = {isa = PBXBuildFile; fileRef = D8ADCFB6196686DA002E178C /* extensions.c */; };
 		D8ADCFB8196686DA002E178C /* extensions.c in Sources */ = {isa = PBXBuildFile; fileRef = D8ADCFB6196686DA002E178C /* extensions.c */; };
+		D8C363331971D6ED00728622 /* grid.c in Sources */ = {isa = PBXBuildFile; fileRef = D8C363321971D6ED00728622 /* grid.c */; };
+		D8C363341971D6ED00728622 /* grid.c in Sources */ = {isa = PBXBuildFile; fileRef = D8C363321971D6ED00728622 /* grid.c */; };
+		D8C363351971D6ED00728622 /* grid.c in Sources */ = {isa = PBXBuildFile; fileRef = D8C363321971D6ED00728622 /* grid.c */; };
 		D8D909411958084400E48C4B /* raster-font.c in Sources */ = {isa = PBXBuildFile; fileRef = D8D909401958084400E48C4B /* raster-font.c */; };
 		D8D909421958084400E48C4B /* raster-font.c in Sources */ = {isa = PBXBuildFile; fileRef = D8D909401958084400E48C4B /* raster-font.c */; };
 		D8DFF709196939440035430B /* 3d-axes.c in Sources */ = {isa = PBXBuildFile; fileRef = 08C2846E180DD15300E96BF5 /* 3d-axes.c */; };
@@ -214,6 +217,7 @@
 		D84A20101969B53A00DFCB31 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		D84A20131969B54F00DFCB31 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
 		D8ADCFB6196686DA002E178C /* extensions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = extensions.c; path = ../../src/extensions.c; sourceTree = "<group>"; };
+		D8C363321971D6ED00728622 /* grid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = grid.c; path = ../../src/grid.c; sourceTree = "<group>"; };
 		D8D909401958084400E48C4B /* raster-font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "raster-font.c"; path = "../../src/raster-font.c"; sourceTree = "<group>"; };
 		D8DFF6D01969372B0035430B /* libimageio.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libimageio.xcodeproj; path = ../../../libimageio/projects/xcode/libimageio.xcodeproj; sourceTree = "<group>"; };
 		D8DFF6D9196937370035430B /* lib3dmath.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = lib3dmath.xcodeproj; path = ../../../lib3dmath/projects/xcode/lib3dmath.xcodeproj; sourceTree = "<group>"; };
@@ -300,6 +304,7 @@
 				08C2846F180DD15300E96BF5 /* buffers.c */,
 				D83B84631946AC8400201CD5 /* camera.c */,
 				D83B84651946AC9900201CD5 /* cube-map.c */,
+				D8C363321971D6ED00728622 /* grid.c */,
 				08C28470180DD15300E96BF5 /* libsimplegl-config.h */,
 				08C28471180DD15300E96BF5 /* objects.c */,
 				D8FF748E1967BCE400D20138 /* overlays.c */,
@@ -521,6 +526,7 @@
 				08C2847B180DD15300E96BF5 /* objects.c in Sources */,
 				D8E8C2621960164A008D51BB /* raster-font-font2.c in Sources */,
 				08C2847C180DD15300E96BF5 /* projections.c in Sources */,
+				D8C363331971D6ED00728622 /* grid.c in Sources */,
 				D8D909411958084400E48C4B /* raster-font.c in Sources */,
 				D8E8C256196007F2008D51BB /* raster-font-vincent.c in Sources */,
 				D8E8C2651960C81A008D51BB /* raster-font-font3.c in Sources */,
@@ -544,6 +550,7 @@
 				D82B50DC194E045400EF5CE4 /* objects.c in Sources */,
 				D8E8C2631960164A008D51BB /* raster-font-font2.c in Sources */,
 				D82B50DD194E045400EF5CE4 /* projections.c in Sources */,
+				D8C363341971D6ED00728622 /* grid.c in Sources */,
 				D8D909421958084400E48C4B /* raster-font.c in Sources */,
 				D8E8C257196007F2008D51BB /* raster-font-vincent.c in Sources */,
 				D8E8C2661960C81A008D51BB /* raster-font-font3.c in Sources */,
@@ -567,6 +574,7 @@
 				D8DFF70D196939440035430B /* objects.c in Sources */,
 				D8DFF70E196939440035430B /* raster-font-font2.c in Sources */,
 				D8DFF70F196939440035430B /* projections.c in Sources */,
+				D8C363351971D6ED00728622 /* grid.c in Sources */,
 				D8DFF711196939440035430B /* raster-font.c in Sources */,
 				D8DFF712196939440035430B /* raster-font-vincent.c in Sources */,
 				D8DFF713196939440035430B /* raster-font-font3.c in Sources */,

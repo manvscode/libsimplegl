@@ -215,6 +215,16 @@ GLboolean cube              ( polyhedra_t* polyhedra, GLfloat scale, bool withCo
 
 
 /*
+ * Grid Helper
+ */
+struct grid;
+typedef struct grid* grid_t;
+
+grid_t grid_create  ( GLfloat size, GLfloat step );
+void   grid_destroy ( grid_t* grid );
+void   grid_render  ( grid_t grid, const mat4_t* model_view, const vec4_t* primary_color, const vec4_t* secondary_color );
+
+/*
  * 3D Axes Helper
  * (x-axis,y-axis,z-axis) --> (red,green,blue)
  */
