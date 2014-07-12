@@ -89,6 +89,7 @@ GLuint color_transfer_texture;
 GLuint color_transfer_texture_overlay;
 GLuint subtitle_texture_overlay;
 
+quat_t volume_orientation = QUAT(0,1,0,0);
 GLuint selected_volume = 0;
 GLuint render_mode = 0;
 raster_font_t* font1 = NULL;
@@ -567,9 +568,6 @@ void render( )
 	delta = frame_delta( now /* milliseconds */ );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-	static float angle = -270.0;
-	if( angle >= 360.0f ) angle = 0.0f;
-
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)width) / height;
@@ -578,9 +576,10 @@ void render( )
 	#else
 	mat4_t projection = orthographic( -2.0f, 2.0f, -2.0f, 2.0f, -10.0f, 10.0f );
 	#endif
-	quat_t q1 = quat_from_axis3_angle( &VEC3( 0.0f, 1.0f, 0.0f ), angle * RADIANS_PER_DEGREE );
-	angle += 0.025f * delta;
-	mat4_t rotation_tfx  = quat_to_mat4( &q1 );
+	const float angle = 0.025f;
+	quat_t q = quat_from_axis3_angle( &VEC3(0, 1, 0), angle * RADIANS_PER_DEGREE * delta );
+	volume_orientation = quat_multiply( &volume_orientation, &q );
+	mat4_t rotation_tfx = quat_to_mat4( &volume_orientation );
 	const vec4_t* dimensions = &volume_dimensions[ selected_volume ];
 	const scaler_t max_dimension = vec3_max_component( vec4_to_vec3( dimensions ) );
 	const vec3_t scaled_dimension = VEC3(dimensions->x / max_dimension, dimensions->y / max_dimension, dimensions->z / max_dimension);

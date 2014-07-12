@@ -1,4 +1,4 @@
- /* Copyright (C) 2013-2014 by Joseph A. Marrero, http://www.manvscode.com/
+/* Copyright (C) 2013-2014 by Joseph A. Marrero, http://www.manvscode.com/
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include "../src/simplegl.h"
 #include <lib3dmath/vec3.h>
+#include <lib3dmath/vec4.h>
 #include <lib3dmath/quat.h>
 #include <SDL2/SDL.h>
 
@@ -47,6 +48,7 @@ GLuint subtitle_texture_overlay;
 polyhedra_t polyhedra;
 raster_font_t* font1 = NULL;
 raster_font_t* font2 = NULL;
+quat_t cube_orientation = QUAT(0,1,0,0);
 
 int main( int argc, char* argv[] )
 {
@@ -356,9 +358,6 @@ void render( )
 	delta = frame_delta( now /* milliseconds */ );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
-	static float angle = 0.0;
-	if( angle >= 360.0f ) angle = 0.0f;
-
 	int width; int height;
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)width) / height;
@@ -368,9 +367,10 @@ void render( )
 	#else
 	mat4_t projection = orthographic( -10.0f, 10.0f, -10.0f, 10.0f, -20.0f, 20.0f );
 	#endif
-	quat_t q1 = quat_from_axis3_angle( &VEC3(0, 1, 1), angle * RADIANS_PER_DEGREE );
-	mat4_t rotation = quat_to_mat4( &q1 );
-	angle += 0.05f * delta;
+	const float angle = 0.05f;
+	quat_t q = quat_from_axis3_angle( &VEC3(0, 1, 1), angle * RADIANS_PER_DEGREE * delta );
+	cube_orientation = quat_multiply( &cube_orientation, &q );
+	mat4_t rotation = quat_to_mat4( &cube_orientation );
 	mat4_t transform = translate( &translation );
 	transform = mat4_mult_matrix( &transform, &rotation );
 	mat4_t model_view = mat4_mult_matrix( &projection, &transform );
