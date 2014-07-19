@@ -108,8 +108,11 @@ grid_t grid_create( GLfloat size, GLfloat step )
 		glsl_destroy( fragment_shader );
 
 		GLint attribute_vertex   = glsl_bind_attribute( program, "a_vertex" );
+		assert(gl_error() == GL_NO_ERROR);
 		GLint uniform_model_view = glsl_bind_uniform( program, "u_model_view" );
+		assert(gl_error() == GL_NO_ERROR);
 		GLint uniform_axis_color = glsl_bind_uniform( program, "u_axis_color" );
+		assert(gl_error() == GL_NO_ERROR);
 		GLint uniform_color      = glsl_bind_uniform( program, "u_color" );
 		assert(gl_error() == GL_NO_ERROR);
 

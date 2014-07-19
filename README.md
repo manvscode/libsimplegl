@@ -3,6 +3,20 @@ libsimplegl
 
 A library for making working with OpenGL easier.
 
+Features
+=============
+* Projection transformations and viewport projecting.
+* Simpler texturing interface.
+* Simpler shader interface.
+* Simpler VBO interface.
+* Camera
+* Bitmap fonts
+* Rendering overlays
+* Some polyhedra meshes
+* Grid and 3D-axis helper utilities.
+* Extension querying and loading.
+* Framerate utilities.
+
 Dependecies
 =============
 * libimageio
