@@ -40,14 +40,35 @@ struct camera {
 	mat4_t orientation_matrix;
 };
 
-
-camera_t* camera_create( GLint screen_width, GLint screen_height, GLfloat near, GLfloat far, GLfloat fov, const pt3_t* position )
+camera_t* camera_create( void )
 {
 	camera_t* c = malloc( sizeof(camera_t) );
 
 	if( c )
 	{
-		const GLfloat aspect = ((GLfloat)screen_width) / screen_height;
+		c->position           = VEC3_ZERO;
+        c->xangle             = 0.0f;
+        c->yangle             = 0.0f;
+		c->projection_matrix  = MAT4_IDENTITY;
+        c->model_matrix       = MAT4_IDENTITY;
+        c->orientation_matrix = MAT4_IDENTITY;
+
+		#ifdef SIMPLEGL_DEBUG
+		printf( "   Camera position: %s\n", vec3_to_string(&c->position) );
+		#endif
+	}
+
+	assert( c != NULL );
+	return c;
+}
+
+camera_t* camera_perspective_create( GLint viewport_width, GLint viewport_height, GLfloat near, GLfloat far, GLfloat fov, const pt3_t* position )
+{
+	camera_t* c = malloc( sizeof(camera_t) );
+
+	if( c )
+	{
+		const GLfloat aspect = ((GLfloat)viewport_width) / viewport_height;
 
 		c->position           = position ? *position : VEC3_ZERO;
         c->xangle             = 0.0f;
@@ -186,10 +207,20 @@ vec3_t camera_side_vector( const camera_t* camera )
 	#endif
 }
 
-void camera_set_perspective( camera_t* camera, GLint screen_width, GLint screen_height, GLfloat near, GLfloat far, GLfloat fov )
+void camera_set_perspective( camera_t* camera, GLfloat aspect, GLfloat near, GLfloat far, GLfloat fov )
 {
-	const GLfloat aspect = ((GLfloat)screen_width) / screen_height;
 	camera->projection_matrix = perspective( fov * RADIANS_PER_DEGREE, aspect, near, far );
+}
+
+void camera_set_perspective_for_viewport( camera_t* camera, GLint viewport_width, GLint viewport_height, GLfloat near, GLfloat far, GLfloat fov )
+{
+	const GLfloat aspect = ((GLfloat)viewport_width) / viewport_height;
+	camera->projection_matrix = perspective( fov * RADIANS_PER_DEGREE, aspect, near, far );
+}
+
+void camera_set_orthographic( camera_t* camera, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far )
+{
+	camera->projection_matrix = orthographic( left, right, bottom, top, near, far );
 }
 
 void camera_set_position( camera_t* camera, const pt3_t* position )
@@ -197,6 +228,7 @@ void camera_set_position( camera_t* camera, const pt3_t* position )
 	assert( camera );
 	assert( position );
 	camera->position = *position;
+	vec3_negate( &camera->position );
 }
 
 const vec3_t* camera_position( const camera_t* camera )

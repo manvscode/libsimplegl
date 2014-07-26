@@ -207,7 +207,7 @@
 		08C28472180DD15300E96BF5 /* projections.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = projections.c; path = ../../src/projections.c; sourceTree = "<group>"; };
 		08C28473180DD15300E96BF5 /* shaders.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shaders.c; path = ../../src/shaders.c; sourceTree = "<group>"; };
 		08C28474180DD15300E96BF5 /* simplegl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = simplegl.c; path = ../../src/simplegl.c; sourceTree = "<group>"; };
-		08C28475180DD15300E96BF5 /* simplegl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplegl.h; path = ../../src/simplegl.h; sourceTree = "<group>"; };
+		08C28475180DD15300E96BF5 /* simplegl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplegl.h; path = ../../src/simplegl.h; sourceTree = "<group>"; wrapsLines = 0; };
 		08C28476180DD15300E96BF5 /* textures.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = textures.c; path = ../../src/textures.c; sourceTree = "<group>"; };
 		08F9B7AC180DD0E000DC30C4 /* libsimplegl.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsimplegl.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D82B50ED194E045400EF5CE4 /* libsimplegl.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsimplegl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };

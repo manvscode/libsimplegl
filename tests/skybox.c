@@ -351,7 +351,7 @@ void initialize( void )
 	assert(gl_error() == GL_NO_ERROR);
 
 
-	camera = camera_create( width, height, 2.0f, 1000.0f, 45.0f, &VEC3(0.0f, 0.0f, 0.0f) );
+	camera = camera_perspective_create( width, height, 2.0f, 1000.0f, 45.0f, &VEC3(0.0f, 0.0f, 0.0f) );
 	assert( camera );
 }
 
