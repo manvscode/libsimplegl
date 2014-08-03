@@ -5,6 +5,9 @@
       location = "group:libsimplegl.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:flag.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:volume-renderer.xcodeproj">
    </FileRef>
    <FileRef
