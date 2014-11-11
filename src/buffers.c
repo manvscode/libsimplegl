@@ -36,7 +36,7 @@ GLboolean buffer_create( GLuint* id, const GLvoid* geometry, GLsizei element_siz
 		assert(gl_error() == GL_NO_ERROR);
 		glBufferData( target, element_size * count, geometry, usage );
 		assert(gl_error() == GL_NO_ERROR);
-		return GL_TRUE;
+		result = GL_TRUE;
 	}
 
 	return result;
@@ -50,7 +50,7 @@ GLboolean buffer_destroy( const GLuint* id )
 	{
 		glDeleteBuffers( 1, id );
 		assert(gl_error() == GL_NO_ERROR);
-		return GL_TRUE;
+		result = GL_TRUE;
 	}
 
 	return result;
