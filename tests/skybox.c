@@ -139,7 +139,7 @@ int main( int argc, char* argv[] )
 	initialize( );
 
 	bool done = false;
-	bool fullscreen = true;
+	bool fullscreen = false;
 
 	SDL_SetWindowFullscreen( window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0 );
 	SDL_ShowCursor( fullscreen ? SDL_DISABLE : SDL_ENABLE );
@@ -418,6 +418,8 @@ void render_skybox( void )
 	assert(gl_error() == GL_NO_ERROR);
 
 
+	glActiveTexture( GL_TEXTURE0 );
+	glUniform1i( uniform_cubemap, 0 );
     glBindTexture( GL_TEXTURE_CUBE_MAP, cube_map_texture[ selected_skybox ] );
 	assert(gl_error() == GL_NO_ERROR);
 	glDepthMask( GL_FALSE );
