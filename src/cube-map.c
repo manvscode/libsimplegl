@@ -146,7 +146,7 @@ bool tex_cube_map_setup( GLuint texture, const char* xpos, const char* xneg, con
 		#ifdef SIMPLEGL_DEBUG
 		fprintf( stdout, "+X: %s\n", imageio_image_string( &xpos_image ) );
 		#endif
-		GLenum pixel_format = (xpos_image.bits_per_pixel == 32 ? GL_RGBA : GL_RGB);
+		GLenum pixel_format = (xpos_image.bit_depth == 32 ? GL_RGBA : GL_RGB);
 		glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, pixel_format, xpos_image.width, xpos_image.height, 0, pixel_format, GL_UNSIGNED_BYTE, xpos_image.pixels );
 	}
 
@@ -155,7 +155,7 @@ bool tex_cube_map_setup( GLuint texture, const char* xpos, const char* xneg, con
 		#ifdef SIMPLEGL_DEBUG
 		fprintf( stdout, "-X: %s\n", imageio_image_string( &xneg_image ) );
 		#endif
-		GLenum pixel_format = (xneg_image.bits_per_pixel == 32 ? GL_RGBA : GL_RGB);
+		GLenum pixel_format = (xneg_image.bit_depth == 32 ? GL_RGBA : GL_RGB);
     	glTexImage2D( GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, pixel_format, xneg_image.width, xneg_image.height, 0, pixel_format, GL_UNSIGNED_BYTE, xneg_image.pixels );
 	}
 
@@ -164,7 +164,7 @@ bool tex_cube_map_setup( GLuint texture, const char* xpos, const char* xneg, con
 		#ifdef SIMPLEGL_DEBUG
 		fprintf( stdout, "+Y: %s\n", imageio_image_string( &ypos_image ) );
 		#endif
-		GLenum pixel_format = (ypos_image.bits_per_pixel == 32 ? GL_RGBA : GL_RGB);
+		GLenum pixel_format = (ypos_image.bit_depth == 32 ? GL_RGBA : GL_RGB);
     	glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, pixel_format, ypos_image.width, ypos_image.height, 0, pixel_format, GL_UNSIGNED_BYTE, ypos_image.pixels );
 	}
 
@@ -173,7 +173,7 @@ bool tex_cube_map_setup( GLuint texture, const char* xpos, const char* xneg, con
 		#ifdef SIMPLEGL_DEBUG
 		fprintf( stdout, "-Y: %s\n", imageio_image_string( &yneg_image ) );
 		#endif
-		GLenum pixel_format = (yneg_image.bits_per_pixel == 32 ? GL_RGBA : GL_RGB);
+		GLenum pixel_format = (yneg_image.bit_depth == 32 ? GL_RGBA : GL_RGB);
     	glTexImage2D( GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, pixel_format, yneg_image.width, yneg_image.height, 0, pixel_format, GL_UNSIGNED_BYTE, yneg_image.pixels );
 	}
 
@@ -182,7 +182,7 @@ bool tex_cube_map_setup( GLuint texture, const char* xpos, const char* xneg, con
 		#ifdef SIMPLEGL_DEBUG
 		fprintf( stdout, "+Z: %s\n", imageio_image_string( &zpos_image ) );
 		#endif
-		GLenum pixel_format = (zpos_image.bits_per_pixel == 32 ? GL_RGBA : GL_RGB);
+		GLenum pixel_format = (zpos_image.bit_depth == 32 ? GL_RGBA : GL_RGB);
     	glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, pixel_format, zpos_image.width, zpos_image.height, 0, pixel_format, GL_UNSIGNED_BYTE, zpos_image.pixels );
 	}
 
@@ -191,7 +191,7 @@ bool tex_cube_map_setup( GLuint texture, const char* xpos, const char* xneg, con
 		#ifdef SIMPLEGL_DEBUG
 		fprintf( stdout, "-Z: %s\n", imageio_image_string( &zneg_image ) );
 		#endif
-		GLenum pixel_format = (zneg_image.bits_per_pixel == 32 ? GL_RGBA : GL_RGB);
+		GLenum pixel_format = (zneg_image.bit_depth == 32 ? GL_RGBA : GL_RGB);
     	glTexImage2D( GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, pixel_format, zneg_image.width, zneg_image.height, 0, pixel_format, GL_UNSIGNED_BYTE, zneg_image.pixels );
 	}
 

@@ -38,8 +38,8 @@ void tex_prepare_image( image_file_format_t format, image_t* image )
         /* These pesky PNG files need to be flipped vertically to be
          * correctly oriented for OpenGL.
          */
-        imageio_flip_horizontally( image->width, image->height, image->bits_per_pixel >> 3, image->pixels );
-        //imageio_flip_vertically( image->width, image->height, image->bits_per_pixel >> 3, image->pixels );
+        imageio_flip_horizontally( image->width, image->height, image->bit_depth >> 3, image->pixels );
+        //imageio_flip_vertically( image->width, image->height, image->bit_depth >> 3, image->pixels );
     }
 }
 
@@ -300,12 +300,12 @@ bool tex_load_1d( GLuint texture, const GLchar* filename, GLint min_filter, GLin
 			/* These pesky PNG files need to be flipped vertically to be
 			 * correctly oriented for OpenGL.
 			 */
-			imageio_flip_vertically( image.width, image.height, image.bits_per_pixel >> 3, image.pixels );
+			imageio_flip_vertically( image.width, image.height, image.bit_depth >> 3, image.pixels );
 		}
 
 		assert(gl_error() == GL_NO_ERROR);
 
-		tex_setup_texture( texture, image.width, image.height, 0, image.bits_per_pixel, image.pixels, min_filter, mag_filter, flags, 1 );
+		tex_setup_texture( texture, image.width, image.height, 0, image.bit_depth, image.pixels, min_filter, mag_filter, flags, 1 );
 		assert( glIsTexture(texture) );
 
 		// Dispose of image
@@ -351,12 +351,12 @@ bool tex_load_2d( GLuint texture, const GLchar* filename, GLint min_filter, GLin
 			/* These pesky PNG files need to be flipped vertically to be
 			 * correctly oriented for OpenGL.
 			 */
-			imageio_flip_vertically( image.width, image.height, image.bits_per_pixel >> 3, image.pixels );
+			imageio_flip_vertically( image.width, image.height, image.bit_depth >> 3, image.pixels );
 		}
 
 		assert(gl_error() == GL_NO_ERROR);
 
-		tex_setup_texture( texture, image.width, image.height, 0, image.bits_per_pixel, image.pixels, min_filter, mag_filter, flags, 2 );
+		tex_setup_texture( texture, image.width, image.height, 0, image.bit_depth, image.pixels, min_filter, mag_filter, flags, 2 );
 		assert( glIsTexture(texture) );
 
 		// Dispose of image
