@@ -18,6 +18,6 @@ void main( ) {
 
 	gl_Position = u_model_view * vec4( a_vertex.x, a_vertex.y, A + a_vertex.z, 1.0 );
 	f_normal    = a_normal;
-	f_tex_coord = vec2( (a_vertex.x + 154 / 2.0) / 153.0, (a_vertex.y + 100 / 2.0) / 99.0 );	
+	f_tex_coord = vec2( (a_vertex.x + 154 / 2.0) / 153.0, (a_vertex.y + 100 / 2.0) / 99.0 );
 	f_color = COLOR;
 }
