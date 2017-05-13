@@ -305,11 +305,15 @@ void render( )
 	mat4_t projection = orthographic( -2.0f * aspect, 2.0f * aspect, -2.0f, 2.0f, -10.0f, 10.0f );
 	#endif
 
+
 	mat4_t rotation = rotate_z( angle );
 	mat4_t transform = translate( &translation );
 	transform = mat4_mult_matrix( &transform, &rotation );
 	mat4_t model_view = mat4_mult_matrix( &projection, &transform );
 
+	printf( "projection:\n%s\n\n", mat4_to_string(&projection) );
+	printf( "model view:\n%s\n\n", mat4_to_string(&model_view) );
+	/*
 	if( angle > TWO_PI )
 	{
 		angle = 0.0f;
@@ -318,6 +322,7 @@ void render( )
 	{
 		angle += 0.001f * delta;
 	}
+	*/
 
 	glUseProgram( program );
 	glBindVertexArray( vao );
