@@ -50,18 +50,19 @@ extern "C" {
 	#include <OpenGLES/ES2/gl.h>
 	#include <OpenGLES/ES2/glext.h>
 	#if GL_OES_vertex_array_object
-	#define glBindVertexArray(array)        glBindVertexArrayOES(array) 
+	#define glBindVertexArray(array)        glBindVertexArrayOES(array)
 	#define glDeleteVertexArrays(n, arrays) glDeleteVertexArraysOES(n, arrays)
-	#define glGenVertexArrays(n, arrays)    glGenVertexArraysOES(n, arrays)  
+	#define glGenVertexArrays(n, arrays)    glGenVertexArraysOES(n, arrays)
 	#define glIsVertexArray(array)          glIsVertexArrayOES(array)
 	#endif
 	#else
 	#include <OpenGL/gl3.h>
 	#include <OpenGL/gl3ext.h>
 	#endif
-#else 
+#else
 	#include <GL/gl.h>
 	#include <GL/glu.h>
+	#include <GL/glext.h>
 #endif
 
 #ifndef GL_PROGRAM

@@ -136,25 +136,24 @@ quit:
 }
 
 
-
-void (*glPushGroupMarker)( GLsizei length, const GLchar* marker ) = NULL;
-void (*glPopGroupMarker)( ) = NULL;
-void (*glLabelObject)( GLenum type, GLuint object, GLsizei length, const GLchar *label ) = NULL;
-void (*glGetObjectLabel)( GLenum type, GLuint object, GLsizei bufSize, GLsizei *length, GLchar *label ) = NULL;
+void (*__glPushGroupMarker)( GLsizei length, const GLchar* marker ) = NULL;
+void (*__glPopGroupMarker)( ) = NULL;
+void (*__glLabelObject)( GLenum type, GLuint object, GLsizei length, const GLchar *label ) = NULL;
+void (*__glGetObjectLabel)( GLenum type, GLuint object, GLsizei bufSize, GLsizei *length, GLchar *label ) = NULL;
 
 void initialize( void )
 {
 
 	if( gl_has_extension( "GL_EXT_debug_marker" ) )
 	{
-		glPushGroupMarker = gl_extension( "glPushGroupMarkerEXT" );
-		glPopGroupMarker  = gl_extension( "glPopGroupMarkerEXT" );
+		__glPushGroupMarker = gl_extension( "glPushGroupMarkerEXT" );
+		__glPopGroupMarker  = gl_extension( "glPopGroupMarkerEXT" );
 	}
 
 	if( gl_has_extension( "GL_EXT_debug_label" ) )
 	{
-		glLabelObject     = gl_extension( "glLabelObjectEXT" );
-		glGetObjectLabel  = gl_extension( "glGetObjectLabelEXT" );
+		__glLabelObject     = gl_extension( "glLabelObjectEXT" );
+		__glGetObjectLabel  = gl_extension( "glGetObjectLabelEXT" );
 	}
 
 	gl_info_print( );
@@ -206,7 +205,7 @@ void initialize( void )
 
 		exit( EXIT_FAILURE );
 	}
-	glLabelObject( GL_PROGRAM_OBJECT_EXT, program, 0, "Triangle Shader Program" );
+	__glLabelObject( GL_PROGRAM_OBJECT_EXT, program, 0, "Triangle Shader Program" );
 
 	uniform_model_view = glsl_bind_uniform( program, "u_model_view" );
 	GL_ASSERT_NO_ERROR( );
@@ -243,7 +242,7 @@ void initialize( void )
 
 	if( buffer_create( &vbo_vertices, triangleVertices, sizeof(GLfloat), 6 * 3, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		glLabelObject( GL_BUFFER_OBJECT_EXT, vbo_vertices, 0, "Triangle Vertices and Colors VBO" );
+		__glLabelObject( GL_BUFFER_OBJECT_EXT, vbo_vertices, 0, "Triangle Vertices and Colors VBO" );
 	}
 	else
 	{
@@ -252,7 +251,7 @@ void initialize( void )
 	}
 
 	glGenVertexArrays( 1, &vao );
-	glLabelObject( GL_BUFFER_OBJECT_EXT, vao, 0, "Triangle VAO" );
+	__glLabelObject( GL_BUFFER_OBJECT_EXT, vao, 0, "Triangle VAO" );
 	GL_ASSERT_NO_ERROR( );
 	glBindVertexArray( vao );
 	glEnableVertexAttribArray( 0 );
