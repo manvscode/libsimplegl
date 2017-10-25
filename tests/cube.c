@@ -147,7 +147,7 @@ quit:
 
 void (*__glPushGroupMarker)( GLsizei length, const GLchar* marker ) = NULL;
 void (*__glPopGroupMarker)( ) = NULL;
-void (*__glLableObject)( GLenum type, GLuint object, GLsizei length, const GLchar *label ) = NULL;
+void (*__glLabelObject)( GLenum type, GLuint object, GLsizei length, const GLchar *label ) = NULL;
 void (*__glGetObjectLabel)( GLenum type, GLuint object, GLsizei bufSize, GLsizei *length, GLchar *label ) = NULL;
 
 void initialize( void )
@@ -161,7 +161,7 @@ void initialize( void )
 
 	if( gl_has_extension( "GL_EXT_debug_label" ) )
 	{
-		__glLableObject     = gl_extension( "glLabelObjectEXT" );
+		__glLabelObject     = gl_extension( "glLabelObjectEXT" );
 		__glGetObjectLabel  = gl_extension( "glGetObjectLabelEXT" );
 	}
 
@@ -217,7 +217,11 @@ void initialize( void )
 
 		exit( EXIT_FAILURE );
 	}
-	__glLableObject( GL_PROGRAM_OBJECT_EXT, program, 0, "Cube Shader Program" );
+
+	if( __glLabelObject )
+	{
+		__glLabelObject( GL_PROGRAM_OBJECT_EXT, program, 0, "Cube Shader Program" );
+	}
 
 	uniform_model_view = glsl_bind_uniform( program, "u_model_view" );
 	GL_ASSERT_NO_ERROR( );
@@ -232,7 +236,10 @@ void initialize( void )
 		GL_ASSERT_NO_ERROR( );
 		tex_load_2d_with_mipmaps( checkered_pattern_texture, "assets/textures/checkered.png", TEX_CLAMP_S | TEX_CLAMP_T );
 		GL_ASSERT_NO_ERROR( );
-		__glLableObject( GL_TEXTURE, checkered_pattern_texture, 0, "Cube Texture" );
+		if( __glLabelObject )
+		{
+			__glLabelObject( GL_TEXTURE, checkered_pattern_texture, 0, "Cube Texture" );
+		}
 	}
 	else
 	{
@@ -269,7 +276,10 @@ void initialize( void )
 
 	if( buffer_create( &vbo_vertices, polyhedra.vertices, sizeof(GLfloat), polyhedra.vertices_count, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		__glLableObject( GL_BUFFER_OBJECT_EXT, vbo_vertices, 0, "Cube Vertices VBO" );
+		if( __glLabelObject )
+		{
+			__glLabelObject( GL_BUFFER_OBJECT_EXT, vbo_vertices, 0, "Cube Vertices VBO" );
+		}
 	}
 	else
 	{
@@ -279,7 +289,10 @@ void initialize( void )
 
 	if( buffer_create( &vbo_tex_coords, polyhedra.tex_coords, sizeof(GLfloat), polyhedra.tex_coords_count, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		__glLableObject( GL_BUFFER_OBJECT_EXT, vbo_tex_coords, 0, "Cube Texture Coordinates VBO" );
+		if( __glLabelObject )
+		{
+			__glLabelObject( GL_BUFFER_OBJECT_EXT, vbo_tex_coords, 0, "Cube Texture Coordinates VBO" );
+		}
 	}
 	else
 	{
@@ -289,7 +302,10 @@ void initialize( void )
 
 	if( buffer_create( &vbo_colors, polyhedra.colors, sizeof(GLfloat), polyhedra.colors_count, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		__glLableObject( GL_BUFFER_OBJECT_EXT, vbo_colors, 0, "Cube Colors VBO" );
+		if( __glLabelObject )
+		{
+			__glLabelObject( GL_BUFFER_OBJECT_EXT, vbo_colors, 0, "Cube Colors VBO" );
+		}
 	}
 	else
 	{
@@ -300,7 +316,10 @@ void initialize( void )
 
 	if( buffer_create( &ibo_indices, polyhedra.indices, sizeof(GLushort), polyhedra.indices_count, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		__glLableObject( GL_BUFFER_OBJECT_EXT, ibo_indices, 0, "Cube Vertex Indices VBO" );
+		if( __glLabelObject )
+		{
+			__glLabelObject( GL_BUFFER_OBJECT_EXT, ibo_indices, 0, "Cube Vertex Indices VBO" );
+		}
 	}
 	else
 	{
@@ -309,7 +328,10 @@ void initialize( void )
 	}
 
 	glGenVertexArrays( 1, &vao );
-	__glLableObject( GL_BUFFER_OBJECT_EXT, vao, 0, "Cube VAO" );
+	if( __glLabelObject )
+	{
+		__glLabelObject( GL_BUFFER_OBJECT_EXT, vao, 0, "Cube VAO" );
+	}
 	GL_ASSERT_NO_ERROR( );
 	glBindVertexArray( vao );
 	glEnableVertexAttribArray( 0 );

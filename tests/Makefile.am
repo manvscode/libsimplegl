@@ -9,8 +9,8 @@ $(top_builddir)/bin/cube \
 $(top_builddir)/bin/volume-render \
 $(top_builddir)/bin/3daxes \
 $(top_builddir)/bin/skybox \
-$(top_builddir)/bin/flag \
-$(top_builddir)/bin/fire
+$(top_builddir)/bin/flag
+#$(top_builddir)/bin/fire
 
 __top_builddir__bin_triangle_SOURCES = triangle.c
 __top_builddir__bin_triangle_CFLAGS  = -D_THREAD_SAFE -DHAVE_OPENGL
@@ -36,7 +36,7 @@ __top_builddir__bin_flag_SOURCES = flag.c
 __top_builddir__bin_flag_CFLAGS  = -D_THREAD_SAFE -DHAVE_OPENGL
 __top_builddir__bin_flag_LDFLAGS = -lm -l3dmath -framework OpenGL $(top_builddir)/lib/.libs/libsimplegl.a
 
-__top_builddir__bin_fire_SOURCES = fire.c
-__top_builddir__bin_fire_CFLAGS  = -D_THREAD_SAFE -DHAVE_OPENGL
-__top_builddir__bin_fire_LDFLAGS = -lm -l3dmath -framework OpenGL $(top_builddir)/lib/.libs/libsimplegl.a
+#__top_builddir__bin_fire_SOURCES = fire.c
+#__top_builddir__bin_fire_CFLAGS  = -D_THREAD_SAFE -DHAVE_OPENGL
+#__top_builddir__bin_fire_LDFLAGS = -lm -l3dmath -framework OpenGL $(top_builddir)/lib/.libs/libsimplegl.a
 endif

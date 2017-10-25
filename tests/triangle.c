@@ -205,7 +205,11 @@ void initialize( void )
 
 		exit( EXIT_FAILURE );
 	}
-	__glLabelObject( GL_PROGRAM_OBJECT_EXT, program, 0, "Triangle Shader Program" );
+
+	if( __glLabelObject )
+	{
+		__glLabelObject( GL_PROGRAM_OBJECT_EXT, program, 0, "Triangle Shader Program" );
+	}
 
 	uniform_model_view = glsl_bind_uniform( program, "u_model_view" );
 	GL_ASSERT_NO_ERROR( );
@@ -242,7 +246,10 @@ void initialize( void )
 
 	if( buffer_create( &vbo_vertices, triangleVertices, sizeof(GLfloat), 6 * 3, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
-		__glLabelObject( GL_BUFFER_OBJECT_EXT, vbo_vertices, 0, "Triangle Vertices and Colors VBO" );
+		if( __glLabelObject )
+		{
+			__glLabelObject( GL_BUFFER_OBJECT_EXT, vbo_vertices, 0, "Triangle Vertices and Colors VBO" );
+		}
 	}
 	else
 	{
@@ -251,7 +258,10 @@ void initialize( void )
 	}
 
 	glGenVertexArrays( 1, &vao );
-	__glLabelObject( GL_BUFFER_OBJECT_EXT, vao, 0, "Triangle VAO" );
+	if( __glLabelObject )
+	{
+		__glLabelObject( GL_BUFFER_OBJECT_EXT, vao, 0, "Triangle VAO" );
+	}
 	GL_ASSERT_NO_ERROR( );
 	glBindVertexArray( vao );
 	glEnableVertexAttribArray( 0 );

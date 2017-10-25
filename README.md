@@ -1,11 +1,16 @@
 Donations
 ==========
-If you found this library useful, please donate some BTC to 1NBfudTasBRBdEAwUvsLmxg1poyDnqHnMf.
+The development of this software took numerous hours of development and testing.  If you found this useful to you, then please consider making a [donation of bitcoin.](https://bitpay.com/cart/add?itemId=DqFRQjE8NwvKfYktgc85ya)
+
+All donations help cover maintenance costs.
 
 libsimplegl
 =============
 
-A library for making working with OpenGL easier.
+A library for making it easier to work with OpenGL.
+
+[![YouTube Video](http://img.youtube.com/vi/FcpS6DPoxsY/0.jpg)](https://youtu.be/FcpS6DPoxsY)
+
 
 Features
 =============
