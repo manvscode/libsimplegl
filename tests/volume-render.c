@@ -38,8 +38,6 @@ static const char* volume_files[ MAX_VOLUMES ] = {
 	"assets/volumes/foot-256x256x256.raw",
 	"assets/volumes/skull-256x256x256.raw",
 	"assets/volumes/stent-512x512x174.raw",
-	//"assets/volumes/lobster-301x324x56.raw",
-	//"assets/volumes/stagbeetle-832x832x494.raw",
 	"assets/volumes/carp-256x256x512-2.raw",
 	"assets/volumes/virgo-256x256x256-3.raw",
 };
