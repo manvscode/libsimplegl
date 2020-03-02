@@ -259,7 +259,10 @@ bool raster_font_shader_initialize( raster_font_shader_t* shader )
 		}
 
 		char debug_cwd[ 256 ];
-		getcwd( debug_cwd, 256 );
+		if (!getcwd( debug_cwd, 256 ) )
+		{
+			goto failure;
+		}
 
         #if TARGET_OS_IPHONE
 		char* vertex_shader_source = glsl_shader_load( "assets/shaders/text-100.v.glsl" );

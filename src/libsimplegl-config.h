@@ -18,6 +18,9 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
 
+/* Define to 1 if you have the `m' library (-lm). */
+#define HAVE_LIBM 1
+
 /* Define to 1 if you have the <limits.h> header file. */
 #define HAVE_LIMITS_H 1
 
@@ -28,7 +31,7 @@
 #define HAVE_MEMORY_H 1
 
 /* Define to 1 if you have the `memset' function. */
-/* #undef HAVE_MEMSET */
+#define HAVE_MEMSET 1
 
 /* Define to 1 if you have the `sqrt' function. */
 /* #undef HAVE_SQRT */
@@ -70,31 +73,31 @@
 #define LT_OBJDIR ".libs/"
 
 /* Name of package */
-#define PACKAGE "libsimplegl"
+#define PACKAGE "simplegl"
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT "manvscode@manvscode.com"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "libsimplegl"
+#define PACKAGE_NAME "simplegl"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libsimplegl 0.2"
+#define PACKAGE_STRING "simplegl 0.2.0"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "libsimplegl"
+#define PACKAGE_TARNAME "simplegl"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL "http://www.manvscode.com/"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.2"
+#define PACKAGE_VERSION "0.2.0"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "0.2"
+#define VERSION "0.2.0"
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */

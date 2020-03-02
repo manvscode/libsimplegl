@@ -18,13 +18,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include <libimageio/imageio.h>
+#include <imageio.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include "simplegl.h"
-
-
 
 
 void tex_prepare_image( image_file_format_t format, image_t* image )

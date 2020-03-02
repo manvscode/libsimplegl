@@ -23,8 +23,8 @@
 #include <time.h>
 #include <unistd.h>
 #include "../src/simplegl.h"
-#include <lib3dmath/vec3.h>
-#include <lib3dmath/quat.h>
+#include <m3d/vec3.h>
+#include <m3d/quat.h>
 #include <SDL2/SDL.h>
 
 #define RENDER_MODE_XRAY                      0u
@@ -332,7 +332,13 @@ void initialize( void )
 {
 	gl_info_print( );
 	char cwd[ 256 ];
-	getcwd( cwd, sizeof(cwd) );
+	if( !getcwd(cwd, sizeof(cwd)) )
+	{
+		printf( "Unable to get current working directory.\n" );
+		exit( EXIT_FAILURE );
+	}
+
+
 	printf( "Current Working Dir.: %s\n", cwd );
 	glClearColor( 0.1f, 0.1f, 0.1f, 1.0f );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
@@ -575,9 +581,9 @@ void render( )
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)width) / height;
 	#if 1
-	mat4_t projection = perspective( 30.0 * RADIANS_PER_DEGREE, aspect, 0.1, 200.0 );
+	mat4_t projection = m3d_perspective( 30.0 * M3D_RADIANS_PER_DEGREE, aspect, 0.1, 200.0 );
 	#else
-	mat4_t projection = orthographic( -2.0f, 2.0f, -2.0f, 2.0f, -10.0f, 10.0f );
+	mat4_t projection = m3d_orthographic( -2.0f, 2.0f, -2.0f, 2.0f, -10.0f, 10.0f );
 	#endif
 
 	render_grid( &projection );
@@ -601,8 +607,8 @@ void render( )
 
 void render_grid( const mat4_t* projection )
 {
-	mat4_t translate_tfx = translate( &VEC3( 0.0, 0.0, zoom * 10 ) );
-	mat4_t rotation_tfx = rotate_x( 90 * RADIANS_PER_DEGREE );
+	mat4_t translate_tfx = m3d_translate( &VEC3( 0.0, 0.0, zoom * 10 ) );
+	mat4_t rotation_tfx = m3d_rotate_x( 90 * M3D_RADIANS_PER_DEGREE );
 	mat4_t transform_tfx = MAT4_IDENTITY;
 	transform_tfx = mat4_mult_matrix( &transform_tfx, &translate_tfx );
 	transform_tfx = mat4_mult_matrix( &transform_tfx, &rotation_tfx );
@@ -614,15 +620,15 @@ void render_grid( const mat4_t* projection )
 void render_volume( const mat4_t* projection, GLuint now )
 {
 	const float angle = 0.025f;
-	quat_t q = quat_from_axis3_angle( &VEC3(0, 1, 0), angle * RADIANS_PER_DEGREE * delta );
+	quat_t q = quat_from_axis3_angle( &VEC3(0, 1, 0), angle * M3D_RADIANS_PER_DEGREE * delta );
 	volume_orientation = quat_multiply( &volume_orientation, &q );
 	mat4_t rotation_tfx = quat_to_mat4( &volume_orientation );
 	const vec4_t* dimensions = &volume_dimensions[ selected_volume ];
 	const scaler_t max_dimension = vec3_max_component( vec4_to_vec3( dimensions ) );
 	const vec3_t scaled_dimension = VEC3(dimensions->x / max_dimension, dimensions->y / max_dimension, dimensions->z / max_dimension);
 
-	mat4_t scale_tfx     = scale( &scaled_dimension );
-	mat4_t translate_tfx = translate( &VEC3( 0.0, 0.0, zoom ) );
+	mat4_t scale_tfx     = m3d_scale( &scaled_dimension );
+	mat4_t translate_tfx = m3d_translate( &VEC3( 0.0, 0.0, zoom ) );
 	mat4_t transform_tfx = MAT4_IDENTITY;
 	transform_tfx = mat4_mult_matrix( &transform_tfx, &scale_tfx );
 	transform_tfx = mat4_mult_matrix( &transform_tfx, &translate_tfx );

@@ -21,10 +21,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../src/simplegl.h"
-#include <lib3dmath/vec3.h>
-#include <lib3dmath/vec4.h>
-#include <lib3dmath/quat.h>
-#include <lib3dmath/geometric-tools.h>
+#include <m3d/vec3.h>
+#include <m3d/vec4.h>
+#include <m3d/quat.h>
+#include <m3d/geometric-tools.h>
 #include <SDL2/SDL.h>
 
 static void initialize     ( void );
@@ -139,7 +139,6 @@ int main( int argc, char* argv[] )
 			}
 
 			render( );
-			//SDL_Delay(10);              // Pause briefly before moving on to the next cycle.
 		}
 	}
 
@@ -305,7 +304,7 @@ void initialize( void )
 					&vertices[ (i - 1) +  FLAG_WIDTH * (j + 0) ],
 				};
 
-				normals[ i + FLAG_WIDTH * j ] = normal_from_triangles( points, 6 );
+				normals[ i + FLAG_WIDTH * j ] = m3d_normal_from_triangles( points, 6 );
 			}
 			else
 			{
@@ -394,15 +393,15 @@ void render( )
 	GLfloat aspect = ((GLfloat)width) / height;
 	vec3_t translation = VEC3( 0, 0, -160 );
 	#if 1
-	mat4_t projection = perspective( 45.0 * RADIANS_PER_DEGREE, aspect, 5, 500.0 );
+	mat4_t projection = m3d_perspective( 45.0 * M3D_RADIANS_PER_DEGREE, aspect, 5, 500.0 );
 	#else
 	mat4_t projection = orthographic( -100.0f, 100.0f, -100.0f, 100.0f, -300.0f, 300.0f );
 	#endif
 	const float angle = 0.01f;
-	quat_t q = quat_from_axis3_angle( &VEC3(0, 1, 0), angle * RADIANS_PER_DEGREE * delta );
+	quat_t q = quat_from_axis3_angle( &VEC3(0, 1, 0), angle * M3D_RADIANS_PER_DEGREE * delta );
 	flag_orientation = quat_multiply( &flag_orientation, &q );
 	mat4_t rotation = quat_to_mat4( &flag_orientation );
-	mat4_t transform = translate( &translation );
+	mat4_t transform = m3d_translate( &translation );
 	transform = mat4_mult_matrix( &transform, &rotation );
 
 	mat3_t normal_matrix = MAT3(

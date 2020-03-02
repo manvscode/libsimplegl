@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
-#include <lib3dmath/mathematics.h>
+#include <m3d/mathematics.h>
 #include "simplegl.h"
 
 

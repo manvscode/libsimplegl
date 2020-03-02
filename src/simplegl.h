@@ -72,15 +72,16 @@ extern "C" {
 /*
  * Mathematics
  */
-#include <lib3dmath/mathematics.h>
-#include <lib3dmath/vec2.h>
-#include <lib3dmath/vec3.h>
-#include <lib3dmath/vec4.h>
-#include <lib3dmath/mat2.h>
-#include <lib3dmath/mat3.h>
-#include <lib3dmath/mat4.h>
-#include <lib3dmath/quat.h>
-#include <lib3dmath/transforms.h>
+#include <m3d/mathematics.h>
+#include <m3d/vec2.h>
+#include <m3d/vec3.h>
+#include <m3d/vec4.h>
+#include <m3d/mat2.h>
+#include <m3d/mat3.h>
+#include <m3d/mat4.h>
+#include <m3d/quat.h>
+#include <m3d/transforms.h>
+#include <m3d/projections.h>
 #include <math.h>
 
 /*

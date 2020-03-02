@@ -25,9 +25,9 @@
 #include <string.h>
 #include <assert.h>
 #include "simplegl.h"
-#include <lib3dmath/vec3.h>
-#include <lib3dmath/quat.h>
-#include <lib3dmath/easing.h>
+#include <m3d/vec3.h>
+#include <m3d/quat.h>
+#include <m3d/easing.h>
 
 #define CAMERA_EPSILON                 (0.1f)
 
@@ -73,7 +73,7 @@ camera_t* camera_perspective_create( GLint viewport_width, GLint viewport_height
 		c->position           = position ? *position : VEC3_ZERO;
         c->xangle             = 0.0f;
         c->yangle             = 0.0f;
-		c->projection_matrix  = perspective( fov * RADIANS_PER_DEGREE, aspect, near, far );
+		c->projection_matrix  = perspective( fov * M3D_RADIANS_PER_DEGREE, aspect, near, far );
         c->model_matrix       = MAT4_IDENTITY;
         c->orientation_matrix = MAT4_IDENTITY;
 		vec3_negate( &c->position );
@@ -209,13 +209,13 @@ vec3_t camera_side_vector( const camera_t* camera )
 
 void camera_set_perspective( camera_t* camera, GLfloat aspect, GLfloat near, GLfloat far, GLfloat fov )
 {
-	camera->projection_matrix = perspective( fov * RADIANS_PER_DEGREE, aspect, near, far );
+	camera->projection_matrix = perspective( fov * M3D_RADIANS_PER_DEGREE, aspect, near, far );
 }
 
 void camera_set_perspective_for_viewport( camera_t* camera, GLint viewport_width, GLint viewport_height, GLfloat near, GLfloat far, GLfloat fov )
 {
 	const GLfloat aspect = ((GLfloat)viewport_width) / viewport_height;
-	camera->projection_matrix = perspective( fov * RADIANS_PER_DEGREE, aspect, near, far );
+	camera->projection_matrix = perspective( fov * M3D_RADIANS_PER_DEGREE, aspect, near, far );
 }
 
 void camera_set_orthographic( camera_t* camera, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far )
@@ -241,7 +241,7 @@ void camera_offset_orientation( camera_t* camera, GLfloat xangle, GLfloat yangle
 	assert( camera );
     camera->xangle += xangle;
     camera->yangle += yangle;
-    camera->yangle = clampf( camera->yangle, -HALF_PI, HALF_PI );
+    camera->yangle = m3d_clampf( camera->yangle, -M3D_HALF_PI, M3D_HALF_PI );
 }
 
 void camera_move_forwards( camera_t* camera, GLfloat a )
@@ -270,7 +270,7 @@ void camera_update( camera_t* camera, GLfloat delta )
 	camera->orientation_matrix = mat4_mult_matrix( &xrotation, &MAT4_IDENTITY );
 	camera->orientation_matrix = mat4_mult_matrix( &yrotation, &camera->orientation_matrix );
 
-	mat4_t translation_matrix = translate( &camera->position );
+	mat4_t translation_matrix = m3d_translate( &camera->position );
 	camera->model_matrix = mat4_mult_matrix( &camera->orientation_matrix, &translation_matrix );
 }
 

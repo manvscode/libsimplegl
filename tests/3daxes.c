@@ -162,10 +162,10 @@ void render( )
 	SDL_GetWindowSize( window, &width, &height );
 	GLfloat aspect = ((GLfloat)height) / width;
 	vec3_t translation = VEC3( 0.0, 0.0, -2.0f );
-	mat4_t projection = perspective( 45.0, aspect, 0.00005, 100.0 );
-	mat4_t rotation = rotate_xyz( "xy", -15.0f * RADIANS_PER_DEGREE, angle );
+	mat4_t projection = m3d_perspective( 45.0, aspect, 0.00005, 100.0 );
+	mat4_t rotation = m3d_rotate_xyz( "xy", -15.0f * M3D_RADIANS_PER_DEGREE, angle );
 	angle += 0.005;
-	mat4_t transform = translate( &translation );
+	mat4_t transform = m3d_translate( &translation );
 	transform = mat4_mult_matrix( &transform, &rotation );
 	mat4_t model_view = mat4_mult_matrix( &projection, &transform );
 

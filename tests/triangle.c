@@ -21,9 +21,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../src/simplegl.h"
-#include <lib3dmath/vec3.h>
-#include <lib3dmath/vec4.h>
-#include <lib3dmath/quat.h>
+#include <m3d/vec3.h>
+#include <m3d/vec4.h>
+#include <m3d/mat4.h>
+#include <m3d/quat.h>
 #include <SDL2/SDL.h>
 
 static void initialize     ( void );
@@ -315,8 +316,8 @@ void render( )
 	#endif
 
 
-	mat4_t rotation = rotate_z( angle );
-	mat4_t transform = translate( &translation );
+	mat4_t rotation = m3d_rotate_z( angle );
+	mat4_t transform = m3d_translate( &translation );
 	transform = mat4_mult_matrix( &transform, &rotation );
 	mat4_t model_view = mat4_mult_matrix( &projection, &transform );
 

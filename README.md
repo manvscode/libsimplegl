@@ -29,7 +29,7 @@ Features
 Dependecies
 =============
 * libimageio
-* lib3dmath
+* libm3d
 
 License
 =============

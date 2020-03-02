@@ -15,7 +15,11 @@
 *.log
 
 # Test Programs 
+bin
 bin/test-*
+
+# pkg-config file
+simplegl.pc
 
 # Autoconf files
 Makefile

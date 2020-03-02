@@ -21,8 +21,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
-#include <lib3dmath/vec3.h>
-#include <lib3dmath/quat.h>
+#include <m3d/vec3.h>
+#include <m3d/quat.h>
 #include "../src/simplegl.h"
 
 static void initialize        ( void );
@@ -473,7 +473,7 @@ void set_view_by_mouse( )
 		(mouse_y - middle_y) * mouse_sensitivity
 	);
 
-    if( scaler_abs(mouse_direction.x) > to_radians(0.05f) || scaler_abs(mouse_direction.y) > to_radians(0.05f) )
+    if( scaler_abs(mouse_direction.x) > m3d_to_radians(0.05f) || scaler_abs(mouse_direction.y) > m3d_to_radians(0.05f) )
     {
         camera_offset_orientation( camera, mouse_direction.x, mouse_direction.y );
     }

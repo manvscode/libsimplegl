@@ -21,6 +21,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "simplegl.h"
+#ifdef __linux__
+//# include <X11/X.h>
+//# include <X11/Xlib.h>
+# include <GL/glx.h>
+# include <GL/glxext.h>
+#endif
 
 
 #if defined(__APPLE__)
@@ -101,6 +107,6 @@ void* gl_extension( const GLchar* procName )
 	#elif __APPLE__
 	return appleGetProcAddress( procName );
 	#else
-	return glXGetProcAddressARB( procName );
+	return glXGetProcAddressARB( (const GLubyte*) procName );
 	#endif
 }
