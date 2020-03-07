@@ -67,29 +67,19 @@ mat4_t perspective( GLfloat fov /* in radians */, GLfloat aspect, GLfloat near, 
 	);
 }
 
-#if 0
-vec4_t viewport_unproject( const vec2_t* position, const mat4_t* projection )
+
+vec4_t viewport_unproject( const vec2_t* point, const mat4_t* projection, const mat4_t* model )
 {
 	GLint viewport[ 4 ];
 	glGetIntegerv( GL_VIEWPORT, viewport );
 
 	/* Convert to normalized device coordinates */
-	vec4_t normalized_device_coordinate = VEC4( ((position->x * 2.0f) / viewport[2]) - 1.0f, ((position->y * 2.0f) / viewport[3]) - 1.0f, 0.0f, 1.0f );
-
-	mat4_t proj = *projection;
-	mat4_invert( &proj );
-
-	return mat4_mult_vector( &proj, &normalized_device_coordinate );
-}
-#endif
-
-vec4_t viewport_unproject( const vec2_t* position, const mat4_t* projection, const mat4_t* model )
-{
-	GLint viewport[ 4 ];
-	glGetIntegerv( GL_VIEWPORT, viewport );
-
-	/* Convert to normalized device coordinates */
-	vec4_t normalized_device_coordinate = VEC4( ((position->x * 2.0f) / viewport[2]) - 1.0f, ((position->y * 2.0f) / viewport[3]) - 1.0f, 0.0f, 1.0f );
+	vec4_t normalized_device_coordinate = VEC4(
+		(point->x - viewport[0]) * (2.0f / viewport[2]) - 1.0f,
+		(point->y - viewport[1]) * (2.0f / viewport[3]) - 1.0f,
+		0.0f,
+		1.0f
+	);
 
 	mat4_t inv_projmodel = mat4_mult_matrix( projection, model );
 	mat4_invert( &inv_projmodel );
@@ -97,7 +87,7 @@ vec4_t viewport_unproject( const vec2_t* position, const mat4_t* projection, con
 	return mat4_mult_vector( &inv_projmodel, &normalized_device_coordinate );
 }
 
-vec2_t viewport_coord_project( const vec4_t* point, const mat4_t* projection, const mat4_t* model )
+vec2_t viewport_project( const vec4_t* point, const mat4_t* projection, const mat4_t* model )
 {
 	GLint viewport[ 4 ];
 	glGetIntegerv( GL_VIEWPORT, viewport );
@@ -105,5 +95,8 @@ vec2_t viewport_coord_project( const vec4_t* point, const mat4_t* projection, co
 	mat4_t projmodel = mat4_mult_matrix( projection, model );
 	vec4_t pt = mat4_mult_vector( &projmodel, point );
 
-	return VEC2( ((1.0f + pt.x) * viewport[2]) / 2.0f, ((1.0f + pt.y) * viewport[3]) / 2.0f );
+	return VEC2(
+		(1.0f + pt.x) * (viewport[2] / 2.0f) + viewport[0],
+		(1.0f + pt.y) * (viewport[3] / 2.0f) + viewport[1]
+	);
 }
