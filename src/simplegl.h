@@ -248,7 +248,7 @@ void* gl_extension      ( const GLchar* procName );
 
 /*
  * Miscellaneous
- */ 
+ */
 const GLchar* gl_vendor         ( void );
 const GLchar* gl_renderer       ( void );
 const GLchar* gl_version        ( void );
