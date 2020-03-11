@@ -8,5 +8,5 @@ Description: A library for making it easier to work with OpenGL.
 URL: @PACKAGE_URL@
 Version: @PACKAGE_VERSION@
 Requires:
-Lib: -l@PACKAGE_NAME@ -L${libdir} -lm
+Libs: -l@PACKAGE_NAME@ -L${libdir} -lm
 Cflags: -I${includedir}/@PACKAGE_NAME@

@@ -1,5 +1,8 @@
 SUBDIRS = src tests
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = simplegl.pc
+
 
 Android.mk: Makefile.am
 	@androgenizer -:PROJECT libsimplegl \

@@ -1,6 +1,6 @@
 AC_PREREQ(2.67)
 AC_INIT([simplegl], [0.2.0], [manvscode@manvscode.com], [simplegl], [http://www.manvscode.com/])
-AM_INIT_AUTOMAKE([1.13 foreign dist-zip silent-rules -Wall -Werror])
+AM_INIT_AUTOMAKE([1.13 foreign silent-rules dist-zip -Wall -Werror])
 
 AM_SILENT_RULES([yes])
 AC_CONFIG_HEADERS([src/libsimplegl-config.h])
