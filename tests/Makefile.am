@@ -1,5 +1,5 @@
 if ENABLE_TESTS
-#AM_CFLAGS = -std=c99 -pg -g -ggdb -O0 -I$(top_builddir)/src/ -I. -I.. -I/usr/local/include/ -L$(top_builddir)/lib/  -L/usr/local/lib
+#AM_CFLAGS = -g -ggdb -O0 -D_THREAD_SAFE -DHAVE_OPENGL $(M3D_CFLAGS) $(GL_CFLAGS) $(SDL2_CFLAGS)
 #AM_CXXFLAGS = -std=c++0x -pg -g -ggdb -O0 -I$(top_builddir)/src/ -I. -I.. -I/usr/local/include/ -L$(top_builddir)/lib/ -L/usr/local/lib
 AM_CFLAGS  = -D_THREAD_SAFE -DHAVE_OPENGL $(M3D_CFLAGS) $(GL_CFLAGS) $(SDL2_CFLAGS)
 AM_LDFLAGS = -static

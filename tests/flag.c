@@ -35,9 +35,11 @@ static void dump_sdl_error ( void );
 static SDL_Window* window = NULL;
 static SDL_GLContext ctx = NULL;
 
-#define FLAG_WIDTH   154
-#define FLAG_HEIGHT  100
-#define INDICES_COUNT  6 * (FLAG_WIDTH - 1) * (FLAG_HEIGHT - 1)
+#define FLAG_WIDTH     154
+#define FLAG_HEIGHT    100
+#define VERTEX_COUNT   (FLAG_WIDTH * FLAG_HEIGHT)
+#define NORMALS_COUNT  (FLAG_WIDTH * FLAG_HEIGHT)
+#define INDICES_COUNT  (6 * (FLAG_WIDTH - 1) * (FLAG_HEIGHT - 1))
 
 static GLuint program              = 0;
 static GLint uniform_model_view    = 0;
@@ -248,35 +250,40 @@ void initialize( void )
 		dump_sdl_error( );
 	}
 
-
+	size_t vertex_count = 0;
 	for( int j = 0; j < FLAG_HEIGHT; j++ )
 	{
 		for( int i = 0; i < FLAG_WIDTH; i++ )
 		{
-			vertices[ i +  FLAG_WIDTH * j ] = VEC3( i - FLAG_WIDTH / 2.0f, j - FLAG_HEIGHT / 2.0f, 0.0 );
+			vertices[ i + FLAG_WIDTH * j ] = VEC3( i - FLAG_WIDTH / 2.0f, j - FLAG_HEIGHT / 2.0f, 0.0 );
+			vertex_count += 1;
 		}
 	}
+	assert(vertex_count == VERTEX_COUNT && "Vertex count should be equal to VERTEX_COUNT");
 
-	size_t count = 0;
+	size_t index_count = 0;
 	for( int j = 0; j < FLAG_HEIGHT - 1; j++ )
 	{
 		for( int i = 0; i < FLAG_WIDTH - 1; i++ )
 		{
-			indices[ count++ ] = (i + 0) +  FLAG_WIDTH * (j + 1);
-			indices[ count++ ] = (i + 0) +  FLAG_WIDTH * (j + 0);
-			indices[ count++ ] = (i + 1) +  FLAG_WIDTH * (j + 0);
+			// triangle 1
+			indices[ index_count++ ] = (i + 0) +  FLAG_WIDTH * (j + 1);
+			indices[ index_count++ ] = (i + 0) +  FLAG_WIDTH * (j + 0);
+			indices[ index_count++ ] = (i + 1) +  FLAG_WIDTH * (j + 0);
 
-			indices[ count++ ] = (i + 0) +  FLAG_WIDTH * (j + 1);
-			indices[ count++ ] = (i + 1) +  FLAG_WIDTH * (j + 0);
-			indices[ count++ ] = (i + 1) +  FLAG_WIDTH * (j + 1);
+			// triangle 2
+			indices[ index_count++ ] = (i + 0) +  FLAG_WIDTH * (j + 1);
+			indices[ index_count++ ] = (i + 1) +  FLAG_WIDTH * (j + 0);
+			indices[ index_count++ ] = (i + 1) +  FLAG_WIDTH * (j + 1);
 		}
 	}
+	assert(index_count == INDICES_COUNT && "Index count should be equal to INDICES_COUNT");
 
-	for( int j = 0; j < FLAG_HEIGHT - 1; j++ )
+	size_t normals_count = 0;
+	for( int j = 0; j < FLAG_HEIGHT; j++ )
 	{
-		for( int i = 0; i < FLAG_WIDTH - 1; i++ )
+		for( int i = 0; i < FLAG_WIDTH; i++ )
 		{
-
 			if( j >= 1 && i >= 1 && j < (FLAG_HEIGHT - 1) && i < (FLAG_WIDTH - 1) )
 			{
 				/*
@@ -288,13 +295,6 @@ void initialize( void )
 				 *                             | \| \|
 				 *                             *--5--4
 				 */
-				indices[ count++ ] = (i + 0) +  FLAG_WIDTH * (j + 0);
-				indices[ count++ ] = (i + 1) +  FLAG_WIDTH * (j + 0);
-
-				indices[ count++ ] = (i + 0) +  FLAG_WIDTH * (j + 1);
-				indices[ count++ ] = (i + 1) +  FLAG_WIDTH * (j + 0);
-				indices[ count++ ] = (i + 1) +  FLAG_WIDTH * (j + 1);
-
 				const vec3_t* points[ 6 ] = {
 					&vertices[ (i - 1) +  FLAG_WIDTH * (j - 1) ],
 					&vertices[ (i + 0) +  FLAG_WIDTH * (j - 1) ],
@@ -310,31 +310,25 @@ void initialize( void )
 			{
 				normals[ i + FLAG_WIDTH * j ] = VEC3_ZUNIT;
 			}
+
+			normals_count += 1;
 		}
 	}
+	assert(normals_count == NORMALS_COUNT && "Normals count should be equal to NORMALS_COUNT");
 
-	if( buffer_create( &vbo_vertices, vertices, sizeof(GLfloat), FLAG_WIDTH * FLAG_HEIGHT * sizeof(vec3_t), GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
-	{
-	}
-	else
+	if( !buffer_create( &vbo_vertices, vertices, sizeof(GLfloat), VERTEX_COUNT * 3, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
 		dump_sdl_error( );
 		exit( EXIT_FAILURE );
 	}
 
-	if( buffer_create( &vbo_normals, normals, sizeof(GLfloat), FLAG_WIDTH * FLAG_HEIGHT * sizeof(vec3_t), GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
-	{
-	}
-	else
+	if( !buffer_create( &vbo_normals, normals, sizeof(GLfloat), NORMALS_COUNT * 3, GL_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
 		dump_sdl_error( );
 		exit( EXIT_FAILURE );
 	}
 
-	if( buffer_create( &vbo_indices, indices, sizeof(GLushort), INDICES_COUNT, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW ) )
-	{
-	}
-	else
+	if( !buffer_create( &vbo_indices, indices, sizeof(GLushort), INDICES_COUNT, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW ) )
 	{
 		dump_sdl_error( );
 		exit( EXIT_FAILURE );
