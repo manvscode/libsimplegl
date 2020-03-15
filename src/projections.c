@@ -37,18 +37,18 @@ mat4_t orthographic( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, G
 
 mat4_t frustum( GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far )
 {
-	GLfloat A = 2.0 * near / (right - left);
-	GLfloat B = (right + left) / (right - left);
-	GLfloat C = 2.0 * near / (top - bottom);
-	GLfloat D = (top + bottom) / (top - bottom);
-	GLfloat E = -(far + near) / (far - near);
-	GLfloat F = -(2.0 * far * near) / (far - near);
+	scaler_t A = 2.0 * near / (right - left);
+	scaler_t B = 2.0 * near / (top - bottom);
+	scaler_t C = (right + left) / (right - left);
+	scaler_t D = (top + bottom) / (top - bottom);
+	scaler_t E = -(far + near) / (far - near);
+	scaler_t F = -(2.0 * far * near) / (far - near);
 
 	return MAT4(
-		  A, 0.0,   B, 0.0,
-		0.0,   C,   D, 0.0,
-		0.0, 0.0,   E,   F,
-		0.0, 0.0,-1.0, 0.0
+		  A, 0.0, 0.0,  0.0,
+		0.0,   B, 0.0,  0.0,
+		  C,   D,   E, -1.0,
+		0.0, 0.0,   F,  0.0
 	);
 }
 
