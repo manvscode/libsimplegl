@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include <libimageio/imageio.h>
+#include <imageio.h>
 #include "simplegl.h"
 #include "raster-fonts.h"
 

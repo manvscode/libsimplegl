@@ -25,19 +25,6 @@ library_includedir      = $(includedir)/@PACKAGE_NAME@/
 library_include_HEADERS = $(libsimplegl_headers)
 
 
-if HAVE_LIBM3D
-LIBM3D = -lm3d
-endif
-
-if HAVE_LIBGL
-LIBGL = -lGL
-endif
-
-if HAVE_LIBX11
-LIBX11 = -lX11
-endif
-
-
 
 # Library
 lib_LTLIBRARIES                            = $(top_builddir)/lib/libsimplegl.la

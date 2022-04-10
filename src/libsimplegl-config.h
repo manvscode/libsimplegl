@@ -76,7 +76,7 @@
 #define PACKAGE "simplegl"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "manvscode@manvscode.com"
+#define PACKAGE_BUGREPORT "manvscode@gmail.com"
 
 /* Define to the full name of this package. */
 #define PACKAGE_NAME "simplegl"
@@ -88,7 +88,7 @@
 #define PACKAGE_TARNAME "simplegl"
 
 /* Define to the home page for this package. */
-#define PACKAGE_URL "http://www.manvscode.com/"
+#define PACKAGE_URL "http://www.joemarrero.com/"
 
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "0.2.0"

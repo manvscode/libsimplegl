@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include <libimageio/imageio.h>
+#include <imageio.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>

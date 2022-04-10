@@ -1,5 +1,5 @@
 AC_PREREQ(2.67)
-AC_INIT([simplegl], [0.2.0], [manvscode@manvscode.com], [simplegl], [http://www.manvscode.com/])
+AC_INIT([simplegl], [0.2.0], [manvscode@gmail.com], [simplegl], [http://www.joemarrero.com/])
 AM_INIT_AUTOMAKE([1.13 foreign silent-rules dist-zip -Wall -Werror])
 
 AM_SILENT_RULES([yes])
@@ -36,10 +36,6 @@ AC_CHECK_LIB([m], [cos],
 	[],
 	[AC_MSG_ERROR([Missing math library (i.e. -lm).])]
 )
-AC_CHECK_LIB([m3d], [m3d_clampf],
-	[have_m3d=yes],
-	[AC_MSG_ERROR([Missing libm3d library (i.e. -lm3d).])]
-)
 AC_CHECK_LIB([GL], [glGetString],
 	[have_opengl=yes],
 	[AC_MSG_ERROR([Missing OpenGL library (i.e. -lGL).])]
@@ -49,9 +45,6 @@ AC_CHECK_LIB([X11], [XOpenDisplay],
 	[AC_MSG_ERROR([Missing X11 library (i.e. -lX11).])]
 )
 
-AC_MSG_NOTICE([---------------------------------------------------------------------])
-PKG_CHECK_MODULES([GL], [gl])
-AC_MSG_NOTICE([---------------------------------------------------------------------])
 
 
 AM_PROG_AR
@@ -67,10 +60,13 @@ AC_ARG_ENABLE([tests],
 	[:],
 	[enable_tests=no])
 
-AM_CONDITIONAL([HAVE_LIBM3D], [test "$have_m3d" = "yes"])
-AM_CONDITIONAL([HAVE_LIBGL], [test "$have_opengl" = "yes"])
-AM_CONDITIONAL([HAVE_LIBX11], [test "$have_x11" = "yes"])
+#AM_CONDITIONAL([HAVE_LIBM3D], [test "$have_m3d" = "yes"])
+#AM_CONDITIONAL([HAVE_LIBGL], [test "$have_opengl" = "yes"])
+#AM_CONDITIONAL([HAVE_LIBX11], [test "$have_x11" = "yes"])
 AM_CONDITIONAL([ENABLE_TESTS], [test "$enable_tests" = "yes"])
+
+AC_MSG_NOTICE([---------------------------------------------------------------------])
+PKG_CHECK_MODULES([GL], [gl])
 
 PKG_CHECK_MODULES([M3D], [m3d],
 	[AC_MSG_NOTICE([Found libm3d])],
@@ -89,6 +85,7 @@ if test "x$enable_tests" = "xyes"; then
 		[AC_MSG_ERROR([Missing libsdl2])],
 	)
 fi
+AC_MSG_NOTICE([---------------------------------------------------------------------])
 
 echo "------------------------------------------------------------------------------"
 if [test -z "$CFLAGS"]; then
