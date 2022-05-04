@@ -3,8 +3,7 @@ libsimplegl
 
 A library for making it easier to work with OpenGL.
 
-[![Volume Rendering](images/volume-render.gif "Volume Rendering")](https://youtu.be/FcpS6DPoxsY)
-![American Flag Animation](images/flag.gif "American Flag Animation")
+[![Volume Rendering](images/volume-render.gif "Volume Rendering")](https://youtu.be/FcpS6DPoxsY)![American Flag Animation](images/flag.gif "American Flag Animation")
 
 
 Features
